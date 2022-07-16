@@ -61,6 +61,10 @@ flutter:
   assets:
     - assets/parkir.png
     - assets/google.png
+    - assets/motorcyclenew.png
+    - assets/carnew.png
+    - assets/list.png
+    - assets/pinjam.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
