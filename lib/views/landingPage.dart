@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:parqran/component/logo.dart';
+import 'package:parqran/views/home.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({Key? key}) : super(key: key);
@@ -30,12 +31,17 @@ class _LandingPageState extends State<LandingPage> {
                   style: ButtonStyle(
                     elevation: MaterialStateProperty.all(6),
                     shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
+                      borderRadius: BorderRadius.circular(20),
                       
                     )),
                     backgroundColor: MaterialStateProperty.all(Color.fromRGBO(52, 152, 219, 1)),
                   ),
-                  onPressed: (){},
+                  onPressed: (){
+                     Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Home()),
+                    );
+                  },
                  child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children :[
