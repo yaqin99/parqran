@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:parqran/component/motor.dart';
+import 'package:parqran/views/pengendara/daftarMobil.dart';
+import 'package:parqran/views/pengendara/daftarMotor.dart';
 
 class BottomNavbar extends StatefulWidget {
   const BottomNavbar({Key? key}) : super(key: key);
@@ -24,11 +27,23 @@ class _BottomNavbarState extends State<BottomNavbar> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DaftarMotor()),
+                        );
+                      },
                       icon: FaIcon(FontAwesomeIcons.motorcycle,
                           color: Colors.white)),
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DaftarMobil()),
+                        );
+                      },
                       icon: FaIcon(
                         FontAwesomeIcons.carSide,
                         color: Colors.white,
