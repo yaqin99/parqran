@@ -13,7 +13,7 @@ class DaftarMotor extends StatefulWidget {
 
 class _DaftarMotorState extends State<DaftarMotor> {
   bool hold = false;
-  Color warna = Colors.white;
+  Color warna = Colors.transparent;
 
   @override
   Widget build(BuildContext context) {

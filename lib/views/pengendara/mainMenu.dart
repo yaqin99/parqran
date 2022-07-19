@@ -4,6 +4,7 @@ import 'package:parqran/component/bottomNavbar.dart';
 import 'package:parqran/component/floatButton.dart';
 import 'package:parqran/views/pengendara/daftarMobil.dart';
 import 'package:parqran/views/pengendara/daftarMotor.dart';
+import 'package:parqran/views/pengendara/historyParkir.dart';
 
 class MainMenu extends StatefulWidget {
   const MainMenu({Key? key}) : super(key: key);
@@ -210,60 +211,73 @@ class _MainMenuState extends State<MainMenu> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.165,
-                                width: MediaQuery.of(context).size.width * 0.35,
-                                child: Stack(
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.topCenter,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            color: Color.fromRGBO(
-                                                217, 240, 255, 1)),
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.135,
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.295,
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => HistoryParkir()),
+                                  );
+                                },
+                                child: Container(
+                                  height: MediaQuery.of(context).size.height *
+                                      0.165,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.35,
+                                  child: Stack(
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.topCenter,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              color: Color.fromRGBO(
+                                                  217, 240, 255, 1)),
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.135,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.295,
+                                        ),
                                       ),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.bottomRight,
-                                      child: Stack(
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 7, left: 20),
-                                              child: Text(
-                                                '114',
-                                                style: TextStyle(
-                                                    fontSize: 23,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color.fromRGBO(
-                                                        52, 152, 219, 1)),
+                                      Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: Stack(
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.topLeft,
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 7, left: 20),
+                                                child: Text(
+                                                  '114',
+                                                  style: TextStyle(
+                                                      fontSize: 23,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Color.fromRGBO(
+                                                          52, 152, 219, 1)),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          Container(
-                                            child: Image.asset(
-                                              'assets/list.png',
-                                              fit: BoxFit.fill,
+                                            Container(
+                                              child: Image.asset(
+                                                'assets/list.png',
+                                                fit: BoxFit.fill,
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    Align(
-                                        alignment: Alignment.bottomCenter,
-                                        child: Text('History Parkir'))
-                                  ],
+                                      Align(
+                                          alignment: Alignment.bottomCenter,
+                                          child: Text('History Parkir'))
+                                    ],
+                                  ),
                                 ),
                               ),
                               Container(

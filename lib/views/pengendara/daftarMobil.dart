@@ -14,7 +14,7 @@ class DaftarMobil extends StatefulWidget {
 
 class _DaftarMobilState extends State<DaftarMobil> {
   bool hold = false;
-  Color warna = Colors.white;
+  Color warna = Colors.transparent;
 
   @override
   Widget build(BuildContext context) {
