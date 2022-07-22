@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:parqran/component/motor.dart';
 import 'package:parqran/views/pengendara/daftarMobil.dart';
 import 'package:parqran/views/pengendara/daftarMotor.dart';
 import 'package:parqran/views/pengendara/historyParkir.dart';
+import 'package:parqran/views/pengendara/pinjamKendaraan.dart';
 
 class BottomNavbar extends StatefulWidget {
   const BottomNavbar({Key? key}) : super(key: key);
@@ -29,21 +29,19 @@ class _BottomNavbarState extends State<BottomNavbar> {
                 children: [
                   IconButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DaftarMotor()),
-                        );
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) {
+                          return DaftarMotor();
+                        }));
                       },
                       icon: FaIcon(FontAwesomeIcons.motorcycle,
                           color: Colors.white)),
                   IconButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DaftarMobil()),
-                        );
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) {
+                          return DaftarMobil();
+                        }));
                       },
                       icon: FaIcon(
                         FontAwesomeIcons.carSide,
@@ -63,18 +61,22 @@ class _BottomNavbarState extends State<BottomNavbar> {
                 children: [
                   IconButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HistoryParkir()),
-                        );
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) {
+                          return HistoryParkir();
+                        }));
                       },
                       icon: FaIcon(
                         FontAwesomeIcons.list,
                         color: Colors.white,
                       )),
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) {
+                          return PinjamKendaraan();
+                        }));
+                      },
                       icon: FaIcon(
                         FontAwesomeIcons.handshake,
                         color: Colors.white,

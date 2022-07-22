@@ -39,15 +39,13 @@ class Mobil extends StatelessWidget {
                         width: MediaQuery.of(context).size.width * 0.295,
                       ),
                     ),
-                    Stack(
-                      children: [
-                        Container(
-                          child: Image.asset(
-                            'assets/carnew.png',
-                            fit: BoxFit.fill,
-                          ),
+                    Center(
+                      child: Container(
+                        child: Image.asset(
+                          'assets/carnew.png',
+                          fit: BoxFit.fill,
                         ),
-                      ],
+                      ),
                     ),
                   ],
                 ),

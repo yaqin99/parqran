@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class History extends StatelessWidget {
   final String lokasi;
@@ -142,15 +141,13 @@ class History extends StatelessWidget {
                         width: MediaQuery.of(context).size.width * 0.295,
                       ),
                     ),
-                    Stack(
-                      children: [
-                        Container(
-                          child: Image.asset(
-                            'assets/motorcyclenew.png',
-                            fit: BoxFit.fill,
-                          ),
+                    Center(
+                      child: Container(
+                        child: Image.asset(
+                          'assets/motorcyclenew.png',
+                          fit: BoxFit.fill,
                         ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
