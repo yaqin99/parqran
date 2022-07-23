@@ -64,7 +64,7 @@ class _DaftarMobilState extends State<DaftarMobil> {
                                       onPressed: () {
                                         setState(() {
                                           hold = false;
-                                          warna = Colors.white;
+                                          warna = Colors.transparent;
                                         });
                                       },
                                       icon: FaIcon(

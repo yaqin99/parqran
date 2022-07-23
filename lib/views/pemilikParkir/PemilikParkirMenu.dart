@@ -4,6 +4,8 @@ import 'package:parqran/component/bottomNavbar.dart';
 import 'package:parqran/component/floatButton.dart';
 import 'package:parqran/component/parkirBottomNavbar.dart';
 import 'package:parqran/component/parkirFloatButton.dart';
+import 'package:parqran/views/pemilikParkir/daftarParkiran.dart';
+import 'package:parqran/views/pemilikParkir/partner.dart';
 import 'package:parqran/views/pengendara/daftarMobil.dart';
 import 'package:parqran/views/pengendara/daftarMotor.dart';
 import 'package:parqran/views/pengendara/historyParkir.dart';
@@ -116,7 +118,7 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
                                   onTap: () {
                                     Navigator.pushReplacement(context,
                                         MaterialPageRoute(builder: (context) {
-                                      return DaftarMotor();
+                                      return DaftarParkiran();
                                     }));
                                   },
                                   child: Container(
@@ -338,7 +340,7 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
                                   onTap: () {
                                     Navigator.pushReplacement(context,
                                         MaterialPageRoute(builder: (context) {
-                                      return PinjamKendaraan();
+                                      return Partner();
                                     }));
                                   },
                                   child: Container(

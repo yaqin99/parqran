@@ -3,15 +3,18 @@ import 'package:parqran/component/bottomNavbar.dart';
 import 'package:parqran/component/floatButton.dart';
 import 'package:parqran/component/motor.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:parqran/component/parkirBottomNavbar.dart';
+import 'package:parqran/component/parkirFloatButton.dart';
+import 'package:parqran/component/parkiran.dart';
 
-class DaftarMotor extends StatefulWidget {
-  const DaftarMotor({Key? key}) : super(key: key);
+class DaftarParkiran extends StatefulWidget {
+  const DaftarParkiran({Key? key}) : super(key: key);
 
   @override
-  State<DaftarMotor> createState() => _DaftarMotorState();
+  State<DaftarParkiran> createState() => _DaftarParkiranState();
 }
 
-class _DaftarMotorState extends State<DaftarMotor> {
+class _DaftarParkiranState extends State<DaftarParkiran> {
   bool hold = false;
   Color warna = Colors.transparent;
   Future<bool?> showWarning(BuildContext context) async => showDialog<bool>(
@@ -69,7 +72,7 @@ class _DaftarMotorState extends State<DaftarMotor> {
                                       icon: FaIcon(
                                         FontAwesomeIcons.xmark,
                                         size: 26,
-                                        color: Color.fromRGBO(52, 152, 219, 1),
+                                        color: Color.fromRGBO(155, 89, 182, 1),
                                       ),
                                     ),
                                     Row(
@@ -81,7 +84,7 @@ class _DaftarMotorState extends State<DaftarMotor> {
                                                   .photo_size_select_actual_rounded,
                                               size: 26,
                                               color: Color.fromRGBO(
-                                                  52, 152, 219, 1),
+                                                  155, 89, 182, 1),
                                             )),
                                         IconButton(
                                           onPressed: () {},
@@ -89,7 +92,7 @@ class _DaftarMotorState extends State<DaftarMotor> {
                                             FontAwesomeIcons.penToSquare,
                                             size: 26,
                                             color:
-                                                Color.fromRGBO(52, 152, 219, 1),
+                                                Color.fromRGBO(155, 89, 182, 1),
                                           ),
                                         ),
                                         IconButton(
@@ -98,7 +101,7 @@ class _DaftarMotorState extends State<DaftarMotor> {
                                             FontAwesomeIcons.trash,
                                             size: 26,
                                             color:
-                                                Color.fromRGBO(52, 152, 219, 1),
+                                                Color.fromRGBO(155, 89, 182, 1),
                                           ),
                                         ),
                                       ],
@@ -108,28 +111,13 @@ class _DaftarMotorState extends State<DaftarMotor> {
                               : Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    // Padding(
-                                    //   padding: const EdgeInsets.only(right: 18),
-                                    //   child: GestureDetector(
-                                    //     onTap: () {
-                                    //       Navigator.pop(
-                                    //         context,
-                                    //       );
-                                    //     },
-                                    //     child: Icon(
-                                    //       Icons.arrow_back,
-                                    //       size: 35,
-                                    //       color: Color.fromRGBO(52, 152, 219, 1),
-                                    //     ),
-                                    //   ),
-                                    // ),
                                     Text(
-                                      'Daftar Motor',
+                                      'Daftar Parkiran',
                                       style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.w400,
                                           color:
-                                              Color.fromRGBO(52, 152, 219, 1)),
+                                              Color.fromRGBO(155, 89, 182, 1)),
                                     ),
                                   ],
                                 )),
@@ -140,29 +128,25 @@ class _DaftarMotorState extends State<DaftarMotor> {
                           onLongPressStart: (a) {
                             setState(() {
                               hold = true;
-                              warna = Color.fromRGBO(52, 152, 219, 1);
+                              warna = Color.fromRGBO(155, 89, 182, 1);
                             });
                           },
-                          child: Motor(
-                            nama: 'Honda Vario 150',
-                            noPol: 'M 333 AB',
-                            noMesin: 'AHDKJ213',
-                            warna: warna,
-                          ),
+                          child: Parkiran(
+                              lokasi: 'Pamekasan Mall',
+                              areaCode: '-126767 , 97721421',
+                              warna: warna),
                         ),
                         GestureDetector(
                           onLongPressStart: (a) {
                             setState(() {
                               hold = true;
-                              warna = Color.fromRGBO(52, 152, 219, 1);
+                              warna = Color.fromRGBO(155, 89, 182, 1);
                             });
                           },
-                          child: Motor(
-                            nama: 'Honda Vario 150',
-                            noPol: 'M 333 AB',
-                            noMesin: 'AHDKJ213',
-                            warna: warna,
-                          ),
+                          child: Parkiran(
+                              lokasi: 'Pamekasan Mall',
+                              areaCode: '-126767 , 97721421',
+                              warna: warna),
                         ),
                       ],
                     )
@@ -194,7 +178,7 @@ class _DaftarMotorState extends State<DaftarMotor> {
                                             borderRadius:
                                                 BorderRadius.circular(50))),
                                     backgroundColor: MaterialStateProperty.all(
-                                        Color.fromRGBO(52, 152, 219, 1))),
+                                        Color.fromRGBO(155, 89, 182, 1))),
                                 onPressed: () {},
                                 child: Icon(
                                   Icons.add,
@@ -211,8 +195,8 @@ class _DaftarMotorState extends State<DaftarMotor> {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: FLoatButton(),
-        bottomNavigationBar: BottomNavbar(),
+        floatingActionButton: ParkirFloatButton(),
+        bottomNavigationBar: ParkirBotNav(),
       ),
     );
   }
