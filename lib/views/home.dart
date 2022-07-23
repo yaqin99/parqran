@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:parqran/views/pemilikParkir/PemilikParkirMenu.dart';
 import 'package:parqran/views/pengendara/mainMenu.dart';
 
 import '../component/logo.dart';
@@ -83,7 +84,12 @@ class _HomeState extends State<Home> {
                       )),
                       backgroundColor: MaterialStateProperty.all(Colors.black),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) {
+                        return PemilikParkirMenu();
+                      }));
+                    },
                     child: Center(
                         child: Text('Pemilik Parkir',
                             style:

@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:parqran/views/pengendara/qrGenerate.dart';
 // import 'package:parqran/views/pengendara/qrScaning.dart';
 
-class FLoatButton extends StatefulWidget {
-  const FLoatButton({Key? key}) : super(key: key);
+class ParkirFloatButton extends StatefulWidget {
+  const ParkirFloatButton({Key? key}) : super(key: key);
 
   @override
-  State<FLoatButton> createState() => _FLoatButtonState();
+  State<ParkirFloatButton> createState() => _ParkirFloatButtonState();
 }
 
-class _FLoatButtonState extends State<FLoatButton> {
+class _ParkirFloatButtonState extends State<ParkirFloatButton> {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      backgroundColor: Color.fromRGBO(52, 152, 219, 1),
+      backgroundColor: Color.fromRGBO(155, 89, 182, 1),
       onPressed: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return QrGenerate();
