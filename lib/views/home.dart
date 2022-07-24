@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:parqran/views/pemilikParkir/PemilikParkirMenu.dart';
 import 'package:parqran/views/pengendara/mainMenu.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../component/logo.dart';
 
@@ -95,7 +96,7 @@ class _HomeState extends State<Home> {
                             style:
                                 TextStyle(color: Colors.white, fontSize: 20)))),
               ),
-            )
+            ),
           ],
         ),
       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:parqran/views/pemilikParkir/daftarParkiran.dart';
+import 'package:parqran/views/pemilikParkir/managementParkir.dart';
 import 'package:parqran/views/pemilikParkir/partner.dart';
 import 'package:parqran/views/pengendara/daftarMobil.dart';
 import 'package:parqran/views/pengendara/daftarMotor.dart';
@@ -65,7 +66,7 @@ class _ParkirBotNavState extends State<ParkirBotNav> {
                       onPressed: () {
                         Navigator.pushReplacement(context,
                             MaterialPageRoute(builder: (context) {
-                          return HistoryParkir();
+                          return ManageParkir();
                         }));
                       },
                       icon: FaIcon(

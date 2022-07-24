@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "507341724576",
+    "project_id": "parqran-f527f",
+    "storage_bucket": "parqran-f527f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:507341724576:android:650360edb58b2df45662c5",
+        "android_client_info": {
+          "package_name": "id.ac.unira.parqran.parqran"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "507341724576-ir31tncov4foa1vcbgccu3nrpgfmhntm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "id.ac.unira.parqran.parqran",
+            "certificate_hash": "eec160523414ba4a59738e6a17fe66003eabb965"
+          }
+        },
+        {
+          "client_id": "507341724576-0qt06iddvjbp8qd7kskg2outno7296o8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhmfwudWJDS0d74yOhay0CTIBAEilNXko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "507341724576-0qt06iddvjbp8qd7kskg2outno7296o8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

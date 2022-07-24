@@ -38,6 +38,7 @@ dependencies:
   qr_flutter: ^4.0.0
   barcode_scan2: ^4.2.1
   qr_code_scanner: ^1.0.0
+  google_sign_in: ^5.4.0
   
 dev_dependencies:
   flutter_test:
@@ -74,6 +75,7 @@ flutter:
     - assets/partner.png
     - assets/motorParking.png
     - assets/map2.png
+    - assets/pinjam.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
