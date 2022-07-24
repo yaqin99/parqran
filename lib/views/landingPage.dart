@@ -91,15 +91,10 @@ class _LandingPageState extends State<LandingPage> {
                   ),
                   onPressed: () {
                     _handleSignIn();
-                    (succeed == true)
-                        ? Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (context) {
-                            return Home();
-                          }))
-                        : Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (context) {
-                            return LandingPage();
-                          }));
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) {
+                      return (_currentUser != null) ? Home() : LandingPage();
+                    }));
                   },
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -118,6 +113,7 @@ class _LandingPageState extends State<LandingPage> {
             IconButton(
                 onPressed: () {
                   _googleSignIn.disconnect();
+                  setState(() {});
                 },
                 icon: Icon(Icons.logout)),
           ],
