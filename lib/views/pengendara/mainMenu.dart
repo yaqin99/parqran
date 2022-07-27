@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:parqran/component/bottomNavbar.dart';
 import 'package:parqran/component/floatButton.dart';
+import 'package:parqran/model/repository.dart';
+import 'package:parqran/model/services.dart';
 import 'package:parqran/views/pengendara/daftarMobil.dart';
 import 'package:parqran/views/pengendara/daftarMotor.dart';
+import 'dart:convert' as convert;
 import 'package:parqran/views/pengendara/historyParkir.dart';
 import 'package:parqran/views/pengendara/pinjamKendaraan.dart';
+import '../../model/person.dart';
+import '../../model/personCard.dart';
 
 class MainMenu extends StatefulWidget {
   const MainMenu({Key? key}) : super(key: key);
@@ -32,6 +37,24 @@ class _MainMenuState extends State<MainMenu> {
                   child: Text('Yes')),
             ],
           ));
+
+  Person? person;
+  getData() async {
+    Person? result = await Services.getById();
+    if (result != null) {
+      setState(() {
+        person = result;
+      });
+    }
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    getData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -53,8 +76,17 @@ class _MainMenuState extends State<MainMenu> {
                     width: MediaQuery.of(context).size.width * 1,
                     child: Center(
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          (person != null)
+                              ? PersonCard(person: person!)
+                              : const Text(
+                                  'Loading ...',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      color: Color.fromRGBO(52, 152, 219, 1)),
+                                ),
                           SizedBox(
                             width: 60,
                             height: 60,
@@ -379,6 +411,17 @@ class _MainMenuState extends State<MainMenu> {
                           ),
                         ]),
                   ),
+                  // RaisedButton(
+                  //   onPressed: () async {
+                  //     Person? result = await Services.getById();
+                  //     if (result != null) {
+                  //       setState(() {
+                  //         person = result;
+                  //       });
+                  //     }
+                  //   },
+                  //   child: Text('Klik'),
+                  // )
                 ],
               ),
             ),
