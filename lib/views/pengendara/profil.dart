@@ -1,0 +1,305 @@
+import 'package:flutter/material.dart';
+import 'package:parqran/component/bottomNavbar.dart';
+import 'package:parqran/component/floatButton.dart';
+import 'package:parqran/model/services.dart';
+import 'package:parqran/views/pengendara/loadingPage.dart';
+import '../../model/person.dart';
+import '../../model/personCard.dart';
+import 'dart:convert' as convert;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+class Profil extends StatefulWidget {
+  const Profil({Key? key}) : super(key: key);
+
+  @override
+  State<Profil> createState() => _ProfilState();
+}
+
+class _ProfilState extends State<Profil> {
+  bool hold = false;
+  Color warna = Colors.transparent;
+  Person? person;
+  getData() async {
+    Person? result = await Services.getById(2);
+    if (result != null) {
+      setState(() {
+        person = result;
+      });
+    }
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    getData();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: (person == null)
+            ? LoadingPage()
+            : Container(
+                // decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+                width: MediaQuery.of(context).size.width * 0.9,
+                child: Column(children: [
+                  Container(
+                    // decoration:
+                    //     BoxDecoration(border: Border.all(color: Colors.black)),
+                    height: MediaQuery.of(context).size.height * 0.17,
+                    width: MediaQuery.of(context).size.width * 1,
+                    child: Container(
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 18),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pop(
+                                context,
+                              );
+                            },
+                            child: Icon(
+                              Icons.arrow_back,
+                              size: 35,
+                              color: Color.fromRGBO(52, 152, 219, 1),
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'Profil',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w400,
+                              color: Color.fromRGBO(52, 152, 219, 1)),
+                        ),
+                      ],
+                    )),
+                  ),
+                  Container(
+                    // decoration:
+                    //     BoxDecoration(border: Border.all(color: Colors.black)),
+                    width: MediaQuery.of(context).size.width * 0.4875,
+                    height: MediaQuery.of(context).size.height * 0.237,
+                    child: Stack(children: [
+                      (person != null)
+                          ? ProfilAvatar(person: person!)
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.477,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.23,
+                                  child: ElevatedButton(
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Color.fromRGBO(
+                                                    255, 255, 255, 1)),
+                                        shape: MaterialStateProperty.all(
+                                            RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(200),
+                                          side: BorderSide(
+                                              color: Color.fromRGBO(
+                                                  52, 152, 219, 1),
+                                              width: 3),
+                                        )),
+                                      ),
+                                      onPressed: () {},
+                                      child: FaIcon(
+                                        FontAwesomeIcons.userLarge,
+                                        size: 100,
+                                        color: Color.fromRGBO(52, 152, 219, 1),
+                                      )),
+                                ),
+                              ],
+                            ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.146,
+                          height: MediaQuery.of(context).size.height * 0.07,
+                          child: ElevatedButton(
+                              style: ButtonStyle(
+                                  shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50),
+                                  )),
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Color.fromRGBO(52, 152, 219, 1))),
+                              onPressed: () {},
+                              child: Icon(Icons.camera_alt_rounded,
+                                  color: Colors.white)),
+                        ),
+                      )
+                    ]),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 40),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.75,
+                      height: MediaQuery.of(context).size.height * 0.4,
+                      // decoration:
+                      //     BoxDecoration(border: Border.all(color: Colors.black)),
+                      child: Column(
+                        children: [
+                          Container(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: Container(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 46),
+                                      child: Text(
+                                        'Nama',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 17,
+                                            color: Color.fromRGBO(
+                                                52, 152, 219, 1)),
+                                      ),
+                                    ),
+                                    ProfilName(person: person!)
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 30),
+                              child: Container(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 65),
+                                      child: Text(
+                                        'Nik',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 17,
+                                            color: Color.fromRGBO(
+                                                52, 152, 219, 1)),
+                                      ),
+                                    ),
+                                    Text(
+                                      '35280527349xxx',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 17,
+                                          color:
+                                              Color.fromRGBO(52, 152, 219, 1)),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 30),
+                              child: Container(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 35),
+                                      child: Text(
+                                        'Alamat',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 17,
+                                            color: Color.fromRGBO(
+                                                52, 152, 219, 1)),
+                                      ),
+                                    ),
+                                    Text(
+                                      'Jl. Sersan Mesrul Gg. 3B',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 17,
+                                          color:
+                                              Color.fromRGBO(52, 152, 219, 1)),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 30),
+                              child: Container(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 47),
+                                      child: Text(
+                                        'Email',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 17,
+                                            color: Color.fromRGBO(
+                                                52, 152, 219, 1)),
+                                      ),
+                                    ),
+                                    ProfilEmail(person: person!)
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 30),
+                              child: Container(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 25),
+                                      child: Text(
+                                        'No. Telp',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 17,
+                                            color: Color.fromRGBO(
+                                                52, 152, 219, 1)),
+                                      ),
+                                    ),
+                                    Text(
+                                      '085232324069',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 17,
+                                          color:
+                                              Color.fromRGBO(52, 152, 219, 1)),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ]),
+              ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FLoatButton(),
+      bottomNavigationBar: BottomNavbar(),
+    );
+  }
+}

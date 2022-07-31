@@ -10,11 +10,10 @@ class QrGenerate extends StatelessWidget {
       home: Scaffold(
         body: Center(
           child: QrImage(
-            data: 'Moh. Ainul Yaqin',
+            data: '123',
             version: 6,
             backgroundColor: Colors.white,
             foregroundColor: Colors.black,
-            errorCorrectionLevel: QrErrorCorrectLevel.L,
             size: 300,
             padding: EdgeInsets.all(10),
           ),

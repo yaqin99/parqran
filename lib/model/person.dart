@@ -2,6 +2,15 @@ class Person {
   int id;
   String name;
   String email;
+  String avatar;
 
-  Person({required this.id, required this.name, required this.email});
+  // int id;
+  // String nama;
+  // String alamat;
+
+  Person(
+      {required this.id,
+      required this.name,
+      required this.email,
+      required this.avatar});
 }
