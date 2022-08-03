@@ -7,10 +7,15 @@ import '../../model/person.dart';
 import '../../model/personCard.dart';
 import 'dart:convert' as convert;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Profil extends StatefulWidget {
-  const Profil({Key? key}) : super(key: key);
-
+  final String email;
+  final String nama;
+  final String foto;
+  const Profil(
+      {Key? key, required this.email, required this.nama, required this.foto})
+      : super(key: key);
   @override
   State<Profil> createState() => _ProfilState();
 }
@@ -18,20 +23,21 @@ class Profil extends StatefulWidget {
 class _ProfilState extends State<Profil> {
   bool hold = false;
   Color warna = Colors.transparent;
+  String? nama;
+  String? email;
+  String? foto;
   Person? person;
-  getData() async {
-    Person? result = await Services.getById(2);
-    if (result != null) {
-      setState(() {
-        person = result;
-      });
-    }
-    setState(() {});
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  void data() async {
+    final SharedPreferences prefs = await _prefs;
+    nama = prefs.getString('nama');
+    email = prefs.getString('email');
+    foto = prefs.getString('foto');
   }
 
   @override
   void initState() {
-    getData();
+    // TODO: implement initState
     super.initState();
   }
 
@@ -39,7 +45,7 @@ class _ProfilState extends State<Profil> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: (person == null)
+        child: (widget.nama == null)
             ? LoadingPage()
             : Container(
                 // decoration: BoxDecoration(border: Border.all(color: Colors.black)),
@@ -85,8 +91,27 @@ class _ProfilState extends State<Profil> {
                     width: MediaQuery.of(context).size.width * 0.4875,
                     height: MediaQuery.of(context).size.height * 0.237,
                     child: Stack(children: [
-                      (person != null)
-                          ? ProfilAvatar(person: person!)
+                      (widget.foto != null)
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(100)),
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.477,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.23,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child: Image.network(
+                                      widget.foto,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
                           : Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -167,7 +192,16 @@ class _ProfilState extends State<Profil> {
                                                 52, 152, 219, 1)),
                                       ),
                                     ),
-                                    ProfilName(person: person!)
+                                    Container(
+                                      child: Text(
+                                        widget.nama,
+                                        style: TextStyle(
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w300,
+                                            color: Color.fromRGBO(
+                                                52, 152, 219, 1)),
+                                      ),
+                                    )
                                   ],
                                 ),
                               ),
@@ -253,7 +287,16 @@ class _ProfilState extends State<Profil> {
                                                 52, 152, 219, 1)),
                                       ),
                                     ),
-                                    ProfilEmail(person: person!)
+                                    Container(
+                                      child: Text(
+                                        widget.email,
+                                        style: TextStyle(
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w300,
+                                            color: Color.fromRGBO(
+                                                52, 152, 219, 1)),
+                                      ),
+                                    )
                                   ],
                                 ),
                               ),

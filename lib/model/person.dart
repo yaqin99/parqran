@@ -1,16 +1,12 @@
 class Person {
-  int id;
-  String name;
-  String email;
-  String avatar;
-
   // int id;
-  // String nama;
-  // String alamat;
+  // String name;
+  // String email;
+  // String avatar;
 
-  Person(
-      {required this.id,
-      required this.name,
-      required this.email,
-      required this.avatar});
+  String email;
+  String nama;
+  String foto;
+
+  Person({required this.email, required this.nama, required this.foto});
 }

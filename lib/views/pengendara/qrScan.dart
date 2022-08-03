@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:parqran/views/pengendara/mainMenu.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -12,15 +12,16 @@ class QrScan extends StatefulWidget {
 }
 
 class _QrScanState extends State<QrScan> {
-  final qrKey = GlobalKey(debugLabel: 'QR');
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
-  Barcode? barcode;
+  Barcode? data;
 
-  @override
-  // void initState() {
-  //   super.initState();
-  //   controller!.resumeCamera();
-  // }
+  getCamera() async {
+    await controller?.flipCamera();
+    await controller?.flipCamera();
+    print('getData Called');
+    setState(() {});
+  }
 
   @override
   void reassemble() {
@@ -32,14 +33,66 @@ class _QrScanState extends State<QrScan> {
     }
   }
 
+  bool clicked = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getCamera();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller!.dispose();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) => SafeArea(
           child: Scaffold(
-        body: Stack(
-          children: [
-            buildQrView(context),
-            Positioned(bottom: 10, child: buildResult())
-          ],
+        body: GestureDetector(
+          onTap: () async {
+            setState(() {});
+            clicked = true;
+            print(clicked);
+            await controller?.flipCamera();
+            await controller?.flipCamera();
+          },
+          child: Stack(
+            children: [
+              buildQrView(context),
+              // Positioned(
+              //     bottom: 30,
+              //     child: Container(
+              //       margin: const EdgeInsets.all(8),
+              //       child: ElevatedButton(
+              //           onPressed: () async {
+              //             setState(() {});
+              //             await controller?.flipCamera();
+              //             await controller?.flipCamera();
+              //           },
+              //           child: FutureBuilder(
+              //             future: controller?.getCameraInfo(),
+              //             builder: (context, snapshot) {
+              //               if (snapshot.data != null) {
+              //                 return Text(
+              //                     'Camera facing ${describeEnum(snapshot.data!)}');
+              //               } else {
+              //                 return const Text('loading');
+              //               }
+              //             },
+              //           )),
+              //     )),
+              Positioned(
+                  left: (clicked == false)
+                      ? MediaQuery.of(context).size.width * 0.33
+                      : MediaQuery.of(context).size.width * 0.22,
+                  bottom: MediaQuery.of(context).size.width * 0.4,
+                  child: Center(child: buildResult()))
+            ],
+          ),
         ),
       ));
 
@@ -47,39 +100,42 @@ class _QrScanState extends State<QrScan> {
         padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
             color: Colors.white24, borderRadius: BorderRadius.circular(8)),
-        child: Text(
-          (barcode != null) ? 'Result : ${barcode!.code}' : 'Scan a Code',
-          maxLines: 3,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text((clicked == true)
+                ? 'Arahkan Camera pada Qr Code '
+                : 'Ketuk Untuk Scan'),
+          ],
         ),
       );
   Widget buildQrView(BuildContext context) => QRView(
         key: qrKey,
         onQRViewCreated: onQRViewCreated,
-        // overlay: QrScannerOverlayShape(
-        //   //   //   borderColor: Color.fromRGBO(52, 152, 219, 1),
-        //   //   //   borderRadius: 10,
-        //   //   //   borderLength: 20,
-        //   //   //   borderWidth: 10,
-        //   cutOutWidth: MediaQuery.of(context).size.width * 0.7,
-        //   cutOutHeight: MediaQuery.of(context).size.height * 0.7,
-        // ),
+        overlay: QrScannerOverlayShape(
+          borderColor: Color.fromRGBO(52, 152, 219, 1),
+          borderRadius: 10,
+          borderLength: 20,
+          borderWidth: 10,
+          cutOutSize: MediaQuery.of(context).size.width * 0.7,
+        ),
       );
 
   void onQRViewCreated(QRViewController controller) {
     setState(() => this.controller = controller);
 
-    controller.scannedDataStream.listen(((barcode) => setState(() {
-          this.barcode = barcode;
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) {
-            return MainMenu();
-          }));
-        })));
-  }
+    controller.scannedDataStream.listen(((scanData) => setState(() {
+          this.data = scanData;
 
-  @override
-  void dispose() {
-    controller!.dispose();
-    super.dispose();
+          controller.stopCamera();
+
+          Navigator.pop(context);
+        })));
+    @override
+    void dispose() {
+      controller.dispose();
+
+      super.dispose();
+    }
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:parqran/component/bottomNavbar.dart';
 import 'package:parqran/component/floatButton.dart';
+import 'package:parqran/model/loginData.dart';
 import 'package:parqran/model/services.dart';
 import 'package:parqran/views/pengendara/daftarMobil.dart';
 import 'package:parqran/views/pengendara/daftarMotor.dart';
@@ -11,12 +12,20 @@ import 'package:parqran/views/pengendara/loadingPage.dart';
 import 'package:parqran/views/pengendara/pinjamKendaraan.dart';
 import 'package:parqran/views/pengendara/profil.dart';
 import 'package:parqran/views/pengendara/qrGenerate.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../model/person.dart';
 import '../../model/personCard.dart';
+import 'package:parqran/model/loginData.dart';
 
 class MainMenu extends StatefulWidget {
-  const MainMenu({Key? key}) : super(key: key);
+  final String email;
+  final String nama;
+  final String foto;
+  const MainMenu(
+      {Key? key, required this.email, required this.nama, required this.foto})
+      : super(key: key);
 
   @override
   State<MainMenu> createState() => _MainMenuState();
@@ -24,7 +33,6 @@ class MainMenu extends StatefulWidget {
 
 class _MainMenuState extends State<MainMenu> {
   QRViewController? controller;
-
   Future<bool?> showWarning(BuildContext context) async => showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -43,23 +51,7 @@ class _MainMenuState extends State<MainMenu> {
             ],
           ));
 
-  Person? person;
-  getData() async {
-    Person? result = await Services.getById(2);
-    if (result != null) {
-      setState(() {
-        person = result;
-        print(result);
-      });
-    }
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    getData();
-    super.initState();
-  }
+  LoginData? loginData;
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +64,7 @@ class _MainMenuState extends State<MainMenu> {
       },
       child: Scaffold(
           body: Center(
-            child: (person == null)
+            child: (widget.nama == null)
                 ? LoadingPage()
                 : Container(
                     // decoration: BoxDecoration(border: Border.all(color: Colors.black)),
@@ -86,7 +78,8 @@ class _MainMenuState extends State<MainMenu> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                PersonName(person: person!),
+                                Text('Selamat Datang ' + widget.nama),
+                                // PersonName(person: person!),
                                 SizedBox(
                                   width: 60,
                                   height: 60,
@@ -102,7 +95,10 @@ class _MainMenuState extends State<MainMenu> {
                                         Navigator.push(context,
                                             MaterialPageRoute(
                                                 builder: (context) {
-                                          return Profil();
+                                          return Profil(
+                                              email: widget.email,
+                                              nama: widget.nama,
+                                              foto: widget.foto);
                                         }));
                                       },
                                       child: Center(

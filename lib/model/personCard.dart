@@ -11,7 +11,7 @@ class PersonName extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Text(
-        'Selamat Datang ${person.name}',
+        'Selamat Datang ${person.nama}',
         style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w700,
@@ -29,7 +29,7 @@ class ProfilName extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Text(
-        person.name,
+        person.nama,
         style: TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.w300,
@@ -73,7 +73,7 @@ class ProfilAvatar extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(100),
             child: Image.network(
-              person.avatar,
+              person.foto,
               fit: BoxFit.fill,
             ),
           ),

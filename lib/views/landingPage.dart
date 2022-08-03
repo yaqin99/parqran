@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:parqran/component/logo.dart';
+import 'package:parqran/model/loginData.dart';
+import 'package:parqran/model/services.dart';
 import 'package:parqran/views/home.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:parqran/views/pengendara/mainMenu.dart';
+import '../../model/person.dart';
+import '../../model/personCard.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
   scopes: [
@@ -38,6 +45,8 @@ class _LandingPageState extends State<LandingPage> {
 
   GoogleSignInAccount? _currentUser;
   bool succeed = false;
+  Person? person;
+
   Future<void> _handleSignIn() async {
     try {
       succeed = true;
@@ -47,14 +56,33 @@ class _LandingPageState extends State<LandingPage> {
     }
   }
 
+  String? nama;
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  Future<void> getData() async {
+    final SharedPreferences prefs = await _prefs;
+    final nama = prefs.getString('nama');
+
+    if (nama != null) {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+        return MainMenu(
+            email: prefs.getString('email')!,
+            nama: prefs.getString('nama')!,
+            foto: prefs.getString('foto')!);
+      }));
+    }
+    ;
+  }
+
   @override
   void initState() {
+    getData();
+
     _googleSignIn.onCurrentUserChanged.listen((event) {
-      setState(() {
-        _currentUser = event;
-      });
+      _currentUser = event;
     });
     _googleSignIn.signInSilently();
+    // getData();
     super.initState();
   }
 
@@ -89,11 +117,30 @@ class _LandingPageState extends State<LandingPage> {
                     backgroundColor: MaterialStateProperty.all(
                         Color.fromRGBO(52, 152, 219, 1)),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     _handleSignIn();
+                    Services.postDataUser(
+                        _currentUser!.email,
+                        _currentUser!.displayName.toString(),
+                        _currentUser!.photoUrl.toString());
+
+                    final SharedPreferences prefs = await _prefs;
+                    prefs.setString('email', _currentUser!.email);
+                    prefs.setString('nama', _currentUser!.displayName!);
+                    prefs.setString('foto', _currentUser!.photoUrl!);
+
+                    LoginData(
+                        email: _currentUser!.email,
+                        nama: _currentUser!.displayName!,
+                        foto: _currentUser!.photoUrl!);
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) {
-                      return (_currentUser != null) ? Home() : LandingPage();
+                      return (_currentUser != null)
+                          ? Home(
+                              email: prefs.getString('email')!,
+                              nama: prefs.getString('nama')!,
+                              foto: prefs.getString('foto')!)
+                          : LandingPage();
                     }));
                   },
                   child: Row(

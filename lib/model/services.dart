@@ -4,23 +4,21 @@ import 'person.dart';
 import 'package:flutter/material.dart';
 
 abstract class Services {
-  static Future<Person?> getById(int id) async {
+  static Future<Person?> postDataUser(
+      String email, String nama, String foto) async {
     try {
-      var response = await Dio().get('https://reqres.in/api/users/$id');
-      if (response.statusCode == 200) {
-        return Person(
-          id: response.data['data']['id'],
-          name: response.data['data']['first_name'],
-          email: response.data['data']['email'],
-          avatar: response.data['data']['avatar'],
-          // id: response.data['id'],
-          // name: response.data['first_name'],
-          // email: response.data['email']);
-        );
-      }
-      return null;
+      var data = await Dio().post('http://192.168.43.95:3000/auth', data: {
+        'email': email,
+        'nama': nama,
+        'foto': foto,
+      });
+      return Person(
+          email: data.data['data'][0]['email'],
+          nama: data.data['data'][0]['nama'],
+          foto: data.data['data'][0]['foto']);
     } catch (e) {
-      throw Exception(e.toString());
+      print(e);
+      // throw ExcReption(e.toString());
     }
   }
 }

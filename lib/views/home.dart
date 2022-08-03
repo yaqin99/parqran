@@ -6,7 +6,12 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../component/logo.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  final String email;
+  final String nama;
+  final String foto;
+  const Home(
+      {Key? key, required this.email, required this.nama, required this.foto})
+      : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
@@ -64,7 +69,10 @@ class _HomeState extends State<Home> {
                   onPressed: () {
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) {
-                      return MainMenu();
+                      return MainMenu(
+                          email: widget.email,
+                          nama: widget.nama,
+                          foto: widget.foto);
                     }));
                   },
                   child: Center(

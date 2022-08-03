@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:parqran/main.dart';
+import 'package:parqran/views/pengendara/qrDebug.dart';
 import 'package:parqran/views/pengendara/qrGenerate.dart';
 import 'package:parqran/views/pengendara/qrScan.dart';
+import 'package:parqran/views/pengendara/qrTry.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 // import 'package:parqran/views/pengendara/qrScaning.dart';
 
