@@ -18,7 +18,8 @@ GoogleSignIn _googleSignIn = GoogleSignIn(
 );
 
 class LandingPage extends StatefulWidget {
-  const LandingPage({Key? key}) : super(key: key);
+  final bool isLogOut;
+  const LandingPage({Key? key, required this.isLogOut}) : super(key: key);
 
   @override
   State<LandingPage> createState() => _LandingPageState();
@@ -46,24 +47,23 @@ class _LandingPageState extends State<LandingPage> {
   GoogleSignInAccount? _currentUser;
   bool succeed = false;
   Person? person;
-
-  Future<void> _handleSignIn() async {
+  _handleSignIn() async {
     try {
-      succeed = true;
-      await _googleSignIn.signIn();
+      if (_currentUser == null) {
+        await _googleSignIn.signIn();
+      }
     } catch (error) {
       print(error);
     }
   }
 
-  String? nama;
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   Future<void> getData() async {
     final SharedPreferences prefs = await _prefs;
-    final nama = prefs.getString('nama');
 
-    if (nama != null) {
+    if (widget.isLogOut == false) {
+      print('anda sudah login');
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
         return MainMenu(
             email: prefs.getString('email')!,
@@ -71,19 +71,20 @@ class _LandingPageState extends State<LandingPage> {
             foto: prefs.getString('foto')!);
       }));
     }
+
     ;
   }
 
   @override
   void initState() {
-    getData();
-
     _googleSignIn.onCurrentUserChanged.listen((event) {
       _currentUser = event;
+
+      _googleSignIn.signInSilently();
     });
-    _googleSignIn.signInSilently();
     // getData();
     super.initState();
+    getData();
   }
 
   @override
@@ -118,30 +119,27 @@ class _LandingPageState extends State<LandingPage> {
                         Color.fromRGBO(52, 152, 219, 1)),
                   ),
                   onPressed: () async {
-                    _handleSignIn();
-                    Services.postDataUser(
-                        _currentUser!.email,
-                        _currentUser!.displayName.toString(),
-                        _currentUser!.photoUrl.toString());
+                    if (widget.isLogOut == true) {
+                      await _handleSignIn();
+                      print('Masuk');
+                      final SharedPreferences prefs = await _prefs;
+                      prefs.setString('email', _currentUser!.email);
+                      prefs.setString('nama', _currentUser!.displayName!);
+                      prefs.setString('foto', _currentUser!.photoUrl!);
+                      prefs.setBool('liat', true);
 
-                    final SharedPreferences prefs = await _prefs;
-                    prefs.setString('email', _currentUser!.email);
-                    prefs.setString('nama', _currentUser!.displayName!);
-                    prefs.setString('foto', _currentUser!.photoUrl!);
-
-                    LoginData(
-                        email: _currentUser!.email,
-                        nama: _currentUser!.displayName!,
-                        foto: _currentUser!.photoUrl!);
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) {
-                      return (_currentUser != null)
-                          ? Home(
-                              email: prefs.getString('email')!,
-                              nama: prefs.getString('nama')!,
-                              foto: prefs.getString('foto')!)
-                          : LandingPage();
-                    }));
+                      Services.postDataUser(_currentUser!.email,
+                          _currentUser!.displayName!, _currentUser!.photoUrl!);
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) {
+                        return (_currentUser != null)
+                            ? Home(
+                                email: prefs.getString('email')!,
+                                nama: prefs.getString('nama')!,
+                                foto: prefs.getString('foto')!)
+                            : LandingPage(isLogOut: false);
+                      }));
+                    }
                   },
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -157,12 +155,12 @@ class _LandingPageState extends State<LandingPage> {
                                 TextStyle(color: Colors.white, fontSize: 20)),
                       ])),
             ),
-            IconButton(
-                onPressed: () {
-                  _googleSignIn.disconnect();
-                  setState(() {});
-                },
-                icon: Icon(Icons.logout)),
+            // IconButton(
+            //     onPressed: () {
+            //       _googleSignIn.disconnect();
+            //       setState(() {});
+            //     },
+            //     icon: Icon(Icons.logout)),
           ],
         ),
       )),

@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:parqran/component/bottomNavbar.dart';
 import 'package:parqran/component/floatButton.dart';
 import 'package:parqran/model/services.dart';
+import 'package:parqran/views/landingPage.dart';
 import 'package:parqran/views/pengendara/loadingPage.dart';
 import '../../model/person.dart';
 import '../../model/personCard.dart';
 import 'dart:convert' as convert;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:restart_app/restart_app.dart';
+
+GoogleSignIn _googleSignIn = GoogleSignIn(
+  scopes: [
+    'email',
+    'https://www.googleapis.com/auth/contacts.readonly',
+  ],
+);
 
 class Profil extends StatefulWidget {
   final String email;
@@ -33,6 +43,15 @@ class _ProfilState extends State<Profil> {
     nama = prefs.getString('nama');
     email = prefs.getString('email');
     foto = prefs.getString('foto');
+  }
+
+  GoogleSignInAccount? _currentUser;
+  Future<void> _logOutGoogle() async {
+    try {
+      await _googleSignIn.disconnect();
+    } catch (error) {
+      print(error);
+    }
   }
 
   @override
@@ -70,6 +89,30 @@ class _ProfilState extends State<Profil> {
                             },
                             child: Icon(
                               Icons.arrow_back,
+                              size: 35,
+                              color: Color.fromRGBO(52, 152, 219, 1),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 18),
+                          child: GestureDetector(
+                            onTap: () async {
+                              final SharedPreferences prefs = await _prefs;
+                              prefs.clear();
+                              _googleSignIn.disconnect();
+                              _googleSignIn.signOut();
+                              setState(() {});
+                              // Restart.restartApp();
+                              Navigator.pushReplacement(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return LandingPage(
+                                  isLogOut: true,
+                                );
+                              }));
+                            },
+                            child: Icon(
+                              Icons.logout,
                               size: 35,
                               color: Color.fromRGBO(52, 152, 219, 1),
                             ),

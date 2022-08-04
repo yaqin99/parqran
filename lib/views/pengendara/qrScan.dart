@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:parqran/views/pengendara/mainMenu.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:geolocator/geolocator.dart';
 
 class QrScan extends StatefulWidget {
   const QrScan({Key? key}) : super(key: key);
@@ -16,10 +18,52 @@ class _QrScanState extends State<QrScan> {
   QRViewController? controller;
   Barcode? data;
 
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    Position lokasi;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      await Geolocator.openAppSettings();
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    lokasi = await Geolocator.getCurrentPosition();
+    print(lokasi.latitude);
+    print(lokasi.longitude);
+
+    return lokasi;
+  }
+
   getCamera() async {
     await controller?.flipCamera();
     await controller?.flipCamera();
     print('getData Called');
+
     setState(() {});
   }
 
@@ -39,6 +83,8 @@ class _QrScanState extends State<QrScan> {
   void initState() {
     // TODO: implement initState
     getCamera();
+    _determinePosition();
+
     super.initState();
   }
 
@@ -52,47 +98,14 @@ class _QrScanState extends State<QrScan> {
   @override
   Widget build(BuildContext context) => SafeArea(
           child: Scaffold(
-        body: GestureDetector(
-          onTap: () async {
-            setState(() {});
-            clicked = true;
-            print(clicked);
-            await controller?.flipCamera();
-            await controller?.flipCamera();
-          },
-          child: Stack(
-            children: [
-              buildQrView(context),
-              // Positioned(
-              //     bottom: 30,
-              //     child: Container(
-              //       margin: const EdgeInsets.all(8),
-              //       child: ElevatedButton(
-              //           onPressed: () async {
-              //             setState(() {});
-              //             await controller?.flipCamera();
-              //             await controller?.flipCamera();
-              //           },
-              //           child: FutureBuilder(
-              //             future: controller?.getCameraInfo(),
-              //             builder: (context, snapshot) {
-              //               if (snapshot.data != null) {
-              //                 return Text(
-              //                     'Camera facing ${describeEnum(snapshot.data!)}');
-              //               } else {
-              //                 return const Text('loading');
-              //               }
-              //             },
-              //           )),
-              //     )),
-              Positioned(
-                  left: (clicked == false)
-                      ? MediaQuery.of(context).size.width * 0.33
-                      : MediaQuery.of(context).size.width * 0.22,
-                  bottom: MediaQuery.of(context).size.width * 0.4,
-                  child: Center(child: buildResult()))
-            ],
-          ),
+        body: Stack(
+          children: [
+            buildQrView(context),
+            Positioned(
+                left: MediaQuery.of(context).size.width * 0.22,
+                bottom: MediaQuery.of(context).size.width * 0.4,
+                child: Center(child: buildResult()))
+          ],
         ),
       ));
 
@@ -103,9 +116,7 @@ class _QrScanState extends State<QrScan> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text((clicked == true)
-                ? 'Arahkan Camera pada Qr Code '
-                : 'Ketuk Untuk Scan'),
+            Text('Arahkan Camera pada Qr Code '),
           ],
         ),
       );
@@ -128,7 +139,6 @@ class _QrScanState extends State<QrScan> {
           this.data = scanData;
 
           controller.stopCamera();
-
           Navigator.pop(context);
         })));
     @override
