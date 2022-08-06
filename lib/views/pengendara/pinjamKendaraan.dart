@@ -5,6 +5,7 @@ import 'package:parqran/component/floatButton.dart';
 import 'package:parqran/component/history.dart';
 import 'package:parqran/component/motor.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:parqran/views/pengendara/confirmPinjam.dart';
 
 class PinjamKendaraan extends StatefulWidget {
   const PinjamKendaraan({Key? key}) : super(key: key);
@@ -240,11 +241,51 @@ class _PinjamKendaraanState extends State<PinjamKendaraan> {
                                           color:
                                               Color.fromRGBO(52, 152, 219, 1)),
                                     ),
-                                    DaftarKendaraan(),
-                                    DaftarKendaraan(),
-                                    DaftarKendaraan(),
-                                    DaftarKendaraan(),
-                                    DaftarKendaraan(),
+                                    GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return ConfirmPinjam();
+                                          }));
+                                        },
+                                        child: DaftarKendaraan()),
+                                    GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return ConfirmPinjam();
+                                          }));
+                                        },
+                                        child: DaftarKendaraan()),
+                                    GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return ConfirmPinjam();
+                                          }));
+                                        },
+                                        child: DaftarKendaraan()),
+                                    GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return ConfirmPinjam();
+                                          }));
+                                        },
+                                        child: DaftarKendaraan()),
+                                    GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return ConfirmPinjam();
+                                          }));
+                                        },
+                                        child: DaftarKendaraan()),
                                   ],
                                 ),
                               ),

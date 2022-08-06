@@ -3,6 +3,7 @@ import 'package:parqran/component/bottomNavbar.dart';
 import 'package:parqran/component/floatButton.dart';
 import 'package:parqran/component/motor.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:parqran/views/pengendara/detailMotor.dart';
 
 class DaftarMotor extends StatefulWidget {
   const DaftarMotor({Key? key}) : super(key: key);
@@ -137,11 +138,14 @@ class _DaftarMotorState extends State<DaftarMotor> {
                     Column(
                       children: [
                         GestureDetector(
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return DetailMotor();
+                            }));
+                          },
                           onLongPressStart: (a) {
-                            setState(() {
-                              hold = true;
-                              warna = Color.fromRGBO(52, 152, 219, 1);
-                            });
+                            setState(() {});
                           },
                           child: Motor(
                             nama: 'Honda Vario 150',
@@ -151,10 +155,16 @@ class _DaftarMotorState extends State<DaftarMotor> {
                           ),
                         ),
                         GestureDetector(
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return DetailMotor();
+                            }));
+                          },
                           onLongPressStart: (a) {
                             setState(() {
-                              hold = true;
-                              warna = Color.fromRGBO(52, 152, 219, 1);
+                              // hold = true;
+                              // warna = Color.fromRGBO(52, 152, 219, 1);
                             });
                           },
                           child: Motor(

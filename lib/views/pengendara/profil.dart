@@ -60,6 +60,8 @@ class _ProfilState extends State<Profil> {
     super.initState();
   }
 
+  bool textFieldActivated = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,30 +96,6 @@ class _ProfilState extends State<Profil> {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 18),
-                          child: GestureDetector(
-                            onTap: () async {
-                              final SharedPreferences prefs = await _prefs;
-                              prefs.clear();
-                              _googleSignIn.disconnect();
-                              _googleSignIn.signOut();
-                              setState(() {});
-                              // Restart.restartApp();
-                              Navigator.pushReplacement(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return LandingPage(
-                                  isLogOut: true,
-                                );
-                              }));
-                            },
-                            child: Icon(
-                              Icons.logout,
-                              size: 35,
-                              color: Color.fromRGBO(52, 152, 219, 1),
-                            ),
-                          ),
-                        ),
                         Text(
                           'Profil',
                           style: TextStyle(
@@ -125,6 +103,35 @@ class _ProfilState extends State<Profil> {
                               fontWeight: FontWeight.w400,
                               color: Color.fromRGBO(52, 152, 219, 1)),
                         ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.645,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              GestureDetector(
+                                onTap: () async {
+                                  final SharedPreferences prefs = await _prefs;
+                                  prefs.setBool('accCheck', true);
+                                  // prefs.clear();
+
+                                  // setState(() {});
+                                  // Restart.restartApp();
+                                  Navigator.pushReplacement(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return LandingPage(
+                                      isLogOut: true,
+                                    );
+                                  }));
+                                },
+                                child: Icon(
+                                  Icons.logout,
+                                  size: 35,
+                                  color: Color.fromRGBO(52, 152, 219, 1),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
                       ],
                     )),
                   ),

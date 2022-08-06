@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:parqran/component/pickVehicleButton.dart';
 import 'package:parqran/views/pengendara/mainMenu.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:geolocator/geolocator.dart';
@@ -102,13 +103,58 @@ class _QrScanState extends State<QrScan> {
           children: [
             buildQrView(context),
             Positioned(
+                left: MediaQuery.of(context).size.width * 0.31,
+                top: MediaQuery.of(context).size.width * 0.1,
+                child: Center(
+                  child: pickVehicle(),
+                )),
+            Positioned(
                 left: MediaQuery.of(context).size.width * 0.22,
                 bottom: MediaQuery.of(context).size.width * 0.4,
                 child: Center(child: buildResult()))
           ],
         ),
       ));
-
+  Widget pickVehicle() => Container(
+        decoration: BoxDecoration(
+            color: Colors.transparent,
+            // border: Border.all(color: Colors.white, width: 3),
+            borderRadius: BorderRadius.circular(15)),
+        width: MediaQuery.of(context).size.width * 0.375,
+        height: MediaQuery.of(context).size.height * 0.07,
+        child: ListView(scrollDirection: Axis.horizontal, children: [
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Container(
+                width: MediaQuery.of(context).size.width * 0.36,
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(52, 152, 219, 1),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Center(child: PickVehicleButton(name: 'Vario 150'))),
+            Container(
+                width: MediaQuery.of(context).size.width * 0.36,
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(52, 152, 219, 1),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Center(child: PickVehicleButton(name: 'Yamaha Mio'))),
+            Container(
+                width: MediaQuery.of(context).size.width * 0.36,
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(52, 152, 219, 1),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Center(child: PickVehicleButton(name: 'KLX 150'))),
+            Container(
+                width: MediaQuery.of(context).size.width * 0.36,
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(52, 152, 219, 1),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Center(child: PickVehicleButton(name: 'Yamaha Ninja'))),
+          ]),
+        ]),
+      );
   Widget buildResult() => Container(
         padding: EdgeInsets.all(12),
         decoration: BoxDecoration(

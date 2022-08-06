@@ -4,6 +4,7 @@ import 'package:parqran/component/floatButton.dart';
 import 'package:parqran/component/motor.dart';
 import 'package:parqran/component/mobil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:parqran/views/pengendara/detailMobil.dart';
 
 class DaftarMobil extends StatefulWidget {
   const DaftarMobil({Key? key}) : super(key: key);
@@ -138,6 +139,12 @@ class _DaftarMobilState extends State<DaftarMobil> {
                     Column(
                       children: [
                         GestureDetector(
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return DetailMobil();
+                            }));
+                          },
                           onLongPressStart: (a) {
                             setState(() {
                               hold = true;

@@ -45,6 +45,16 @@ class _LandingPageState extends State<LandingPage> {
           ));
 
   GoogleSignInAccount? _currentUser;
+
+  _checkAcc() async {
+    final SharedPreferences prefs = await _prefs;
+
+    if (prefs.getBool('accCheck') == true) {
+      print(prefs.getBool('accCheck'));
+      _googleSignIn.disconnect();
+    }
+  }
+
   bool succeed = false;
   Person? person;
   _handleSignIn() async {
@@ -77,14 +87,16 @@ class _LandingPageState extends State<LandingPage> {
 
   @override
   void initState() {
+    // _checkAcc();
+
     _googleSignIn.onCurrentUserChanged.listen((event) {
       _currentUser = event;
 
       _googleSignIn.signInSilently();
     });
+
     // getData();
     super.initState();
-    getData();
   }
 
   @override
