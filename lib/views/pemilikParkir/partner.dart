@@ -7,6 +7,7 @@ import 'package:parqran/component/motor.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:parqran/component/parkirBottomNavbar.dart';
 import 'package:parqran/component/parkirFloatButton.dart';
+import 'package:parqran/views/pemilikParkir/confirmPartner.dart';
 
 class Partner extends StatefulWidget {
   const Partner({Key? key}) : super(key: key);
@@ -147,83 +148,107 @@ class _PartnerState extends State<Partner> {
                                         fontWeight: FontWeight.bold,
                                         color: Color.fromRGBO(155, 89, 182, 1)),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 20),
-                                    child: Center(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            width: 80,
-                                            height: 80,
-                                            child: ElevatedButton(
-                                                style: ButtonStyle(
-                                                    shape: MaterialStateProperty
-                                                        .all(
-                                                            RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              50),
-                                                      side: BorderSide(
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return ConfirmPartner();
+                                      }));
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(top: 20),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: Colors.transparent)),
+                                        child: Center(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              SizedBox(
+                                                width: 80,
+                                                height: 80,
+                                                child: ElevatedButton(
+                                                    style: ButtonStyle(
+                                                        shape: MaterialStateProperty
+                                                            .all(
+                                                                RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(50),
+                                                          side: BorderSide(
+                                                              color: Color
+                                                                  .fromRGBO(
+                                                                      155,
+                                                                      89,
+                                                                      182,
+                                                                      1),
+                                                              width: 3),
+                                                        )),
+                                                        backgroundColor:
+                                                            MaterialStateProperty
+                                                                .all(Colors
+                                                                    .white)),
+                                                    onPressed: () {},
+                                                    child: Center(
+                                                        child: Icon(
+                                                      Icons.person,
+                                                      color: Color.fromRGBO(
+                                                          155, 89, 182, 1),
+                                                      size: 40,
+                                                    ))),
+                                              ),
+                                              Container(
+                                                margin:
+                                                    EdgeInsets.only(left: 20),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Moh Ainul Yaqin',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          fontSize: 15,
                                                           color: Color.fromRGBO(
-                                                              155, 89, 182, 1),
-                                                          width: 3),
-                                                    )),
-                                                    backgroundColor:
-                                                        MaterialStateProperty
-                                                            .all(Colors.white)),
-                                                onPressed: () {},
-                                                child: Center(
-                                                    child: Icon(
-                                                  Icons.person,
-                                                  color: Color.fromRGBO(
-                                                      155, 89, 182, 1),
-                                                  size: 40,
-                                                ))),
+                                                              155, 89, 182, 1)),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 11,
+                                                              bottom: 11),
+                                                      child: Text(
+                                                        'Jl. Sersan Mesrul Gg. 3B',
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            fontSize: 15,
+                                                            color:
+                                                                Color.fromRGBO(
+                                                                    155,
+                                                                    89,
+                                                                    182,
+                                                                    1)),
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      '085232324069',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          fontSize: 15,
+                                                          color: Color.fromRGBO(
+                                                              155, 89, 182, 1)),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          Container(
-                                            margin: EdgeInsets.only(left: 20),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  'Moh Ainul Yaqin',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontSize: 15,
-                                                      color: Color.fromRGBO(
-                                                          155, 89, 182, 1)),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 11, bottom: 11),
-                                                  child: Text(
-                                                    'Jl. Sersan Mesrul Gg. 3B',
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        fontSize: 15,
-                                                        color: Color.fromRGBO(
-                                                            155, 89, 182, 1)),
-                                                  ),
-                                                ),
-                                                Text(
-                                                  '085232324069',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontSize: 15,
-                                                      color: Color.fromRGBO(
-                                                          155, 89, 182, 1)),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
                                     ),
                                   ),

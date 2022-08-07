@@ -4,6 +4,7 @@ import 'package:parqran/component/floatButton.dart';
 import 'package:parqran/component/motor.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:parqran/views/pengendara/detailMotor.dart';
+import 'package:parqran/views/pengendara/tambahKendaraan.dart';
 
 class DaftarMotor extends StatefulWidget {
   const DaftarMotor({Key? key}) : super(key: key);
@@ -205,7 +206,12 @@ class _DaftarMotorState extends State<DaftarMotor> {
                                                 BorderRadius.circular(50))),
                                     backgroundColor: MaterialStateProperty.all(
                                         Color.fromRGBO(52, 152, 219, 1))),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return TambahKendaraan();
+                                  }));
+                                },
                                 child: Icon(
                                   Icons.add,
                                   color: Colors.white,

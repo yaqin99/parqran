@@ -5,6 +5,7 @@ import 'package:parqran/component/motor.dart';
 import 'package:parqran/component/mobil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:parqran/views/pengendara/detailMobil.dart';
+import 'package:parqran/views/pengendara/tambahKendaraan.dart';
 
 class DaftarMobil extends StatefulWidget {
   const DaftarMobil({Key? key}) : super(key: key);
@@ -189,7 +190,12 @@ class _DaftarMobilState extends State<DaftarMobil> {
                                                 BorderRadius.circular(50))),
                                     backgroundColor: MaterialStateProperty.all(
                                         Color.fromRGBO(52, 152, 219, 1))),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return TambahKendaraan();
+                                  }));
+                                },
                                 child: Icon(
                                   Icons.add,
                                   color: Colors.white,
