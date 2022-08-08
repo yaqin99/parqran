@@ -22,8 +22,13 @@ class TambahKendaraan extends StatefulWidget {
 
 class _TambahKendaraanState extends State<TambahKendaraan> {
   bool hold = false;
-  Color warna = Colors.transparent;
   TextEditingController merk = new TextEditingController();
+  TextEditingController warna = new TextEditingController();
+  String? tipe;
+  TextEditingController noPol = new TextEditingController();
+  TextEditingController noStnk = new TextEditingController();
+  TextEditingController noRangka = new TextEditingController();
+  String? foto;
   bool tipeKendaraanMotor = false;
   bool tipeKendaraanMobil = false;
   Color motorText = Color.fromRGBO(52, 152, 219, 1);
@@ -203,7 +208,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                       width: MediaQuery.of(context).size.width *
                                           0.475,
                                       child: TextField(
-                                        controller: merk,
+                                        controller: warna,
                                         decoration: InputDecoration(
                                             border: OutlineInputBorder(
                                               borderSide: BorderSide(
@@ -380,7 +385,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                       width: MediaQuery.of(context).size.width *
                                           0.475,
                                       child: TextField(
-                                        controller: merk,
+                                        controller: noPol,
                                         decoration: InputDecoration(
                                             border: OutlineInputBorder(
                                               borderSide: BorderSide(
@@ -418,7 +423,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                       width: MediaQuery.of(context).size.width *
                                           0.475,
                                       child: TextField(
-                                        controller: merk,
+                                        controller: noStnk,
                                         decoration: InputDecoration(
                                             border: OutlineInputBorder(
                                               borderSide: BorderSide(
@@ -456,7 +461,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                       width: MediaQuery.of(context).size.width *
                                           0.475,
                                       child: TextField(
-                                        controller: merk,
+                                        controller: noRangka,
                                         decoration: InputDecoration(
                                             border: OutlineInputBorder(
                                               borderSide: BorderSide(

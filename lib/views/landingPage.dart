@@ -45,6 +45,7 @@ class _LandingPageState extends State<LandingPage> {
           ));
 
   GoogleSignInAccount? _currentUser;
+  var response;
 
   _checkAcc() async {
     final SharedPreferences prefs = await _prefs;
@@ -61,6 +62,7 @@ class _LandingPageState extends State<LandingPage> {
     try {
       if (_currentUser == null) {
         await _googleSignIn.signIn();
+        print(_currentUser!.displayName);
       }
     } catch (error) {
       print(error);
@@ -74,12 +76,12 @@ class _LandingPageState extends State<LandingPage> {
 
     if (widget.isLogOut == false) {
       print('anda sudah login');
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-        return MainMenu(
-            email: prefs.getString('email')!,
-            nama: prefs.getString('nama')!,
-            foto: prefs.getString('foto')!);
-      }));
+      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+      //   // return MainMenu(
+      //   //     email: prefs.getString('email')!,
+      //   //     nama: prefs.getString('nama')!,
+      //   //     foto: prefs.getString('foto')!);
+      // }));
     }
 
     ;
@@ -131,27 +133,27 @@ class _LandingPageState extends State<LandingPage> {
                         Color.fromRGBO(52, 152, 219, 1)),
                   ),
                   onPressed: () async {
-                    if (widget.isLogOut == true) {
-                      await _handleSignIn();
-                      print('Masuk');
-                      final SharedPreferences prefs = await _prefs;
-                      prefs.setString('email', _currentUser!.email);
-                      prefs.setString('nama', _currentUser!.displayName!);
-                      prefs.setString('foto', _currentUser!.photoUrl!);
-                      prefs.setBool('liat', true);
+                    await _handleSignIn();
+                    print('Masuk');
+                    final SharedPreferences prefs = await _prefs;
+                    prefs.setString('email', _currentUser!.email);
+                    prefs.setString('nama', _currentUser!.displayName!);
+                    prefs.setString('foto', _currentUser!.photoUrl!);
 
-                      Services.postDataUser(_currentUser!.email,
-                          _currentUser!.displayName!, _currentUser!.photoUrl!);
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) {
-                        return (_currentUser != null)
-                            ? Home(
-                                email: prefs.getString('email')!,
-                                nama: prefs.getString('nama')!,
-                                foto: prefs.getString('foto')!)
-                            : LandingPage(isLogOut: false);
-                      }));
-                    }
+                    response = await Services.postDataUser(_currentUser!.email,
+                        _currentUser!.displayName!, _currentUser!.photoUrl!);
+
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) {
+                      return (_currentUser != null)
+                          ? Home(
+                              email: response['email'],
+                              nama: response['nama'],
+                              foto: response['foto'],
+                              id_pengguna: response['id_pengguna'].toString(),
+                            )
+                          : LandingPage(isLogOut: false);
+                    }));
                   },
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:parqran/component/bottomNavbar.dart';
 import 'package:parqran/component/floatButton.dart';
@@ -112,10 +113,12 @@ class _ProfilState extends State<Profil> {
                                 onTap: () async {
                                   final SharedPreferences prefs = await _prefs;
                                   prefs.setBool('accCheck', true);
-                                  // prefs.clear();
-
+                                  prefs.clear();
+                                  _googleSignIn.disconnect();
+                                  _googleSignIn.signOut();
                                   // setState(() {});
                                   // Restart.restartApp();
+                                  SystemNavigator.pop();
                                   Navigator.pushReplacement(context,
                                       MaterialPageRoute(builder: (context) {
                                     return LandingPage(

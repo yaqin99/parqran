@@ -29,7 +29,25 @@ class ProfilName extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Text(
-        person.nama,
+        '',
+        style: TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.w300,
+            color: Color.fromRGBO(52, 152, 219, 1)),
+      ),
+    );
+  }
+}
+
+class ProfilId extends StatelessWidget {
+  final Person person;
+  const ProfilId({Key? key, required this.person}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Text(
+        person.id_pengguna.toString(),
         style: TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.w300,
@@ -47,7 +65,7 @@ class ProfilEmail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Text(
-        person.email,
+        '',
         style: TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.w300,
@@ -73,7 +91,7 @@ class ProfilAvatar extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(100),
             child: Image.network(
-              person.foto,
+              '',
               fit: BoxFit.fill,
             ),
           ),

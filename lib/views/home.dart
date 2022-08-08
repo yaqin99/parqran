@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:parqran/model/person.dart';
 import 'package:parqran/views/pemilikParkir/PemilikParkirMenu.dart';
 import 'package:parqran/views/pengendara/mainMenu.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -9,8 +10,13 @@ class Home extends StatefulWidget {
   final String email;
   final String nama;
   final String foto;
+  final String id_pengguna;
   const Home(
-      {Key? key, required this.email, required this.nama, required this.foto})
+      {Key? key,
+      required this.email,
+      required this.nama,
+      required this.foto,
+      required this.id_pengguna})
       : super(key: key);
 
   @override
@@ -18,6 +24,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  Person? person;
   Future<bool?> showWarning(BuildContext context) async => showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -70,9 +77,11 @@ class _HomeState extends State<Home> {
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) {
                       return MainMenu(
-                          email: widget.email,
-                          nama: widget.nama,
-                          foto: widget.foto);
+                        email: widget.email,
+                        nama: widget.nama,
+                        foto: widget.foto,
+                        id_pengguna: widget.id_pengguna,
+                      );
                     }));
                   },
                   child: Center(

@@ -23,8 +23,13 @@ class MainMenu extends StatefulWidget {
   final String email;
   final String nama;
   final String foto;
+  final String id_pengguna;
   const MainMenu(
-      {Key? key, required this.email, required this.nama, required this.foto})
+      {Key? key,
+      required this.email,
+      required this.nama,
+      required this.foto,
+      required this.id_pengguna})
       : super(key: key);
 
   @override
