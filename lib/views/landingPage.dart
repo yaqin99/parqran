@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:parqran/component/logo.dart';
-import 'package:parqran/model/loginData.dart';
 import 'package:parqran/model/services.dart';
+import 'package:parqran/model/userModel.dart';
 import 'package:parqran/views/home.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:parqran/views/pengendara/mainMenu.dart';
-import '../../model/person.dart';
-import '../../model/personCard.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
+import '../../model/person.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
   scopes: [
@@ -29,7 +27,7 @@ class _LandingPageState extends State<LandingPage> {
   Future<bool?> showWarning(BuildContext context) async => showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-            title: Text('Are you sure want to Exit?'),
+            title: const Text('Are you sure want to Exit?'),
             actions: [
               ElevatedButton(
                   onPressed: () {
@@ -45,7 +43,6 @@ class _LandingPageState extends State<LandingPage> {
           ));
 
   GoogleSignInAccount? _currentUser;
-  var response;
 
   _checkAcc() async {
     final SharedPreferences prefs = await _prefs;
@@ -57,7 +54,6 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   bool succeed = false;
-  Person? person;
   _handleSignIn() async {
     try {
       if (_currentUser == null) {
@@ -93,7 +89,6 @@ class _LandingPageState extends State<LandingPage> {
 
     _googleSignIn.onCurrentUserChanged.listen((event) {
       _currentUser = event;
-
       _googleSignIn.signInSilently();
     });
 
@@ -134,25 +129,18 @@ class _LandingPageState extends State<LandingPage> {
                   ),
                   onPressed: () async {
                     await _handleSignIn();
-                    print('Masuk');
                     final SharedPreferences prefs = await _prefs;
                     prefs.setString('email', _currentUser!.email);
                     prefs.setString('nama', _currentUser!.displayName!);
                     prefs.setString('foto', _currentUser!.photoUrl!);
 
-                    response = await Services.postDataUser(_currentUser!.email,
+                    // masukkan ke provider
+                    final response = await Services.postDataUser(_currentUser!.email,
                         _currentUser!.displayName!, _currentUser!.photoUrl!);
+                    Provider.of<Person>(context, listen: false).setPerson(response['id_pengguna'], _currentUser!.email, _currentUser!.displayName!, _currentUser!.photoUrl!);
 
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) {
-                      return (_currentUser != null)
-                          ? Home(
-                              email: response['email'],
-                              nama: response['nama'],
-                              foto: response['foto'],
-                              id_pengguna: response['id_pengguna'].toString(),
-                            )
-                          : LandingPage(isLogOut: false);
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+                      return _currentUser != null ? Home() : LandingPage(isLogOut: false);
                     }));
                   },
                   child: Row(

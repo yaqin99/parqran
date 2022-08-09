@@ -1,45 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:parqran/model/person.dart';
 import 'package:parqran/views/pemilikParkir/PemilikParkirMenu.dart';
 import 'package:parqran/views/pengendara/mainMenu.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 import '../component/logo.dart';
 
 class Home extends StatefulWidget {
-  final String email;
-  final String nama;
-  final String foto;
-  final String id_pengguna;
-  const Home(
-      {Key? key,
-      required this.email,
-      required this.nama,
-      required this.foto,
-      required this.id_pengguna})
-      : super(key: key);
+  const Home({Key? key}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  Person? person;
   Future<bool?> showWarning(BuildContext context) async => showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-            title: Text('Are you sure want to Exit?'),
+            title: const Text('Are you sure want to Exit?'),
             actions: [
               ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context, false);
                   },
-                  child: Text('No')),
+                  child: const Text('No')),
               ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context, true);
                   },
-                  child: Text('Yes')),
+                  child: const Text('Yes')),
             ],
           ));
 
@@ -59,7 +46,7 @@ class _HomeState extends State<Home> {
             Container(
               width: MediaQuery.of(context).size.width * 1,
               height: MediaQuery.of(context).size.height * 0.65,
-              child: Logo(),
+              child: const Logo(),
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.8,
@@ -71,20 +58,15 @@ class _HomeState extends State<Home> {
                       borderRadius: BorderRadius.circular(50),
                     )),
                     backgroundColor: MaterialStateProperty.all(
-                        Color.fromRGBO(52, 152, 219, 1)),
+                        const Color.fromRGBO(52, 152, 219, 1)),
                   ),
                   onPressed: () {
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) {
-                      return MainMenu(
-                        email: widget.email,
-                        nama: widget.nama,
-                        foto: widget.foto,
-                        id_pengguna: widget.id_pengguna,
-                      );
+                      return MainMenu();
                     }));
                   },
-                  child: Center(
+                  child: const Center(
                       child: Text('Pemilik Kendaraan',
                           style:
                               TextStyle(color: Colors.white, fontSize: 20)))),
@@ -105,10 +87,10 @@ class _HomeState extends State<Home> {
                     onPressed: () {
                       Navigator.pushReplacement(context,
                           MaterialPageRoute(builder: (context) {
-                        return PemilikParkirMenu();
+                        return const PemilikParkirMenu();
                       }));
                     },
-                    child: Center(
+                    child: const Center(
                         child: Text('Pemilik Parkir',
                             style:
                                 TextStyle(color: Colors.white, fontSize: 20)))),

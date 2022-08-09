@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:parqran/component/bottomNavbar.dart';
 import 'package:parqran/component/floatButton.dart';
-import 'package:parqran/model/loginData.dart';
-import 'package:parqran/model/services.dart';
+import 'package:parqran/model/person.dart';
 import 'package:parqran/views/pengendara/daftarMobil.dart';
 import 'package:parqran/views/pengendara/daftarMotor.dart';
-import 'dart:convert' as convert;
 import 'package:parqran/views/pengendara/historyParkir.dart';
 import 'package:parqran/views/pengendara/loadingPage.dart';
 import 'package:parqran/views/pengendara/pinjamKendaraan.dart';
@@ -14,23 +11,9 @@ import 'package:parqran/views/pengendara/profil.dart';
 import 'package:parqran/views/pengendara/qrGenerate.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../model/person.dart';
-import '../../model/personCard.dart';
-import 'package:parqran/model/loginData.dart';
 
 class MainMenu extends StatefulWidget {
-  final String email;
-  final String nama;
-  final String foto;
-  final String id_pengguna;
-  const MainMenu(
-      {Key? key,
-      required this.email,
-      required this.nama,
-      required this.foto,
-      required this.id_pengguna})
-      : super(key: key);
+  const MainMenu({Key? key}) : super(key: key);
 
   @override
   State<MainMenu> createState() => _MainMenuState();
@@ -41,25 +24,26 @@ class _MainMenuState extends State<MainMenu> {
   Future<bool?> showWarning(BuildContext context) async => showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-            title: Text('Are you sure want to Exit?'),
+            title: const Text('Are you sure want to Exit?'),
             actions: [
               ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context, false);
                   },
-                  child: Text('No')),
+                  child: const Text('No')),
               ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context, true);
                   },
-                  child: Text('Yes')),
+                  child: const Text('Yes')),
             ],
           ));
 
-  LoginData? loginData;
-
   @override
   Widget build(BuildContext context) {
+    final String nama = Provider.of<Person>(context, listen: false).nama;
+    final String idPengguna = Provider.of<Person>(context, listen: false).getIdPengguna.toString();
+
     return WillPopScope(
       onWillPop: () async {
         print('Back Button Pressed');
@@ -69,7 +53,7 @@ class _MainMenuState extends State<MainMenu> {
       },
       child: Scaffold(
           body: Center(
-            child: (widget.nama == null)
+            child: (nama == null)
                 ? LoadingPage()
                 : Container(
                     // decoration: BoxDecoration(border: Border.all(color: Colors.black)),
@@ -83,7 +67,7 @@ class _MainMenuState extends State<MainMenu> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('Selamat Datang ' + widget.nama),
+                                Text('Selamat Datang ' + nama + ' -- ' + idPengguna),
                                 // PersonName(person: person!),
                                 SizedBox(
                                   width: 60,
@@ -100,10 +84,10 @@ class _MainMenuState extends State<MainMenu> {
                                         Navigator.push(context,
                                             MaterialPageRoute(
                                                 builder: (context) {
-                                          return Profil(
-                                              email: widget.email,
-                                              nama: widget.nama,
-                                              foto: widget.foto);
+                                          return const Profil(
+                                              email: '',
+                                              nama: '',
+                                              foto: '');
                                         }));
                                       },
                                       child: Center(
