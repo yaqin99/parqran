@@ -44,44 +44,17 @@ class _LandingPageState extends State<LandingPage> {
 
   GoogleSignInAccount? _currentUser;
 
-  _checkAcc() async {
-    final SharedPreferences prefs = await _prefs;
-
-    if (prefs.getBool('accCheck') == true) {
-      print(prefs.getBool('accCheck'));
-      _googleSignIn.disconnect();
-    }
-  }
-
   bool succeed = false;
   _handleSignIn() async {
     try {
-      if (_currentUser == null) {
-        await _googleSignIn.signIn();
-        print(_currentUser!.displayName);
-      }
+      await _googleSignIn.signIn();
+      print(_currentUser!.displayName);
     } catch (error) {
       print(error);
     }
   }
 
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-
-  Future<void> getData() async {
-    final SharedPreferences prefs = await _prefs;
-
-    if (widget.isLogOut == false) {
-      print('anda sudah login');
-      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-      //   // return MainMenu(
-      //   //     email: prefs.getString('email')!,
-      //   //     nama: prefs.getString('nama')!,
-      //   //     foto: prefs.getString('foto')!);
-      // }));
-    }
-
-    ;
-  }
 
   @override
   void initState() {
@@ -128,19 +101,28 @@ class _LandingPageState extends State<LandingPage> {
                         Color.fromRGBO(52, 152, 219, 1)),
                   ),
                   onPressed: () async {
-                    await _handleSignIn();
+                    _handleSignIn();
                     final SharedPreferences prefs = await _prefs;
                     prefs.setString('email', _currentUser!.email);
                     prefs.setString('nama', _currentUser!.displayName!);
                     prefs.setString('foto', _currentUser!.photoUrl!);
 
                     // masukkan ke provider
-                    final response = await Services.postDataUser(_currentUser!.email,
-                        _currentUser!.displayName!, _currentUser!.photoUrl!);
-                    Provider.of<Person>(context, listen: false).setPerson(response['id_pengguna'], _currentUser!.email, _currentUser!.displayName!, _currentUser!.photoUrl!);
+                    final response = await Services.postDataUser(
+                        _currentUser!.email,
+                        _currentUser!.displayName!,
+                        _currentUser!.photoUrl!);
+                    Provider.of<Person>(context, listen: false).setPerson(
+                        response['id_pengguna'],
+                        _currentUser!.email,
+                        _currentUser!.displayName!,
+                        _currentUser!.photoUrl!);
 
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-                      return _currentUser != null ? Home() : LandingPage(isLogOut: false);
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) {
+                      return _currentUser != null
+                          ? Home()
+                          : LandingPage(isLogOut: false);
                     }));
                   },
                   child: Row(

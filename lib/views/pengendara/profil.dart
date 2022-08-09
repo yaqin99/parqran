@@ -12,6 +12,8 @@ import 'dart:convert' as convert;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:restart_app/restart_app.dart';
+import 'package:provider/provider.dart';
+import 'package:parqran/model/person.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
   scopes: [
@@ -21,12 +23,7 @@ GoogleSignIn _googleSignIn = GoogleSignIn(
 );
 
 class Profil extends StatefulWidget {
-  final String email;
-  final String nama;
-  final String foto;
-  const Profil(
-      {Key? key, required this.email, required this.nama, required this.foto})
-      : super(key: key);
+  const Profil({Key? key}) : super(key: key);
   @override
   State<Profil> createState() => _ProfilState();
 }
@@ -34,17 +31,6 @@ class Profil extends StatefulWidget {
 class _ProfilState extends State<Profil> {
   bool hold = false;
   Color warna = Colors.transparent;
-  String? nama;
-  String? email;
-  String? foto;
-  Person? person;
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  void data() async {
-    final SharedPreferences prefs = await _prefs;
-    nama = prefs.getString('nama');
-    email = prefs.getString('email');
-    foto = prefs.getString('foto');
-  }
 
   GoogleSignInAccount? _currentUser;
   Future<void> _logOutGoogle() async {
@@ -54,6 +40,8 @@ class _ProfilState extends State<Profil> {
       print(error);
     }
   }
+
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   @override
   void initState() {
@@ -65,9 +53,14 @@ class _ProfilState extends State<Profil> {
 
   @override
   Widget build(BuildContext context) {
+    final String nama = Provider.of<Person>(context, listen: false).nama;
+    final String foto = Provider.of<Person>(context, listen: false).foto;
+    final String email = Provider.of<Person>(context, listen: false).email;
+    final String idPengguna =
+        Provider.of<Person>(context, listen: false).getIdPengguna.toString();
     return Scaffold(
       body: Center(
-        child: (widget.nama == null)
+        child: (nama == null)
             ? LoadingPage()
             : Container(
                 // decoration: BoxDecoration(border: Border.all(color: Colors.black)),
@@ -144,7 +137,7 @@ class _ProfilState extends State<Profil> {
                     width: MediaQuery.of(context).size.width * 0.4875,
                     height: MediaQuery.of(context).size.height * 0.237,
                     child: Stack(children: [
-                      (widget.foto != null)
+                      (foto != null)
                           ? Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -158,7 +151,7 @@ class _ProfilState extends State<Profil> {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(100),
                                     child: Image.network(
-                                      widget.foto,
+                                      foto,
                                       fit: BoxFit.fill,
                                     ),
                                   ),
@@ -247,7 +240,7 @@ class _ProfilState extends State<Profil> {
                                     ),
                                     Container(
                                       child: Text(
-                                        widget.nama,
+                                        nama,
                                         style: TextStyle(
                                             fontSize: 17,
                                             fontWeight: FontWeight.w300,
@@ -342,7 +335,7 @@ class _ProfilState extends State<Profil> {
                                     ),
                                     Container(
                                       child: Text(
-                                        widget.email,
+                                        email,
                                         style: TextStyle(
                                             fontSize: 17,
                                             fontWeight: FontWeight.w300,

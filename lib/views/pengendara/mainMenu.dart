@@ -42,7 +42,8 @@ class _MainMenuState extends State<MainMenu> {
   @override
   Widget build(BuildContext context) {
     final String nama = Provider.of<Person>(context, listen: false).nama;
-    final String idPengguna = Provider.of<Person>(context, listen: false).getIdPengguna.toString();
+    final String idPengguna =
+        Provider.of<Person>(context, listen: false).getIdPengguna.toString();
 
     return WillPopScope(
       onWillPop: () async {
@@ -67,7 +68,7 @@ class _MainMenuState extends State<MainMenu> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('Selamat Datang ' + nama + ' -- ' + idPengguna),
+                                Text('Selamat Datang ' + nama),
                                 // PersonName(person: person!),
                                 SizedBox(
                                   width: 60,
@@ -84,10 +85,7 @@ class _MainMenuState extends State<MainMenu> {
                                         Navigator.push(context,
                                             MaterialPageRoute(
                                                 builder: (context) {
-                                          return const Profil(
-                                              email: '',
-                                              nama: '',
-                                              foto: '');
+                                          return const Profil();
                                         }));
                                       },
                                       child: Center(

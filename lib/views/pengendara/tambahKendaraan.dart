@@ -7,6 +7,8 @@ import 'package:parqran/views/landingPage.dart';
 import 'package:parqran/views/pengendara/loadingPage.dart';
 import '../../model/person.dart';
 import '../../model/personCard.dart';
+import 'package:provider/provider.dart';
+
 import 'dart:convert' as convert;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,10 +24,11 @@ class TambahKendaraan extends StatefulWidget {
 
 class _TambahKendaraanState extends State<TambahKendaraan> {
   bool hold = false;
+  TextEditingController nama = new TextEditingController();
   TextEditingController merk = new TextEditingController();
   TextEditingController warna = new TextEditingController();
   String? tipe;
-  TextEditingController noPol = new TextEditingController();
+  TextEditingController noRegistrasi = new TextEditingController();
   TextEditingController noStnk = new TextEditingController();
   TextEditingController noRangka = new TextEditingController();
   String? foto;
@@ -35,6 +38,31 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
   Color mobilText = Color.fromRGBO(52, 152, 219, 1);
   Color? warnaMotorButton;
   Color? warnaMobilButton;
+  var response;
+  postVehicle() async {
+    final String idPengguna =
+        Provider.of<Person>(context, listen: false).getIdPengguna.toString();
+    response = await AddKendaraan.postDataKendaraan(
+        int.parse(idPengguna),
+        tipe!,
+        nama.text,
+        merk.text,
+        warna.text,
+        noRegistrasi.text,
+        noRangka.text,
+        noStnk.text);
+
+    setState(() {
+      nama.text = '';
+      tipe = '';
+      merk.text = '';
+      warna.text = '';
+      noRegistrasi.text = '';
+      noRangka.text = '';
+      noStnk.text = '';
+      Navigator.pop(context);
+    });
+  }
 
   @override
   void initState() {
@@ -156,6 +184,44 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                 child: Row(
                                   children: [
                                     Padding(
+                                      padding: const EdgeInsets.only(right: 62),
+                                      child: Text(
+                                        'Nama',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 17,
+                                            color: Color.fromRGBO(
+                                                52, 152, 219, 1)),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.475,
+                                      child: TextField(
+                                        controller: nama,
+                                        decoration: InputDecoration(
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.brown),
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                            filled: true,
+                                            hintStyle:
+                                                TextStyle(color: Colors.pink),
+                                            fillColor: Colors.white70),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(top: 10),
+                                // decoration: BoxDecoration(
+                                //     border: Border.all(color: Colors.black)),
+                                child: Row(
+                                  children: [
+                                    Padding(
                                       padding: const EdgeInsets.only(right: 66),
                                       child: Text(
                                         'Merk',
@@ -258,6 +324,8 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                           children: [
                                             GestureDetector(
                                               onTap: () {
+                                                tipe = 'Motor';
+                                                print('tipe $tipe');
                                                 tipeKendaraanMotor = true;
                                                 tipeKendaraanMobil = false;
                                                 motorText = Color.fromRGBO(
@@ -310,6 +378,8 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                             ),
                                             GestureDetector(
                                               onTap: () {
+                                                tipe = 'Mobil';
+                                                print('tipe $tipe');
                                                 tipeKendaraanMobil = true;
                                                 tipeKendaraanMotor = false;
                                                 mobilText = Color.fromRGBO(
@@ -385,7 +455,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                       width: MediaQuery.of(context).size.width *
                                           0.475,
                                       child: TextField(
-                                        controller: noPol,
+                                        controller: noRegistrasi,
                                         decoration: InputDecoration(
                                             border: OutlineInputBorder(
                                               borderSide: BorderSide(
@@ -576,12 +646,16 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                           style: ButtonStyle(
                                               shape: MaterialStateProperty.all(
                                                   RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(
-                                                          10))),
-                                              backgroundColor: MaterialStateProperty.all(
-                                                  Color.fromRGBO(
-                                                      52, 152, 219, 1))),
-                                          onPressed: () {},
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10))),
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      Color.fromRGBO(
+                                                          52, 152, 219, 1))),
+                                          onPressed: () {
+                                            postVehicle();
+                                          },
                                           child: Center(
                                               child: Text('Tambah',
                                                   style: TextStyle(
