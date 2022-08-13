@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:parqran/component/parkirBottomNavbar.dart';
 import 'package:parqran/component/parkirFloatButton.dart';
 import 'package:parqran/component/parkiran.dart';
+import 'package:parqran/views/pemilikParkir/tambahParkir.dart';
 
 class DaftarParkiran extends StatefulWidget {
   const DaftarParkiran({Key? key}) : super(key: key);
@@ -179,7 +180,15 @@ class _DaftarParkiranState extends State<DaftarParkiran> {
                                                 BorderRadius.circular(50))),
                                     backgroundColor: MaterialStateProperty.all(
                                         Color.fromRGBO(155, 89, 182, 1))),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return TambahParkiran(
+                                      latitude: -0,
+                                      longitude: 12,
+                                    );
+                                  }));
+                                },
                                 child: Icon(
                                   Icons.add,
                                   color: Colors.white,

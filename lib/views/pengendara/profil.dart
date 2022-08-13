@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:parqran/component/bottomNavbar.dart';
 import 'package:parqran/component/floatButton.dart';
+import 'package:parqran/component/parkirBottomNavbar.dart';
+import 'package:parqran/component/parkirFloatButton.dart';
 import 'package:parqran/model/services.dart';
 import 'package:parqran/views/landingPage.dart';
 import 'package:parqran/views/pengendara/loadingPage.dart';
@@ -23,14 +25,21 @@ GoogleSignIn _googleSignIn = GoogleSignIn(
 );
 
 class Profil extends StatefulWidget {
-  const Profil({Key? key}) : super(key: key);
+  final bool addWarna;
+  const Profil({Key? key, required this.addWarna}) : super(key: key);
   @override
   State<Profil> createState() => _ProfilState();
 }
 
 class _ProfilState extends State<Profil> {
   bool hold = false;
-  Color warna = Colors.transparent;
+
+  Color warna = Color.fromRGBO(52, 152, 219, 1);
+  colorCheck() {
+    if (widget.addWarna == true) {
+      warna = Color.fromRGBO(155, 89, 182, 1);
+    }
+  }
 
   GoogleSignInAccount? _currentUser;
   Future<void> _logOutGoogle() async {
@@ -45,6 +54,7 @@ class _ProfilState extends State<Profil> {
 
   @override
   void initState() {
+    colorCheck();
     // TODO: implement initState
     super.initState();
   }
@@ -86,7 +96,7 @@ class _ProfilState extends State<Profil> {
                             child: Icon(
                               Icons.arrow_back,
                               size: 35,
-                              color: Color.fromRGBO(52, 152, 219, 1),
+                              color: warna,
                             ),
                           ),
                         ),
@@ -95,7 +105,7 @@ class _ProfilState extends State<Profil> {
                           style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w400,
-                              color: Color.fromRGBO(52, 152, 219, 1)),
+                              color: warna),
                         ),
                         Container(
                           width: MediaQuery.of(context).size.width * 0.645,
@@ -122,7 +132,7 @@ class _ProfilState extends State<Profil> {
                                 child: Icon(
                                   Icons.logout,
                                   size: 35,
-                                  color: Color.fromRGBO(52, 152, 219, 1),
+                                  color: warna,
                                 ),
                               ),
                             ],
@@ -186,7 +196,7 @@ class _ProfilState extends State<Profil> {
                                       child: FaIcon(
                                         FontAwesomeIcons.userLarge,
                                         size: 100,
-                                        color: Color.fromRGBO(52, 152, 219, 1),
+                                        color: warna,
                                       )),
                                 ),
                               ],
@@ -202,8 +212,8 @@ class _ProfilState extends State<Profil> {
                                       RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(50),
                                   )),
-                                  backgroundColor: MaterialStateProperty.all(
-                                      Color.fromRGBO(52, 152, 219, 1))),
+                                  backgroundColor:
+                                      MaterialStateProperty.all(warna)),
                               onPressed: () {},
                               child: Icon(Icons.camera_alt_rounded,
                                   color: Colors.white)),
@@ -234,8 +244,7 @@ class _ProfilState extends State<Profil> {
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 17,
-                                            color: Color.fromRGBO(
-                                                52, 152, 219, 1)),
+                                            color: warna),
                                       ),
                                     ),
                                     Container(
@@ -244,8 +253,7 @@ class _ProfilState extends State<Profil> {
                                         style: TextStyle(
                                             fontSize: 17,
                                             fontWeight: FontWeight.w300,
-                                            color: Color.fromRGBO(
-                                                52, 152, 219, 1)),
+                                            color: warna),
                                       ),
                                     )
                                   ],
@@ -267,8 +275,7 @@ class _ProfilState extends State<Profil> {
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 17,
-                                            color: Color.fromRGBO(
-                                                52, 152, 219, 1)),
+                                            color: warna),
                                       ),
                                     ),
                                     Text(
@@ -276,8 +283,7 @@ class _ProfilState extends State<Profil> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.w300,
                                           fontSize: 17,
-                                          color:
-                                              Color.fromRGBO(52, 152, 219, 1)),
+                                          color: warna),
                                     ),
                                   ],
                                 ),
@@ -298,8 +304,7 @@ class _ProfilState extends State<Profil> {
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 17,
-                                            color: Color.fromRGBO(
-                                                52, 152, 219, 1)),
+                                            color: warna),
                                       ),
                                     ),
                                     Text(
@@ -307,8 +312,7 @@ class _ProfilState extends State<Profil> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.w300,
                                           fontSize: 17,
-                                          color:
-                                              Color.fromRGBO(52, 152, 219, 1)),
+                                          color: warna),
                                     ),
                                   ],
                                 ),
@@ -329,8 +333,7 @@ class _ProfilState extends State<Profil> {
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 17,
-                                            color: Color.fromRGBO(
-                                                52, 152, 219, 1)),
+                                            color: warna),
                                       ),
                                     ),
                                     Container(
@@ -339,8 +342,7 @@ class _ProfilState extends State<Profil> {
                                         style: TextStyle(
                                             fontSize: 17,
                                             fontWeight: FontWeight.w300,
-                                            color: Color.fromRGBO(
-                                                52, 152, 219, 1)),
+                                            color: warna),
                                       ),
                                     )
                                   ],
@@ -362,8 +364,7 @@ class _ProfilState extends State<Profil> {
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 17,
-                                            color: Color.fromRGBO(
-                                                52, 152, 219, 1)),
+                                            color: warna),
                                       ),
                                     ),
                                     Text(
@@ -371,8 +372,7 @@ class _ProfilState extends State<Profil> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.w300,
                                           fontSize: 17,
-                                          color:
-                                              Color.fromRGBO(52, 152, 219, 1)),
+                                          color: warna),
                                     ),
                                   ],
                                 ),
@@ -387,8 +387,10 @@ class _ProfilState extends State<Profil> {
               ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FLoatButton(),
-      bottomNavigationBar: BottomNavbar(),
+      floatingActionButton:
+          (widget.addWarna == true) ? ParkirFloatButton() : FLoatButton(),
+      bottomNavigationBar:
+          (widget.addWarna == true) ? ParkirBotNav() : BottomNavbar(),
     );
   }
 }

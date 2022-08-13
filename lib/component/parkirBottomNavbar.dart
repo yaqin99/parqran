@@ -41,10 +41,10 @@ class _ParkirBotNavState extends State<ParkirBotNav> {
                           color: Colors.white)),
                   IconButton(
                       onPressed: () {
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (context) {
-                          return DaftarMobil();
-                        }));
+                        // Navigator.pushReplacement(context,
+                        //     MaterialPageRoute(builder: (context) {
+                        //   return DaftarMobil();
+                        // }));
                       },
                       icon: FaIcon(
                         FontAwesomeIcons.circleDollarToSlot,

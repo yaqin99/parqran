@@ -1,9 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 abstract class Services {
   static Future postDataUser(String email, String nama, String foto) async {
     try {
-      var data = await Dio().post('http://192.168.43.95:8080/auth', data: {
+      var data = await Dio().post('http://192.168.114.79:8080/auth', data: {
         'email': email,
         'nama': nama,
         'foto': foto,
@@ -13,6 +14,18 @@ abstract class Services {
       print(e);
       // throw ExcReption(e.toString());
     }
+  }
+
+  static GraphQLClient? client;
+
+  static _checkGraphql() {
+    final HttpLink httpLink = HttpLink('http://192.168.114.79:8080/graphql');
+    client = GraphQLClient(link: httpLink, cache: GraphQLCache());
+  }
+
+  static Future<QueryResult> gqlQuery(QueryOptions query) {
+    _checkGraphql();
+    return client!.query(query);
   }
 }
 
@@ -28,7 +41,7 @@ abstract class AddKendaraan {
       String no_stnk) async {
     try {
       var vehicle =
-          await Dio().post('http://192.168.43.95:8080/vehicle', data: {
+          await Dio().post('http://192.168.114.79:8080/vehicle', data: {
         'id_pengguna': id_pengguna,
         'jenis': jenis,
         'nama': nama,

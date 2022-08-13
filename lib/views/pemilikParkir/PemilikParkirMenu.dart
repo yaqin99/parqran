@@ -12,6 +12,7 @@ import 'package:parqran/views/pengendara/daftarMotor.dart';
 import 'package:parqran/views/pengendara/historyParkir.dart';
 import 'package:parqran/views/pengendara/pinjamKendaraan.dart';
 import 'package:http/http.dart';
+import 'package:parqran/views/pengendara/profil.dart';
 
 class PemilikParkirMenu extends StatefulWidget {
   const PemilikParkirMenu({Key? key}) : super(key: key);
@@ -70,7 +71,14 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
                                         CircleBorder()),
                                     backgroundColor: MaterialStateProperty.all(
                                         Color.fromRGBO(155, 89, 182, 1))),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return const Profil(
+                                      addWarna: true,
+                                    );
+                                  }));
+                                },
                                 child: Center(
                                     child: Icon(
                                   Icons.person,
@@ -189,10 +197,10 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.pushReplacement(context,
-                                        MaterialPageRoute(builder: (context) {
-                                      return DaftarMobil();
-                                    }));
+                                    // Navigator.pushReplacement(context,
+                                    //     MaterialPageRoute(builder: (context) {
+                                    //   return DaftarMobil();
+                                    // }));
                                   },
                                   child: Container(
                                     height: MediaQuery.of(context).size.height *

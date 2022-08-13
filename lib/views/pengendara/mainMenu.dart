@@ -85,7 +85,9 @@ class _MainMenuState extends State<MainMenu> {
                                         Navigator.push(context,
                                             MaterialPageRoute(
                                                 builder: (context) {
-                                          return const Profil();
+                                          return const Profil(
+                                            addWarna: false,
+                                          );
                                         }));
                                       },
                                       child: Center(

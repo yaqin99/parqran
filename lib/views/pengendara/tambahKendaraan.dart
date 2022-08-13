@@ -324,7 +324,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                           children: [
                                             GestureDetector(
                                               onTap: () {
-                                                tipe = 'Motor';
+                                                tipe = '0';
                                                 print('tipe $tipe');
                                                 tipeKendaraanMotor = true;
                                                 tipeKendaraanMobil = false;
@@ -378,7 +378,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                             ),
                                             GestureDetector(
                                               onTap: () {
-                                                tipe = 'Mobil';
+                                                tipe = '1';
                                                 print('tipe $tipe');
                                                 tipeKendaraanMobil = true;
                                                 tipeKendaraanMotor = false;
