@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:parqran/component/bottomNavbar.dart';
 import 'package:parqran/component/floatButton.dart';
 import 'package:parqran/model/person.dart';
@@ -12,8 +11,6 @@ import 'package:parqran/views/pengendara/profil.dart';
 import 'package:parqran/views/pengendara/qrGenerate.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-
-import '../../model/services.dart';
 
 class MainMenu extends StatefulWidget {
   const MainMenu({Key? key}) : super(key: key);
@@ -52,73 +49,61 @@ class _MainMenuState extends State<MainMenu> {
   @override
   Widget build(BuildContext context) {
     final String nama = Provider.of<Person>(context, listen: false).nama;
-    final String idPengguna =
-        Provider.of<Person>(context, listen: false).getIdPengguna.toString();
+    final String foto = Provider.of<Person>(context, listen: false).foto;
 
     return WillPopScope(
       onWillPop: () async {
-        print('Back Button Pressed');
-
         final shouldPop = await showWarning(context);
         return shouldPop ?? false;
       },
       child: Scaffold(
           body: Center(
-            child: (nama == null)
-                ? LoadingPage()
-                : Container(
+            child: (nama.isEmpty)
+                ? const LoadingPage()
+                : SizedBox(
                     // decoration: BoxDecoration(border: Border.all(color: Colors.black)),
                     width: MediaQuery.of(context).size.width * 0.9,
                     child: Column(
                       children: [
-                        Container(
+                        SizedBox(
                           height: MediaQuery.of(context).size.height * 0.2,
                           width: MediaQuery.of(context).size.width * 1,
                           child: Center(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('Selamat Datang ' + nama),
+                                Text('Selamat Datang $nama'),
                                 // PersonName(person: person!),
                                 SizedBox(
                                   width: 60,
                                   height: 60,
-                                  child: ElevatedButton(
-                                      style: ButtonStyle(
-                                          shape: MaterialStateProperty.all(
-                                              CircleBorder()),
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                                  Color.fromRGBO(
-                                                      52, 152, 219, 1))),
-                                      onPressed: () {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return const Profil(
-                                            addWarna: false,
-                                          );
-                                        }));
-                                      },
-                                      child: Center(
-                                          child: Icon(
-                                        Icons.person,
-                                        color: Colors.white,
-                                        size: 30,
-                                      ))),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => const Profil(addWarna: false),
+                                        ),
+                                      );
+                                    },
+                                    child: CircleAvatar(
+                                      backgroundImage: NetworkImage(foto),
+                                      radius: 10
+                                    ),
+                                  ),
                                 )
                               ],
                             ),
                           ),
                         ),
-                        Container(
+                        SizedBox(
                           height: MediaQuery.of(context).size.height * 0.41,
                           width: MediaQuery.of(context).size.width * 1,
                           child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Container(
+                                SizedBox(
                                   height:
                                       MediaQuery.of(context).size.height * 0.2,
                                   width: MediaQuery.of(context).size.width * 1,
@@ -131,10 +116,10 @@ class _MainMenuState extends State<MainMenu> {
                                           Navigator.pushReplacement(context,
                                               MaterialPageRoute(
                                                   builder: (context) {
-                                            return DaftarMotor();
+                                            return const DaftarMotor();
                                           }));
                                         },
-                                        child: Container(
+                                        child: SizedBox(
                                           height: MediaQuery.of(context)
                                                   .size
                                                   .height *
@@ -152,7 +137,7 @@ class _MainMenuState extends State<MainMenu> {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               20),
-                                                      color: Color.fromRGBO(
+                                                      color: const Color.fromRGBO(
                                                           217, 240, 255, 1)),
                                                   height: MediaQuery.of(context)
                                                           .size
@@ -169,7 +154,7 @@ class _MainMenuState extends State<MainMenu> {
                                                 child: Stack(
                                                   children: [
                                                     Container(
-                                                      margin: EdgeInsets.only(
+                                                      margin: const EdgeInsets.only(
                                                           bottom: 20),
                                                       child: Image.asset(
                                                         'assets/motorcyclenew.png',
@@ -179,7 +164,7 @@ class _MainMenuState extends State<MainMenu> {
                                                   ],
                                                 ),
                                               ),
-                                              Align(
+                                              const Align(
                                                   alignment:
                                                       Alignment.bottomCenter,
                                                   child: Text('Daftar Motor'))
@@ -192,10 +177,10 @@ class _MainMenuState extends State<MainMenu> {
                                           Navigator.pushReplacement(context,
                                               MaterialPageRoute(
                                                   builder: (context) {
-                                            return DaftarMobil();
+                                            return const DaftarMobil();
                                           }));
                                         },
-                                        child: Container(
+                                        child: SizedBox(
                                           height: MediaQuery.of(context)
                                                   .size
                                                   .height *
@@ -213,7 +198,7 @@ class _MainMenuState extends State<MainMenu> {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               20),
-                                                      color: Color.fromRGBO(
+                                                      color: const Color.fromRGBO(
                                                           217, 240, 255, 1)),
                                                   height: MediaQuery.of(context)
                                                           .size
@@ -230,7 +215,7 @@ class _MainMenuState extends State<MainMenu> {
                                                 child: Stack(
                                                   children: [
                                                     Container(
-                                                      margin: EdgeInsets.only(
+                                                      margin: const EdgeInsets.only(
                                                           bottom: 20),
                                                       child: Image.asset(
                                                         'assets/carnew.png',
@@ -240,7 +225,7 @@ class _MainMenuState extends State<MainMenu> {
                                                   ],
                                                 ),
                                               ),
-                                              Align(
+                                              const Align(
                                                   alignment:
                                                       Alignment.bottomCenter,
                                                   child: Text('Daftar Mobil'))
@@ -251,7 +236,7 @@ class _MainMenuState extends State<MainMenu> {
                                     ],
                                   ),
                                 ),
-                                Container(
+                                SizedBox(
                                   height:
                                       MediaQuery.of(context).size.height * 0.2,
                                   width: MediaQuery.of(context).size.width * 1,
@@ -264,10 +249,10 @@ class _MainMenuState extends State<MainMenu> {
                                           Navigator.pushReplacement(context,
                                               MaterialPageRoute(
                                                   builder: (context) {
-                                            return HistoryParkir();
+                                            return const HistoryParkir();
                                           }));
                                         },
-                                        child: Container(
+                                        child: SizedBox(
                                           height: MediaQuery.of(context)
                                                   .size
                                                   .height *
@@ -285,7 +270,7 @@ class _MainMenuState extends State<MainMenu> {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               20),
-                                                      color: Color.fromRGBO(
+                                                      color: const Color.fromRGBO(
                                                           217, 240, 255, 1)),
                                                   height: MediaQuery.of(context)
                                                           .size
@@ -302,7 +287,7 @@ class _MainMenuState extends State<MainMenu> {
                                                 child: Stack(
                                                   children: [
                                                     Container(
-                                                      margin: EdgeInsets.only(
+                                                      margin: const EdgeInsets.only(
                                                           bottom: 20),
                                                       child: Image.asset(
                                                         'assets/list.png',
@@ -312,7 +297,7 @@ class _MainMenuState extends State<MainMenu> {
                                                   ],
                                                 ),
                                               ),
-                                              Align(
+                                              const Align(
                                                   alignment:
                                                       Alignment.bottomCenter,
                                                   child: Text('History Parkir'))
@@ -325,10 +310,10 @@ class _MainMenuState extends State<MainMenu> {
                                           Navigator.pushReplacement(context,
                                               MaterialPageRoute(
                                                   builder: (context) {
-                                            return PinjamKendaraan();
+                                            return const PinjamKendaraan();
                                           }));
                                         },
-                                        child: Container(
+                                        child: SizedBox(
                                           height: MediaQuery.of(context)
                                                   .size
                                                   .height *
@@ -346,7 +331,7 @@ class _MainMenuState extends State<MainMenu> {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               20),
-                                                      color: Color.fromRGBO(
+                                                      color: const Color.fromRGBO(
                                                           217, 240, 255, 1)),
                                                   height: MediaQuery.of(context)
                                                           .size
@@ -365,7 +350,7 @@ class _MainMenuState extends State<MainMenu> {
                                                       Alignment.topCenter,
                                                   children: [
                                                     Container(
-                                                      margin: EdgeInsets.only(
+                                                      margin: const EdgeInsets.only(
                                                           bottom: 20),
                                                       child: Image.asset(
                                                         'assets/pinjam.png',
@@ -375,7 +360,7 @@ class _MainMenuState extends State<MainMenu> {
                                                   ],
                                                 ),
                                               ),
-                                              Align(
+                                              const Align(
                                                   alignment:
                                                       Alignment.bottomCenter,
                                                   child:
@@ -404,8 +389,8 @@ class _MainMenuState extends State<MainMenu> {
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: FLoatButton(),
-          bottomNavigationBar: BottomNavbar()),
+          floatingActionButton: const FLoatButton(),
+          bottomNavigationBar: const BottomNavbar()),
     );
   }
 }

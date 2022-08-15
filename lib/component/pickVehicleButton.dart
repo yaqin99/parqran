@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class PickVehicleButton extends StatelessWidget {
   final String name;
@@ -16,7 +13,7 @@ class PickVehicleButton extends StatelessWidget {
         Center(
           child: Text(
             name,
-            style: TextStyle(
+            style: const TextStyle(
                 color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
           ),
         )

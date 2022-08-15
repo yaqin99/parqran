@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/foundation.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:parqran/component/pickVehicleButton.dart';
-import 'package:parqran/views/pengendara/mainMenu.dart';
+import 'package:parqran/model/person.dart';
+import 'package:parqran/model/services.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:geolocator/geolocator.dart';
@@ -62,7 +64,7 @@ query loadKendaraan($id: Int) {
   }
 
   getMotor() async {
-    final String id_pengguna = await Provider.of<Person>(context, listen: false)
+    final String id_pengguna = Provider.of<Person>(context, listen: false)
         .getIdPengguna
         .toString();
     int vehicleId = int.parse(id_pengguna);
@@ -131,10 +133,34 @@ query loadKendaraan($id: Int) {
   }
 
   bool clicked = false;
+  String idPengguna = '';
+
+  loadKendaraan() {
+    // Services.gqlQuery(QueryOptions(
+    //   document: gql(
+    //     '''
+    //       query getKendaraan($id: Int!) {
+    //         kendaraan(id: $id) {
+    //           id
+    //           jenis
+    //           nama
+    //           merk
+    //           warna
+    //           no_registrasi
+    //           no_rangka
+    //           no_stnk
+    //         }
+    //       }
+    //     ''',
+    //   ),
+    //   variables: {
+    //     'id': idPengguna,
+    //   },
+    // ));
+  }
 
   @override
   void initState() {
-    // TODO: implement initState
     getCamera();
     _determinePosition();
     getMotor();
@@ -143,15 +169,11 @@ query loadKendaraan($id: Int) {
   }
 
   @override
-  void dispose() {
-    controller!.dispose();
+  Widget build(BuildContext context) {
+    idPengguna = Provider.of<Person>(context, listen: false).id_pengguna.toString();
 
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => SafeArea(
-          child: Scaffold(
+    return SafeArea(
+      child: Scaffold(
         body: Stack(
           children: [
             buildQrView(context),
@@ -167,68 +189,79 @@ query loadKendaraan($id: Int) {
                 child: Center(child: buildResult()))
           ],
         ),
-      ));
+      )
+    );
+  }
+
   Widget pickVehicle() => Container(
-        decoration: BoxDecoration(
-            color: Colors.transparent,
-            // border: Border.all(color: Colors.white, width: 3),
-            borderRadius: BorderRadius.circular(15)),
-        width: MediaQuery.of(context).size.width * 0.375,
-        height: MediaQuery.of(context).size.height * 0.07,
-        child: ListView(scrollDirection: Axis.horizontal, children: [
-          Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: listMotor.map((e) {
-                return GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                      width: MediaQuery.of(context).size.width * 0.36,
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(52, 152, 219, 1),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Center(child: PickVehicleButton(name: e['nama']))),
-                );
-              }).toList()),
-        ]),
-      );
+    decoration: BoxDecoration(
+      color: Colors.transparent,
+      // border: Border.all(color: Colors.white, width: 3),
+      borderRadius: BorderRadius.circular(15)),
+    width: MediaQuery.of(context).size.width * 0.375,
+    height: MediaQuery.of(context).size.height * 0.07,
+    child: ListView(scrollDirection: Axis.horizontal, children: [
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Container(
+          width: MediaQuery.of(context).size.width * 0.36,
+          decoration: BoxDecoration(
+            color: const Color.fromRGBO(52, 152, 219, 1),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: const Center(child: PickVehicleButton(name: 'Vario 150'))),
+      ]),
+    ]),
+  );
   Widget buildResult() => Container(
-        padding: EdgeInsets.all(12),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
             color: Colors.white24, borderRadius: BorderRadius.circular(8)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children: const [
             Text('Arahkan Camera pada Qr Code '),
           ],
         ),
       );
   Widget buildQrView(BuildContext context) => QRView(
-        key: qrKey,
-        onQRViewCreated: onQRViewCreated,
-        overlay: QrScannerOverlayShape(
-          borderColor: Color.fromRGBO(52, 152, 219, 1),
-          borderRadius: 10,
-          borderLength: 20,
-          borderWidth: 10,
-          cutOutSize: MediaQuery.of(context).size.width * 0.7,
-        ),
-      );
-
+    key: qrKey,
+    onQRViewCreated: onQRViewCreated,
+    overlay: QrScannerOverlayShape(
+      borderColor: const Color.fromRGBO(52, 152, 219, 1),
+      borderRadius: 10,
+      borderLength: 20,
+      borderWidth: 10,
+      cutOutSize: MediaQuery.of(context).size.width * 0.7,
+    ),
+  );
   void onQRViewCreated(QRViewController controller) {
     setState(() => this.controller = controller);
-
     controller.scannedDataStream.listen(((scanData) => setState(() {
-          this.data = scanData;
-
-          controller.stopCamera();
-          Navigator.pop(context);
-        })));
-    @override
-    void dispose() {
-      controller.dispose();
-
-      super.dispose();
+      data = scanData;
+      controller.stopCamera();
+      Navigator.pop(context);
+    })));
+  }
+  checkToServer() async {
+    if (data != null) {
+      try {
+        final lokasi = await _determinePosition();
+        
+        await Dio().post('${dotenv.env['API']!}/distance', data: {
+          'id_parkiran': data!.code,
+          'origins': '${lokasi.latitude},${lokasi.longitude}',
+          'id_pengguna': idPengguna,
+          'id_kendaraan': '1'
+        });
+      } catch (e) {
+        print(e);
+      }
     }
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
   }
 }
