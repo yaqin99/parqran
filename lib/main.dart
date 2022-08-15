@@ -1,11 +1,13 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:parqran/views/landingPage.dart';
 import 'package:provider/provider.dart';
 
 import 'model/person.dart';
 
-void main() {
+Future<void> main() async {
+  await dotenv.load(fileName: '.env');
   runApp(
     ChangeNotifierProvider(
       create: (context) => Person(),

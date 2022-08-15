@@ -8,7 +8,7 @@ import 'package:parqran/views/pengendara/loadingPage.dart';
 import '../../model/person.dart';
 import '../../model/personCard.dart';
 import 'package:provider/provider.dart';
-
+import '../../model/services.dart';
 import 'dart:convert' as convert;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
