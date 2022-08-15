@@ -34,8 +34,8 @@ class _DaftarMotorState extends State<DaftarMotor> {
 
   loadMotor(int idUser) async {
     const String motor = r'''
-query loadKendaraan($id: Int) {
-  Kendaraans(id: $id) {
+query loadKendaraan($id: Int, $jenis: Int) {
+  Kendaraans(id: $id, jenis: $jenis) {
     nama
     merk
     no_registrasi
@@ -48,7 +48,8 @@ query loadKendaraan($id: Int) {
 ''';
 
     final QueryOptions queryOptions = QueryOptions(
-        document: gql(motor), variables: <String, dynamic>{"id": idUser});
+        document: gql(motor),
+        variables: <String, dynamic>{"id": idUser, "jenis": 0});
     result = await Services.gqlQuery(queryOptions);
     var response = result!.data!['Kendaraans'];
     for (var item in response) {
@@ -61,10 +62,8 @@ query loadKendaraan($id: Int) {
         "warna": item['warna'],
         "id_kendaraan": item['id_kendaraan']
       });
-
-      listMotor.removeWhere((item) => item['jenis'] == '1');
     }
-    print(listMotor);
+    print(response);
     setState(() {});
   }
 

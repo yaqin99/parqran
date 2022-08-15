@@ -59,6 +59,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
       noRegistrasi.text = '';
       noRangka.text = '';
       noStnk.text = '';
+      Navigator.pop(context);
     });
   }
 

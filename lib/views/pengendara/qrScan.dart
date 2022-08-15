@@ -2,10 +2,15 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:parqran/component/pickVehicleButton.dart';
 import 'package:parqran/views/pengendara/mainMenu.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:geolocator/geolocator.dart';
+
+import '../../model/person.dart';
+import '../../model/services.dart';
 
 class QrScan extends StatefulWidget {
   const QrScan({Key? key}) : super(key: key);
@@ -18,6 +23,53 @@ class _QrScanState extends State<QrScan> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
   Barcode? data;
+  String? id_pengguna;
+  List listMotor = List.empty(growable: true);
+  QueryResult? result;
+
+  loadMotor(int idUser) async {
+    const String motor = r'''
+query loadKendaraan($id: Int) {
+  Kendaraans(id: $id) {
+    nama
+    merk
+    no_registrasi
+    no_stnk
+    jenis
+    warna
+    id_kendaraan
+	}
+}
+''';
+
+    final QueryOptions queryOptions = QueryOptions(
+        document: gql(motor), variables: <String, dynamic>{"id": idUser});
+    result = await Services.gqlQuery(queryOptions);
+    var response = result!.data!['Kendaraans'];
+    for (var item in response) {
+      listMotor.add({
+        "nama": item['nama'],
+        "merk": item['merk'],
+        "no_registrasi": item['no_registrasi'],
+        "no_stnk": item['no_stnk'],
+        "jenis": item['jenis'],
+        "warna": item['warna'],
+        "id_kendaraan": item['id_kendaraan']
+      });
+    }
+    print(listMotor);
+    setState(() {});
+  }
+
+  getMotor() async {
+    final String id_pengguna = await Provider.of<Person>(context, listen: false)
+        .getIdPengguna
+        .toString();
+    int vehicleId = int.parse(id_pengguna);
+    if (vehicleId != null) {
+      loadMotor(vehicleId);
+    }
+  }
 
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
@@ -85,6 +137,7 @@ class _QrScanState extends State<QrScan> {
     // TODO: implement initState
     getCamera();
     _determinePosition();
+    getMotor();
 
     super.initState();
   }
@@ -123,36 +176,20 @@ class _QrScanState extends State<QrScan> {
         width: MediaQuery.of(context).size.width * 0.375,
         height: MediaQuery.of(context).size.height * 0.07,
         child: ListView(scrollDirection: Axis.horizontal, children: [
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Container(
-                width: MediaQuery.of(context).size.width * 0.36,
-                decoration: BoxDecoration(
-                  color: Color.fromRGBO(52, 152, 219, 1),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Center(child: PickVehicleButton(name: 'Vario 150'))),
-            Container(
-                width: MediaQuery.of(context).size.width * 0.36,
-                decoration: BoxDecoration(
-                  color: Color.fromRGBO(52, 152, 219, 1),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Center(child: PickVehicleButton(name: 'Yamaha Mio'))),
-            Container(
-                width: MediaQuery.of(context).size.width * 0.36,
-                decoration: BoxDecoration(
-                  color: Color.fromRGBO(52, 152, 219, 1),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Center(child: PickVehicleButton(name: 'KLX 150'))),
-            Container(
-                width: MediaQuery.of(context).size.width * 0.36,
-                decoration: BoxDecoration(
-                  color: Color.fromRGBO(52, 152, 219, 1),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Center(child: PickVehicleButton(name: 'Yamaha Ninja'))),
-          ]),
+          Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: listMotor.map((e) {
+                return GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                      width: MediaQuery.of(context).size.width * 0.36,
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(52, 152, 219, 1),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Center(child: PickVehicleButton(name: e['nama']))),
+                );
+              }).toList()),
         ]),
       );
   Widget buildResult() => Container(

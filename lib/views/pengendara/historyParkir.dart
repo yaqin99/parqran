@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:parqran/component/bottomNavbar.dart';
 import 'package:parqran/component/floatButton.dart';
 import 'package:parqran/component/history.dart';
 import 'package:parqran/component/motor.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:parqran/model/services.dart';
+import 'package:provider/provider.dart';
+
+import '../../model/person.dart';
 
 class HistoryParkir extends StatefulWidget {
   const HistoryParkir({Key? key}) : super(key: key);
@@ -13,6 +18,55 @@ class HistoryParkir extends StatefulWidget {
 }
 
 class _HistoryParkirState extends State<HistoryParkir> {
+  String? id_pengguna;
+  List listMotor = List.empty(growable: true);
+  QueryResult? result;
+  var data;
+
+  loadMotor(int idUser) async {
+    const String motor = r'''
+query loadKendaraan($id: Int, $jenis: Int) {
+  Kendaraans(id: $id, jenis: $jenis) {
+    nama
+    merk
+    no_registrasi
+    no_stnk
+    jenis
+    warna
+    id_kendaraan
+	}
+}
+''';
+
+    final QueryOptions queryOptions = QueryOptions(
+        document: gql(motor), variables: <String, dynamic>{"id": idUser});
+    result = await Services.gqlQuery(queryOptions);
+    var response = result!.data!['Kendaraans'];
+    for (var item in response) {
+      listMotor.add({
+        "nama": item['nama'],
+        "merk": item['merk'],
+        "no_registrasi": item['no_registrasi'],
+        "no_stnk": item['no_stnk'],
+        "jenis": item['jenis'],
+        "warna": item['warna'],
+        "id_kendaraan": item['id_kendaraan']
+      });
+    }
+    print(listMotor);
+    setState(() {});
+  }
+
+  getMotor() async {
+    final String id_pengguna = await Provider.of<Person>(context, listen: false)
+        .getIdPengguna
+        .toString();
+    int vehicleId = int.parse(id_pengguna);
+    if (vehicleId != null) {
+      loadMotor(vehicleId);
+    }
+  }
+
   Future<bool?> showWarning(BuildContext context) async => showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(

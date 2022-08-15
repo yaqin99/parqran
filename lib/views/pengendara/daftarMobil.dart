@@ -29,8 +29,8 @@ class _DaftarMobilState extends State<DaftarMobil> {
 
   loadMobil(int idUser) async {
     const String mobil = r'''
-query loadKendaraan($id: Int) {
-  Kendaraans(id: $id) {
+query loadKendaraan($id: Int, $jenis: Int) {
+  Kendaraans(id: $id, jenis: $jenis) {
     nama
     merk
     no_registrasi
@@ -41,9 +41,9 @@ query loadKendaraan($id: Int) {
 	}
 }
 ''';
-
     final QueryOptions queryOptions = QueryOptions(
-        document: gql(mobil), variables: <String, dynamic>{"id": idUser});
+        document: gql(mobil),
+        variables: <String, dynamic>{"id": idUser, "jenis": 1});
     result = await Services.gqlQuery(queryOptions);
     var response = result!.data!['Kendaraans'];
     for (var item in response) {
@@ -56,8 +56,6 @@ query loadKendaraan($id: Int) {
         "warna": item['warna'],
         "id_kendaraan": item['id_kendaraan']
       });
-
-      listMobil.removeWhere((item) => item['jenis'] == '0');
     }
     print(listMobil);
     setState(() {});
