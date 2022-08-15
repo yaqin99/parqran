@@ -13,8 +13,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:restart_app/restart_app.dart';
 
 class DetailMobil extends StatefulWidget {
+  final String nama;
+  final String merk;
+  final String warna;
+  final String no_registrasi;
+  final String no_stnk;
+  final String no_rangka;
   const DetailMobil({
     Key? key,
+    required this.nama,
+    required this.merk,
+    required this.warna,
+    required this.no_registrasi,
+    required this.no_stnk,
+    required this.no_rangka,
   }) : super(key: key);
   @override
   State<DetailMobil> createState() => _DetailMobilState();
@@ -146,7 +158,7 @@ class _DetailMobilState extends State<DetailMobil> {
                               ),
                               Container(
                                 child: Text(
-                                  'Honda Brio',
+                                  widget.merk + ' ' + widget.nama,
                                   style: TextStyle(
                                       fontSize: 17,
                                       fontWeight: FontWeight.w300,
@@ -176,7 +188,7 @@ class _DetailMobilState extends State<DetailMobil> {
                                 ),
                               ),
                               Text(
-                                'Merah',
+                                widget.warna,
                                 style: TextStyle(
                                     fontWeight: FontWeight.w300,
                                     fontSize: 17,
@@ -205,7 +217,7 @@ class _DetailMobilState extends State<DetailMobil> {
                                 ),
                               ),
                               Text(
-                                'M 3333 AB',
+                                widget.no_registrasi,
                                 style: TextStyle(
                                     fontWeight: FontWeight.w300,
                                     fontSize: 17,
@@ -235,7 +247,7 @@ class _DetailMobilState extends State<DetailMobil> {
                               ),
                               Container(
                                 child: Text(
-                                  '123213699045',
+                                  widget.no_stnk,
                                   style: TextStyle(
                                       fontSize: 17,
                                       fontWeight: FontWeight.w300,
@@ -265,7 +277,7 @@ class _DetailMobilState extends State<DetailMobil> {
                                 ),
                               ),
                               Text(
-                                'HH9893472GFWEG',
+                                widget.no_rangka,
                                 style: TextStyle(
                                     fontWeight: FontWeight.w300,
                                     fontSize: 17,

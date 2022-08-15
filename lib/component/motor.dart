@@ -15,7 +15,7 @@ class Motor extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          border: Border.all(color: Color.fromRGBO(52, 152, 219, 1), width: 3)),
+          border: Border.all(color: Colors.transparent, width: 3)),
       height: MediaQuery.of(context).size.height * 0.1524,
       width: MediaQuery.of(context).size.width * 1,
       child: Column(

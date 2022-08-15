@@ -15,9 +15,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:restart_app/restart_app.dart';
 
 class TambahKendaraan extends StatefulWidget {
-  const TambahKendaraan({
-    Key? key,
-  }) : super(key: key);
+  final bool isMobil;
+  const TambahKendaraan({Key? key, required this.isMobil}) : super(key: key);
   @override
   State<TambahKendaraan> createState() => _TambahKendaraanState();
 }
@@ -60,7 +59,6 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
       noRegistrasi.text = '';
       noRangka.text = '';
       noStnk.text = '';
-      Navigator.pop(context);
     });
   }
 
@@ -108,7 +106,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                           ),
                         ),
                         Text(
-                          'Tambah Motor',
+                          'Tambah Kendaraan',
                           style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w400,
@@ -143,7 +141,9 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                 ),
                                 onPressed: () {},
                                 child: FaIcon(
-                                  FontAwesomeIcons.motorcycle,
+                                  (widget.isMobil == false)
+                                      ? FontAwesomeIcons.motorcycle
+                                      : FontAwesomeIcons.car,
                                   size: 100,
                                   color: Color.fromRGBO(52, 152, 219, 1),
                                 )),

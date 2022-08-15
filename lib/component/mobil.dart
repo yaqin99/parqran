@@ -3,20 +3,19 @@ import 'package:flutter/material.dart';
 class Mobil extends StatelessWidget {
   final String nama;
   final String noPol;
-  final String noMesin;
-  final Color warna;
-  const Mobil(
-      {Key? key,
-      required this.nama,
-      required this.noPol,
-      required this.noMesin,
-      required this.warna})
-      : super(key: key);
+  final String noStnk;
+  const Mobil({
+    Key? key,
+    required this.nama,
+    required this.noPol,
+    required this.noStnk,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(border: Border.all(color: warna, width: 3)),
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.transparent, width: 3)),
       height: MediaQuery.of(context).size.height * 0.1524,
       width: MediaQuery.of(context).size.width * 1,
       child: Column(
@@ -73,7 +72,7 @@ class Mobil extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      noMesin,
+                      noStnk,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,

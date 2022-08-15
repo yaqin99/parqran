@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:parqran/component/bottomNavbar.dart';
 import 'package:parqran/component/floatButton.dart';
 import 'package:parqran/model/person.dart';
@@ -12,6 +13,8 @@ import 'package:parqran/views/pengendara/qrGenerate.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
+import '../../model/services.dart';
+
 class MainMenu extends StatefulWidget {
   const MainMenu({Key? key}) : super(key: key);
 
@@ -21,6 +24,13 @@ class MainMenu extends StatefulWidget {
 
 class _MainMenuState extends State<MainMenu> {
   QRViewController? controller;
+  String? id_pengguna;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   Future<bool?> showWarning(BuildContext context) async => showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -155,36 +165,12 @@ class _MainMenuState extends State<MainMenu> {
                                                 ),
                                               ),
                                               Align(
-                                                alignment:
-                                                    Alignment.bottomRight,
+                                                alignment: Alignment.center,
                                                 child: Stack(
                                                   children: [
-                                                    Align(
-                                                      alignment:
-                                                          Alignment.topLeft,
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                top: 7,
-                                                                left: 20),
-                                                        child: Text(
-                                                          '12',
-                                                          style: TextStyle(
-                                                              fontSize: 23,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color: Color
-                                                                  .fromRGBO(
-                                                                      52,
-                                                                      152,
-                                                                      219,
-                                                                      1)),
-                                                        ),
-                                                      ),
-                                                    ),
                                                     Container(
+                                                      margin: EdgeInsets.only(
+                                                          bottom: 20),
                                                       child: Image.asset(
                                                         'assets/motorcyclenew.png',
                                                         fit: BoxFit.fill,
@@ -240,36 +226,12 @@ class _MainMenuState extends State<MainMenu> {
                                                 ),
                                               ),
                                               Align(
-                                                alignment:
-                                                    Alignment.bottomRight,
+                                                alignment: Alignment.center,
                                                 child: Stack(
                                                   children: [
-                                                    Align(
-                                                      alignment:
-                                                          Alignment.topLeft,
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                top: 7,
-                                                                left: 20),
-                                                        child: Text(
-                                                          '3',
-                                                          style: TextStyle(
-                                                              fontSize: 23,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color: Color
-                                                                  .fromRGBO(
-                                                                      52,
-                                                                      152,
-                                                                      219,
-                                                                      1)),
-                                                        ),
-                                                      ),
-                                                    ),
                                                     Container(
+                                                      margin: EdgeInsets.only(
+                                                          bottom: 20),
                                                       child: Image.asset(
                                                         'assets/carnew.png',
                                                         fit: BoxFit.fill,
@@ -336,36 +298,12 @@ class _MainMenuState extends State<MainMenu> {
                                                 ),
                                               ),
                                               Align(
-                                                alignment:
-                                                    Alignment.bottomRight,
+                                                alignment: Alignment.center,
                                                 child: Stack(
                                                   children: [
-                                                    Align(
-                                                      alignment:
-                                                          Alignment.topLeft,
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                top: 7,
-                                                                left: 20),
-                                                        child: Text(
-                                                          '114',
-                                                          style: TextStyle(
-                                                              fontSize: 23,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color: Color
-                                                                  .fromRGBO(
-                                                                      52,
-                                                                      152,
-                                                                      219,
-                                                                      1)),
-                                                        ),
-                                                      ),
-                                                    ),
                                                     Container(
+                                                      margin: EdgeInsets.only(
+                                                          bottom: 20),
                                                       child: Image.asset(
                                                         'assets/list.png',
                                                         fit: BoxFit.fill,
@@ -421,36 +359,14 @@ class _MainMenuState extends State<MainMenu> {
                                                 ),
                                               ),
                                               Align(
-                                                alignment:
-                                                    Alignment.bottomRight,
+                                                alignment: Alignment.topCenter,
                                                 child: Stack(
+                                                  alignment:
+                                                      Alignment.topCenter,
                                                   children: [
-                                                    Align(
-                                                      alignment:
-                                                          Alignment.topLeft,
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                top: 7,
-                                                                left: 20),
-                                                        child: Text(
-                                                          '1',
-                                                          style: TextStyle(
-                                                              fontSize: 23,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color: Color
-                                                                  .fromRGBO(
-                                                                      52,
-                                                                      152,
-                                                                      219,
-                                                                      1)),
-                                                        ),
-                                                      ),
-                                                    ),
                                                     Container(
+                                                      margin: EdgeInsets.only(
+                                                          bottom: 20),
                                                       child: Image.asset(
                                                         'assets/pinjam.png',
                                                         fit: BoxFit.fill,

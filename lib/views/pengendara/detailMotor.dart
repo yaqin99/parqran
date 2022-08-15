@@ -13,8 +13,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:restart_app/restart_app.dart';
 
 class DetailMotor extends StatefulWidget {
+  final String nama;
+  final String merk;
+  final String warna;
+  final String no_registrasi;
+  final String no_stnk;
+  final String no_rangka;
   const DetailMotor({
     Key? key,
+    required this.nama,
+    required this.merk,
+    required this.warna,
+    required this.no_registrasi,
+    required this.no_stnk,
+    required this.no_rangka,
   }) : super(key: key);
   @override
   State<DetailMotor> createState() => _DetailMotorState();
@@ -146,7 +158,7 @@ class _DetailMotorState extends State<DetailMotor> {
                               ),
                               Container(
                                 child: Text(
-                                  'Yamaha Mio',
+                                  widget.merk + ' ' + widget.nama,
                                   style: TextStyle(
                                       fontSize: 17,
                                       fontWeight: FontWeight.w300,
@@ -176,7 +188,7 @@ class _DetailMotorState extends State<DetailMotor> {
                                 ),
                               ),
                               Text(
-                                'Merah',
+                                widget.warna,
                                 style: TextStyle(
                                     fontWeight: FontWeight.w300,
                                     fontSize: 17,
@@ -205,7 +217,7 @@ class _DetailMotorState extends State<DetailMotor> {
                                 ),
                               ),
                               Text(
-                                'M 3333 AB',
+                                widget.no_registrasi,
                                 style: TextStyle(
                                     fontWeight: FontWeight.w300,
                                     fontSize: 17,
@@ -235,7 +247,7 @@ class _DetailMotorState extends State<DetailMotor> {
                               ),
                               Container(
                                 child: Text(
-                                  '123213699045',
+                                  widget.no_stnk,
                                   style: TextStyle(
                                       fontSize: 17,
                                       fontWeight: FontWeight.w300,
@@ -265,7 +277,7 @@ class _DetailMotorState extends State<DetailMotor> {
                                 ),
                               ),
                               Text(
-                                'HH9893472GFWEG',
+                                widget.no_rangka,
                                 style: TextStyle(
                                     fontWeight: FontWeight.w300,
                                     fontSize: 17,

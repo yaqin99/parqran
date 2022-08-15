@@ -4,7 +4,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 abstract class Services {
   static Future postDataUser(String email, String nama, String foto) async {
     try {
-      var data = await Dio().post('http://192.168.114.79:8080/auth', data: {
+      var data = await Dio().post('http://192.168.1.110:8080/auth', data: {
         'email': email,
         'nama': nama,
         'foto': foto,
@@ -19,7 +19,7 @@ abstract class Services {
   static GraphQLClient? client;
 
   static _checkGraphql() {
-    final HttpLink httpLink = HttpLink('http://192.168.114.79:8080/graphql');
+    final HttpLink httpLink = HttpLink('http://192.168.1.110:8080/graphql');
     client = GraphQLClient(link: httpLink, cache: GraphQLCache());
   }
 
@@ -41,7 +41,7 @@ abstract class AddKendaraan {
       String no_stnk) async {
     try {
       var vehicle =
-          await Dio().post('http://192.168.114.79:8080/vehicle', data: {
+          await Dio().post('http://192.168.1.110:8080/vehicle', data: {
         'id_pengguna': id_pengguna,
         'jenis': jenis,
         'nama': nama,

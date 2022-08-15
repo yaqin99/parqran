@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:parqran/component/bottomNavbar.dart';
+import 'package:parqran/component/emptyMotor.dart';
 import 'package:parqran/component/floatButton.dart';
 import 'package:parqran/component/motor.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -22,10 +23,12 @@ class DaftarMotor extends StatefulWidget {
 }
 
 class _DaftarMotorState extends State<DaftarMotor> {
+  String? selected;
   bool hold = false;
   Color warna = Colors.transparent;
+  Color backColor = Colors.black;
   String? id_pengguna;
-  List kendaraan = List.empty(growable: true);
+  List listMotor = List.empty(growable: true);
   QueryResult? result;
   var data;
 
@@ -37,8 +40,9 @@ query loadKendaraan($id: Int) {
     merk
     no_registrasi
     no_stnk
-    
-
+    jenis
+    warna
+    id_kendaraan
 	}
 }
 ''';
@@ -48,13 +52,20 @@ query loadKendaraan($id: Int) {
     result = await Services.gqlQuery(queryOptions);
     var response = result!.data!['Kendaraans'];
     for (var item in response) {
-      kendaraan.add({
+      listMotor.add({
         "nama": item['nama'],
+        "merk": item['merk'],
         "no_registrasi": item['no_registrasi'],
-        "no_stnk": item['no_stnk']
+        "no_stnk": item['no_stnk'],
+        "jenis": item['jenis'],
+        "warna": item['warna'],
+        "id_kendaraan": item['id_kendaraan']
       });
+
+      listMotor.removeWhere((item) => item['jenis'] == '1');
     }
-    print(kendaraan);
+    print(listMotor);
+    setState(() {});
   }
 
   getMotor() async {
@@ -178,14 +189,54 @@ query loadKendaraan($id: Int) {
                                   ],
                                 )),
                     ),
-                    Column(
-                        children: kendaraan.map((e) {
-                      return Motor(
-                        nama: e['nama'],
-                        noPol: e['no_registrasi'],
-                        noStnk: e['no_stnk'],
-                      );
-                    }).toList())
+                    (listMotor.isEmpty)
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.25,
+                              ),
+                              Container(
+                                child: Center(
+                                  child: Text(
+                                    'Not Found',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w200,
+                                        fontSize: 40,
+                                        color: Color.fromRGBO(52, 152, 219, 1)),
+                                  ),
+                                ),
+                              )
+                            ],
+                          )
+                        : Column(
+                            children: listMotor.map((e) {
+                            return GestureDetector(
+                              onLongPress: () {
+                                hold = true;
+                                setState(() {});
+                              },
+                              onTap: () {
+                                hold = false;
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return DetailMotor(
+                                      nama: e['nama'],
+                                      merk: e['merk'],
+                                      warna: e['warna'],
+                                      no_registrasi: e['no_registrasi'],
+                                      no_stnk: e['no_stnk'],
+                                      no_rangka: 'Masih gak Ada');
+                                }));
+                              },
+                              child: Motor(
+                                nama: e['nama'],
+                                noPol: e['no_registrasi'],
+                                noStnk: e['no_stnk'],
+                              ),
+                            );
+                          }).toList())
                   ])
                 ],
               ),
@@ -218,7 +269,9 @@ query loadKendaraan($id: Int) {
                                 onPressed: () {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return TambahKendaraan();
+                                    return TambahKendaraan(
+                                      isMobil: false,
+                                    );
                                   }));
                                 },
                                 child: Icon(
