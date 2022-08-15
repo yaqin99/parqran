@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:parqran/component/logo.dart';
 import 'package:parqran/model/services.dart';
 import 'package:parqran/model/userModel.dart';
@@ -65,6 +66,22 @@ class _LandingPageState extends State<LandingPage> {
       _googleSignIn.signInSilently();
     });
 
+    _prefs.then((SharedPreferences pref) {
+      print(pref.get('email'));
+      print('called');
+      if (pref.getString('email') != null) {
+        Provider.of<Person>(context, listen: false).setPerson(
+          pref.getInt('idUser')!, pref.getString('email')!, pref.getString('nama')!, pref.getString('foto')!
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Home(),
+          ),
+        );
+      }
+    });
+
     // getData();
     super.initState();
   }
@@ -103,15 +120,21 @@ class _LandingPageState extends State<LandingPage> {
                   onPressed: () async {
                     _handleSignIn();
                     final SharedPreferences prefs = await _prefs;
+                    if (_currentUser == null) {
+                      return;
+                    }
+
+                    final response = await Services.postDataUser(
+                        _currentUser!.email,
+                        _currentUser!.displayName!,
+                        _currentUser!.photoUrl!);
+
+                    prefs.setString('idUser', response['id_pengguna'].toString());
                     prefs.setString('email', _currentUser!.email);
                     prefs.setString('nama', _currentUser!.displayName!);
                     prefs.setString('foto', _currentUser!.photoUrl!);
 
                     // masukkan ke provider
-                    final response = await Services.postDataUser(
-                        _currentUser!.email,
-                        _currentUser!.displayName!,
-                        _currentUser!.photoUrl!);
                     Provider.of<Person>(context, listen: false).setPerson(
                         response['id_pengguna'],
                         _currentUser!.email,
