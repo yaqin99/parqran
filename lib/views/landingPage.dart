@@ -67,11 +67,9 @@ class _LandingPageState extends State<LandingPage> {
     });
 
     _prefs.then((SharedPreferences pref) {
-      print(pref.get('email'));
-      print('called');
       if (pref.getString('email') != null) {
         Provider.of<Person>(context, listen: false).setPerson(
-          pref.getInt('idUser')!, pref.getString('email')!, pref.getString('nama')!, pref.getString('foto')!
+          int.parse(pref.getString('idUser')!), pref.getString('email')!, pref.getString('nama')!, pref.getString('foto')!
         );
         Navigator.pushReplacement(
           context,
