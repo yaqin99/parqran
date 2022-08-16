@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 class Motor extends StatelessWidget {
   final String nama;
   final String noPol;
-  final String noStnk;
+  final String warna;
   const Motor({
     Key? key,
     required this.nama,
     required this.noPol,
-    required this.noStnk,
+    required this.warna,
   }) : super(key: key);
 
   @override
@@ -72,7 +72,7 @@ class Motor extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      noStnk,
+                      warna,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,

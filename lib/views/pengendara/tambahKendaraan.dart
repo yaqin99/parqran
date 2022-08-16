@@ -18,11 +18,22 @@ import 'package:restart_app/restart_app.dart';
 class TambahKendaraan extends StatefulWidget {
   final bool isEdit;
   final bool isMobil;
-
+  final String namaEdit;
+  final String merkEdit;
+  final String warnaEdit;
+  final String noPolEdit;
+  final String noStnkEdit;
+  final String noRangkaEdit;
   const TambahKendaraan({
     Key? key,
     required this.isMobil,
     required this.isEdit,
+    required this.namaEdit,
+    required this.merkEdit,
+    required this.warnaEdit,
+    required this.noPolEdit,
+    required this.noStnkEdit,
+    required this.noRangkaEdit,
   }) : super(key: key);
   @override
   State<TambahKendaraan> createState() => _TambahKendaraanState();
@@ -70,18 +81,32 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
     });
   }
 
-  tipeSet() {
+  initValue() {
+    if (widget.isEdit == true) {
+      nama.text = widget.namaEdit;
+      merk.text = widget.merkEdit;
+      warna.text = widget.warnaEdit;
+      noRegistrasi.text = widget.noPolEdit;
+      noRangka.text = widget.noRangkaEdit;
+      noStnk.text = widget.noStnkEdit;
+    }
+  }
+
+  setTipe() {
     if (widget.isMobil == false) {
       tipe = '0';
+      print(tipe);
     }
     if (widget.isMobil == true) {
       tipe = '1';
+      print(tipe);
     }
   }
 
   @override
   void initState() {
-    tipeSet();
+    initValue();
+    setTipe();
     // TODO: implement initState
     super.initState();
   }

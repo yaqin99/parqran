@@ -4,6 +4,7 @@ import 'package:parqran/component/bottomNavbar.dart';
 import 'package:parqran/component/floatButton.dart';
 import 'package:parqran/component/parkirBottomNavbar.dart';
 import 'package:parqran/component/parkirFloatButton.dart';
+import 'package:parqran/model/person.dart';
 import 'package:parqran/views/pemilikParkir/daftarParkiran.dart';
 import 'package:parqran/views/pemilikParkir/managementParkir.dart';
 import 'package:parqran/views/pemilikParkir/partner.dart';
@@ -13,6 +14,7 @@ import 'package:parqran/views/pengendara/historyParkir.dart';
 import 'package:parqran/views/pengendara/pinjamKendaraan.dart';
 import 'package:http/http.dart';
 import 'package:parqran/views/pengendara/profil.dart';
+import 'package:provider/provider.dart';
 
 class PemilikParkirMenu extends StatefulWidget {
   const PemilikParkirMenu({Key? key}) : super(key: key);
@@ -41,6 +43,8 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
           ));
   @override
   Widget build(BuildContext context) {
+    final String nama = Provider.of<Person>(context, listen: false).nama;
+    final String foto = Provider.of<Person>(context, listen: false).foto;
     return WillPopScope(
       onWillPop: () async {
         print('Back Button Pressed');
@@ -65,46 +69,19 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
                           SizedBox(
                             width: 60,
                             height: 60,
-                            child: ElevatedButton(
-                                style: ButtonStyle(
-                                    shape: MaterialStateProperty.all(
-                                        CircleBorder()),
-                                    backgroundColor: MaterialStateProperty.all(
-                                        Color.fromRGBO(155, 89, 182, 1))),
-                                onPressed: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return const Profil(
-                                      addWarna: true,
-                                    );
-                                  }));
-                                },
-                                child: Center(
-                                    child: Icon(
-                                  Icons.person,
-                                  color: Colors.white,
-                                  size: 30,
-                                ))),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: SizedBox(
-                              width: 60,
-                              height: 60,
-                              child: ElevatedButton(
-                                  style: ButtonStyle(
-                                      shape: MaterialStateProperty.all(
-                                          CircleBorder()),
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              Color.fromRGBO(155, 89, 182, 1))),
-                                  onPressed: () {},
-                                  child: Center(
-                                      child: Icon(
-                                    Icons.settings,
-                                    color: Colors.white,
-                                    size: 30,
-                                  ))),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const Profil(addWarna: false),
+                                  ),
+                                );
+                              },
+                              child: CircleAvatar(
+                                  backgroundImage: NetworkImage(foto),
+                                  radius: 10),
                             ),
                           )
                         ],
@@ -196,12 +173,7 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: () {
-                                    // Navigator.pushReplacement(context,
-                                    //     MaterialPageRoute(builder: (context) {
-                                    //   return DaftarMobil();
-                                    // }));
-                                  },
+                                  onTap: () {},
                                   child: Container(
                                     height: MediaQuery.of(context).size.height *
                                         0.165,
