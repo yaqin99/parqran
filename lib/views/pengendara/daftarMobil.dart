@@ -12,6 +12,7 @@ import 'package:parqran/views/pengendara/tambahKendaraan.dart';
 import 'package:provider/provider.dart';
 
 import '../../component/emptyMobil.dart';
+import '../../model/kendaraan.dart';
 import '../../model/services.dart';
 
 class DaftarMobil extends StatefulWidget {
@@ -58,8 +59,12 @@ query loadKendaraan($id: Int, $jenis: Int) {
       });
     }
     print(listMobil);
-    setState(() {});
+    setState(() {
+      notLoad = true;
+    });
   }
+
+  bool notLoad = false;
 
   getMobil() async {
     final String id_pengguna = await Provider.of<Person>(context, listen: false)
@@ -139,7 +144,7 @@ query loadKendaraan($id: Int, $jenis: Int) {
                                       children: [
                                         IconButton(
                                             onPressed: () {},
-                                            icon: Icon(
+                                            icon: const Icon(
                                               Icons
                                                   .photo_size_select_actual_rounded,
                                               size: 26,
@@ -147,8 +152,17 @@ query loadKendaraan($id: Int, $jenis: Int) {
                                                   52, 152, 219, 1),
                                             )),
                                         IconButton(
-                                          onPressed: () {},
-                                          icon: FaIcon(
+                                          onPressed: () {
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                              return const TambahKendaraan(
+                                                isEdit: true,
+                                                isMobil: false,
+                                              );
+                                            }));
+                                          },
+                                          icon: const FaIcon(
                                             FontAwesomeIcons.penToSquare,
                                             size: 26,
                                             color:
@@ -170,22 +184,7 @@ query loadKendaraan($id: Int, $jenis: Int) {
                                 )
                               : Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    // Padding(
-                                    //   padding: const EdgeInsets.only(right: 18),
-                                    //   child: GestureDetector(
-                                    //     onTap: () {
-                                    //       Navigator.pop(
-                                    //         context,
-                                    //       );
-                                    //     },
-                                    //     child: Icon(
-                                    //       Icons.arrow_back,
-                                    //       size: 35,
-                                    //       color: Color.fromRGBO(52, 152, 219, 1),
-                                    //     ),
-                                    //   ),
-                                    // ),
+                                  children: const [
                                     Text(
                                       'Daftar Mobil',
                                       style: TextStyle(
@@ -198,26 +197,39 @@ query loadKendaraan($id: Int, $jenis: Int) {
                                 )),
                     ),
                     (listMobil.isEmpty)
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.25,
-                              ),
-                              Container(
-                                child: Center(
-                                  child: Text(
-                                    'Not Found',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w200,
-                                        fontSize: 40,
-                                        color: Color.fromRGBO(52, 152, 219, 1)),
+                        ? !notLoad
+                            ? Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.25,
                                   ),
-                                ),
+                                  const Center(
+                                      child: CircularProgressIndicator(
+                                          color:
+                                              Color.fromRGBO(52, 152, 219, 1)))
+                                ],
                               )
-                            ],
-                          )
+                            : Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.25,
+                                  ),
+                                  const Center(
+                                    child: Text(
+                                      'Not Found',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w200,
+                                          fontSize: 40,
+                                          color:
+                                              Color.fromRGBO(52, 152, 219, 1)),
+                                    ),
+                                  )
+                                ],
+                              )
                         : Column(
                             children: listMobil.map((e) {
                             return GestureDetector(
@@ -275,6 +287,7 @@ query loadKendaraan($id: Int, $jenis: Int) {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
                                     return TambahKendaraan(
+                                      isEdit: false,
                                       isMobil: true,
                                     );
                                   }));

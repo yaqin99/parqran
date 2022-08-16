@@ -9,14 +9,21 @@ import '../../model/person.dart';
 import '../../model/personCard.dart';
 import 'package:provider/provider.dart';
 import '../../model/services.dart';
+import '../../model/kendaraan.dart';
 import 'dart:convert' as convert;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:restart_app/restart_app.dart';
 
 class TambahKendaraan extends StatefulWidget {
+  final bool isEdit;
   final bool isMobil;
-  const TambahKendaraan({Key? key, required this.isMobil}) : super(key: key);
+
+  const TambahKendaraan({
+    Key? key,
+    required this.isMobil,
+    required this.isEdit,
+  }) : super(key: key);
   @override
   State<TambahKendaraan> createState() => _TambahKendaraanState();
 }
@@ -63,8 +70,18 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
     });
   }
 
+  tipeSet() {
+    if (widget.isMobil == false) {
+      tipe = '0';
+    }
+    if (widget.isMobil == true) {
+      tipe = '1';
+    }
+  }
+
   @override
   void initState() {
+    tipeSet();
     // TODO: implement initState
     super.initState();
   }
@@ -289,149 +306,6 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                             fillColor: Colors.white70),
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(top: 10),
-                                // decoration: BoxDecoration(
-                                //     border: Border.all(color: Colors.black)),
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 72),
-                                      child: Text(
-                                        'Tipe',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 17,
-                                            color: Color.fromRGBO(
-                                                52, 152, 219, 1)),
-                                      ),
-                                    ),
-                                    Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            border: Border.all(
-                                                color: Colors.black54)),
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.475,
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.075,
-                                        child: Row(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                tipe = '0';
-                                                print('tipe $tipe');
-                                                tipeKendaraanMotor = true;
-                                                tipeKendaraanMobil = false;
-                                                motorText = Color.fromRGBO(
-                                                    52, 152, 219, 1);
-                                                ;
-                                                warnaMotorButton =
-                                                    Color.fromRGBO(
-                                                        52, 152, 219, 1);
-                                                setState(() {});
-                                              },
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                    color:
-                                                        (tipeKendaraanMotor ==
-                                                                true)
-                                                            ? warnaMotorButton
-                                                            : Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.only(
-                                                            topLeft: Radius
-                                                                .circular(10),
-                                                            bottomLeft:
-                                                                Radius.circular(
-                                                                    10))),
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.2348,
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.075,
-                                                child: Center(
-                                                    child: Text(
-                                                  'Motor',
-                                                  style: TextStyle(
-                                                      color:
-                                                          (tipeKendaraanMotor ==
-                                                                  true)
-                                                              ? Colors.white
-                                                              : Color.fromRGBO(
-                                                                  52,
-                                                                  152,
-                                                                  219,
-                                                                  1),
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                )),
-                                              ),
-                                            ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                tipe = '1';
-                                                print('tipe $tipe');
-                                                tipeKendaraanMobil = true;
-                                                tipeKendaraanMotor = false;
-                                                mobilText = Color.fromRGBO(
-                                                    52, 152, 219, 1);
-                                                warnaMobilButton =
-                                                    Color.fromRGBO(
-                                                        52, 152, 219, 1);
-                                                setState(() {});
-                                              },
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                    color:
-                                                        (tipeKendaraanMobil ==
-                                                                true)
-                                                            ? warnaMobilButton
-                                                            : Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.only(
-                                                            topRight: Radius
-                                                                .circular(10),
-                                                            bottomRight:
-                                                                Radius.circular(
-                                                                    10))),
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.2348,
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.075,
-                                                child: Center(
-                                                    child: Text(
-                                                  'Mobil',
-                                                  style: TextStyle(
-                                                      color:
-                                                          (tipeKendaraanMobil ==
-                                                                  true)
-                                                              ? Colors.white
-                                                              : Color.fromRGBO(
-                                                                  52,
-                                                                  152,
-                                                                  219,
-                                                                  1),
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                )),
-                                              ),
-                                            ),
-                                          ],
-                                        )),
                                   ],
                                 ),
                               ),

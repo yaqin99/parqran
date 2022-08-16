@@ -12,7 +12,7 @@ import 'package:parqran/views/pengendara/detailMotor.dart';
 import 'package:parqran/views/pengendara/tambahKendaraan.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/kendaraanModel.dart';
+import '../../model/kendaraan.dart';
 import '../../model/person.dart';
 
 class DaftarMotor extends StatefulWidget {
@@ -30,6 +30,7 @@ class _DaftarMotorState extends State<DaftarMotor> {
   String? id_pengguna;
   List listMotor = List.empty(growable: true);
   QueryResult? result;
+  late AnimationController controller;
   var data;
 
   loadMotor(int idUser) async {
@@ -64,7 +65,9 @@ query loadKendaraan($id: Int, $jenis: Int) {
       });
     }
     print(response);
-    setState(() {});
+    setState(() {
+      notLoad = true;
+    });
   }
 
   getMotor() async {
@@ -77,9 +80,12 @@ query loadKendaraan($id: Int, $jenis: Int) {
     }
   }
 
+  bool notLoad = false;
+
   @override
   void initState() {
     getMotor();
+
     super.initState();
   }
 
@@ -153,7 +159,16 @@ query loadKendaraan($id: Int, $jenis: Int) {
                                                   52, 152, 219, 1),
                                             )),
                                         IconButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                              return TambahKendaraan(
+                                                isEdit: true,
+                                                isMobil: false,
+                                              );
+                                            }));
+                                          },
                                           icon: FaIcon(
                                             FontAwesomeIcons.penToSquare,
                                             size: 26,
@@ -189,26 +204,41 @@ query loadKendaraan($id: Int, $jenis: Int) {
                                 )),
                     ),
                     (listMotor.isEmpty)
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.25,
-                              ),
-                              Container(
-                                child: Center(
-                                  child: Text(
-                                    'Not Found',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w200,
-                                        fontSize: 40,
-                                        color: Color.fromRGBO(52, 152, 219, 1)),
+                        ? !notLoad
+                            ? Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.25,
                                   ),
-                                ),
+                                  const Center(
+                                      child: CircularProgressIndicator(
+                                          color:
+                                              Color.fromRGBO(52, 152, 219, 1)))
+                                ],
                               )
-                            ],
-                          )
+                            : Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.25,
+                                  ),
+                                  Container(
+                                    child: Center(
+                                      child: Text(
+                                        'Not Found',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w200,
+                                            fontSize: 40,
+                                            color: Color.fromRGBO(
+                                                52, 152, 219, 1)),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              )
                         : Column(
                             children: listMotor.map((e) {
                             return GestureDetector(
@@ -269,6 +299,7 @@ query loadKendaraan($id: Int, $jenis: Int) {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
                                     return TambahKendaraan(
+                                      isEdit: false,
                                       isMobil: false,
                                     );
                                   }));

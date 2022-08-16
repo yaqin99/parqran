@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:parqran/views/pengendara/daftarMobil.dart';
 import 'package:parqran/views/pengendara/daftarMotor.dart';
 import 'package:parqran/views/pengendara/historyParkir.dart';
+import 'package:parqran/views/pengendara/mainMenu.dart';
 import 'package:parqran/views/pengendara/pinjamKendaraan.dart';
 
 class BottomNavbar extends StatefulWidget {
@@ -31,22 +32,20 @@ class _BottomNavbarState extends State<BottomNavbar> {
                       onPressed: () {
                         Navigator.pushReplacement(context,
                             MaterialPageRoute(builder: (context) {
+                          return MainMenu();
+                        }));
+                      },
+                      icon:
+                          FaIcon(FontAwesomeIcons.house, color: Colors.white)),
+                  IconButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) {
                           return DaftarMotor();
                         }));
                       },
                       icon: FaIcon(FontAwesomeIcons.motorcycle,
                           color: Colors.white)),
-                  IconButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (context) {
-                          return DaftarMobil();
-                        }));
-                      },
-                      icon: FaIcon(
-                        FontAwesomeIcons.carSide,
-                        color: Colors.white,
-                      )),
                 ],
               ),
             ),
@@ -63,11 +62,11 @@ class _BottomNavbarState extends State<BottomNavbar> {
                       onPressed: () {
                         Navigator.pushReplacement(context,
                             MaterialPageRoute(builder: (context) {
-                          return HistoryParkir();
+                          return DaftarMobil();
                         }));
                       },
                       icon: FaIcon(
-                        FontAwesomeIcons.list,
+                        FontAwesomeIcons.carSide,
                         color: Colors.white,
                       )),
                   IconButton(

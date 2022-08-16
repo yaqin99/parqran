@@ -7,6 +7,7 @@ import 'package:parqran/component/parkirBottomNavbar.dart';
 import 'package:parqran/component/parkirFloatButton.dart';
 import 'package:parqran/model/services.dart';
 import 'package:parqran/views/landingPage.dart';
+import 'package:parqran/views/pengendara/historyParkir.dart';
 import 'package:parqran/views/pengendara/loadingPage.dart';
 import '../../model/person.dart';
 import '../../model/personCard.dart';
@@ -112,6 +113,22 @@ class _ProfilState extends State<Profil> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
+                              GestureDetector(
+                                onTap: () async {
+                                  Navigator.pushReplacement(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return HistoryParkir();
+                                  }));
+                                },
+                                child: Icon(
+                                  Icons.list,
+                                  size: 35,
+                                  color: warna,
+                                ),
+                              ),
+                              Container(
+                                width: 20,
+                              ),
                               GestureDetector(
                                 onTap: () async {
                                   final SharedPreferences prefs = await _prefs;
