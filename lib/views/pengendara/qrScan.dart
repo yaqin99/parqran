@@ -14,6 +14,12 @@ import 'package:geolocator/geolocator.dart';
 import '../../model/person.dart';
 import '../../model/services.dart';
 
+class Kendaraan {
+  Kendaraan(this.id, this.nama);
+  String id;
+  String nama;
+}
+
 class QrScan extends StatefulWidget {
   const QrScan({Key? key}) : super(key: key);
 
@@ -26,57 +32,35 @@ class _QrScanState extends State<QrScan> {
   QRViewController? controller;
   Barcode? data;
   String? id_pengguna;
-  List listMotor = List.empty(growable: true);
+  List<Kendaraan> listMotor = List.empty(growable: true);
   QueryResult? result;
 
-  loadMotor(int idUser) async {
+  getMotor() async {
+    final String id_pengguna = Provider.of<Person>(context, listen: false).getIdPengguna.toString();
+    
     const String motor = r'''
 query loadKendaraan($id: Int) {
   Kendaraans(id: $id) {
     nama
-    merk
-    no_registrasi
-    no_stnk
-    jenis
-    warna
     id_kendaraan
 	}
 }
 ''';
 
-    final QueryOptions queryOptions = QueryOptions(
-        document: gql(motor), variables: <String, dynamic>{"id": idUser});
+    final QueryOptions queryOptions = QueryOptions(document: gql(motor), variables: <String, dynamic>{"id": id_pengguna});
     result = await Services.gqlQuery(queryOptions);
     var response = result!.data!['Kendaraans'];
     for (var item in response) {
-      listMotor.add({
-        "nama": item['nama'],
-        "merk": item['merk'],
-        "no_registrasi": item['no_registrasi'],
-        "no_stnk": item['no_stnk'],
-        "jenis": item['jenis'],
-        "warna": item['warna'],
-        "id_kendaraan": item['id_kendaraan']
-      });
+      listMotor.add(Kendaraan(item['id_kendaraan'], item['nama']));
     }
     print(listMotor);
     setState(() {});
   }
 
-  getMotor() async {
-    final String id_pengguna = Provider.of<Person>(context, listen: false)
-        .getIdPengguna
-        .toString();
-    int vehicleId = int.parse(id_pengguna);
-    if (vehicleId != null) {
-      loadMotor(vehicleId);
-    }
-  }
-
-  Future<Position> _determinePosition() async {
+  late Position _lokasi;
+  Future<void> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
-    Position lokasi;
 
     // Test if location services are enabled.
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -105,11 +89,9 @@ query loadKendaraan($id: Int) {
 
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
-    lokasi = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
-    print(lokasi.latitude);
-    print(lokasi.longitude);
-
-    return lokasi;
+    _lokasi = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+    print(_lokasi.latitude);
+    print(_lokasi.longitude);
   }
 
   getCamera() async {
@@ -132,30 +114,6 @@ query loadKendaraan($id: Int) {
 
   bool clicked = false;
   String idPengguna = '';
-
-  loadKendaraan() {
-    // Services.gqlQuery(QueryOptions(
-    //   document: gql(
-    //     '''
-    //       query getKendaraan($id: Int!) {
-    //         kendaraan(id: $id) {
-    //           id
-    //           jenis
-    //           nama
-    //           merk
-    //           warna
-    //           no_registrasi
-    //           no_rangka
-    //           no_stnk
-    //         }
-    //       }
-    //     ''',
-    //   ),
-    //   variables: {
-    //     'id': idPengguna,
-    //   },
-    // ));
-  }
 
   @override
   void initState() {
@@ -198,17 +156,19 @@ query loadKendaraan($id: Int) {
       borderRadius: BorderRadius.circular(15)),
     width: MediaQuery.of(context).size.width * 0.375,
     height: MediaQuery.of(context).size.height * 0.07,
-    child: ListView(scrollDirection: Axis.horizontal, children: [
-      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+    child: ListView.builder(itemBuilder: ((context, index) {
+      return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         Container(
           width: MediaQuery.of(context).size.width * 0.36,
           decoration: BoxDecoration(
             color: const Color.fromRGBO(52, 152, 219, 1),
             borderRadius: BorderRadius.circular(16),
           ),
-          child: const Center(child: PickVehicleButton(name: 'Vario 150'))),
-      ]),
-    ]),
+          child: Center(
+            child: PickVehicleButton(name: listMotor[index].nama))
+          ),
+      ]);
+    }), itemCount: listMotor.length, scrollDirection: Axis.horizontal),
   );
   Widget buildResult() => Container(
         padding: const EdgeInsets.all(12),
@@ -240,14 +200,18 @@ query loadKendaraan($id: Int) {
       Navigator.pop(context);
     })));
   }
+
   checkToServer() async {
     if (data != null) {
+      // if (_lokasi) {
+      //   Timer timer = new Timer(const Duration(seconds: 5), () {
+      //     _determinePosition()
+      //   });
+      // }
       try {
-        final lokasi = await _determinePosition();
-        
         await Dio().post('${dotenv.env['API']!}/distance', data: {
           'id_parkiran': data!.code,
-          'origins': '${lokasi.latitude},${lokasi.longitude}',
+          'origins': '${_lokasi.latitude},${_lokasi.longitude}',
           'id_pengguna': idPengguna,
           'id_kendaraan': '1'
         });
