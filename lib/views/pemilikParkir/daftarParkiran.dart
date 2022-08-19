@@ -22,7 +22,7 @@ class DaftarParkiran extends StatefulWidget {
 
 class _DaftarParkiranState extends State<DaftarParkiran> {
   bool hold = false;
-  Color warna = Colors.transparent;
+  Color warna = Color.fromRGBO(155, 89, 182, 1);
   QueryResult? result;
   List listParkiran = List.empty(growable: true);
 
@@ -32,6 +32,7 @@ query loadParkiran($id: Int) {
   Parkirans(id_pengguna: $id) {
     nama
    	koordinat
+    alamat
 	}
 }
 ''';
@@ -44,6 +45,7 @@ query loadParkiran($id: Int) {
       listParkiran.add({
         "nama": item['nama'],
         "koordinat": item['koordinat'],
+        "alamat": item['alamat']
       });
     }
     print(response);
@@ -51,6 +53,8 @@ query loadParkiran($id: Int) {
       // notLoad = true;
     });
   }
+
+  bool notLoad = false;
 
   getParkiran() async {
     final String id_pengguna = await Provider.of<Person>(context, listen: false)
@@ -162,23 +166,64 @@ query loadParkiran($id: Int) {
                               : Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      'Daftar Parkiran',
-                                      style: TextStyle(
+                                    Text('Daftar Parkiran',
+                                        style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.w400,
-                                          color:
-                                              Color.fromRGBO(155, 89, 182, 1)),
-                                    ),
+                                          color: warna,
+                                        )),
                                   ],
                                 )),
                     ),
-                    Column(
-                      children: listParkiran.map((e) {
-                        return Parkiran(
-                            lokasi: e["nama"], areaCode: e['koordinat']);
-                      }).toList(),
-                    )
+                    (listParkiran.isEmpty)
+                        ? !notLoad
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Center(
+                                      child: CircularProgressIndicator(
+                                          color:
+                                              Color.fromRGBO(155, 89, 182, 1)))
+                                ],
+                              )
+                            : Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.25,
+                                  ),
+                                  Container(
+                                    child: Center(
+                                      child: Text(
+                                        'Not Found',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w200,
+                                            fontSize: 40,
+                                            color: warna),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              )
+                        : Column(
+                            children: listParkiran.map((e) {
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return DetailParkiran(
+                                        nama: e['nama'],
+                                        koordinat: e['koordinat'],
+                                        alamat: e['alamat']);
+                                  }));
+                                },
+                                child: Parkiran(
+                                    lokasi: e["nama"],
+                                    areaCode: e['koordinat']),
+                              );
+                            }).toList(),
+                          )
                   ])
                 ],
               ),
@@ -206,8 +251,8 @@ query loadParkiran($id: Int) {
                                         RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(50))),
-                                    backgroundColor: MaterialStateProperty.all(
-                                        Color.fromRGBO(155, 89, 182, 1))),
+                                    backgroundColor:
+                                        MaterialStateProperty.all(warna)),
                                 onPressed: () {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {

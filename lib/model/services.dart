@@ -21,12 +21,12 @@ abstract class Services {
       String koordinat, String jamBuka, String jamTutup) async {
     try {
       var data = await Dio().post('${dotenv.env['API']!}/parking', data: {
-        'id_pengguna': 1,
-        'nama': 'coba',
-        'alamat': 'alamat',
-        'koordinat': 'koordinat',
-        'jam_buka': '09:10',
-        'jam_tutup': '09:30',
+        'id_pengguna': id_pengguna,
+        'nama': nama,
+        'alamat': alamat,
+        'koordinat': koordinat,
+        'jam_buka': jamBuka,
+        'jam_tutup': jamTutup,
       });
       print(data.data);
       return data.data['data'];

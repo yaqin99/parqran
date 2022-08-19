@@ -149,14 +149,7 @@ class _TambahParkiranState extends State<TambahParkiran> {
     String buka =
         selectedTime.hour.toString() + ':' + selectedTime.minute.toString();
     String tutup = jamTutup.hour.toString() + ':' + jamTutup.minute.toString();
-    // print({
-    //   'id_pengguna': idPengguna,
-    //   'nama': nama.text,
-    //   'alamat': alamat.text,
-    //   'lokasi': lokasi,
-    //   'buka': buka,
-    //   'tutup': tutup,
-    // });
+
     result = await Services.postParkiran(
       idPengguna,
       nama.text,

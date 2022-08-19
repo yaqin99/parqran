@@ -18,8 +18,14 @@ import 'package:restart_app/restart_app.dart';
 import '../pengendara/qrGenerate.dart';
 
 class DetailParkiran extends StatefulWidget {
+  final String nama;
+  final String koordinat;
+  final String alamat;
   const DetailParkiran({
     Key? key,
+    required this.nama,
+    required this.koordinat,
+    required this.alamat,
   }) : super(key: key);
   @override
   State<DetailParkiran> createState() => _DetailParkiranState();
@@ -187,7 +193,7 @@ class _DetailParkiranState extends State<DetailParkiran> {
                               ),
                               Container(
                                 child: Text(
-                                  'Pamekasan Plaza',
+                                  widget.nama,
                                   style: TextStyle(
                                       fontSize: 17,
                                       fontWeight: FontWeight.w300,
@@ -217,7 +223,7 @@ class _DetailParkiranState extends State<DetailParkiran> {
                                 ),
                               ),
                               Text(
-                                'Jl. Niaga No. 132',
+                                widget.alamat,
                                 style: TextStyle(
                                     fontWeight: FontWeight.w300,
                                     fontSize: 17,
@@ -246,7 +252,7 @@ class _DetailParkiranState extends State<DetailParkiran> {
                                 ),
                               ),
                               Text(
-                                '-2323637, 2376235',
+                                widget.koordinat,
                                 style: TextStyle(
                                     fontWeight: FontWeight.w300,
                                     fontSize: 17,
