@@ -38,6 +38,7 @@ class _DaftarMotorState extends State<DaftarMotor> {
   String? noStnkEdit;
   String? noRangkaEdit;
   String? fotoEdit;
+  String? idKendaraan;
 
   loadMotor(int idUser) async {
     const String motor = r'''
@@ -168,6 +169,7 @@ query loadKendaraan($id: Int, $jenis: Int) {
                                             )),
                                         IconButton(
                                           onPressed: () {
+                                            hold = false;
                                             Navigator.push(context,
                                                 MaterialPageRoute(
                                                     builder: (context) {
@@ -180,6 +182,8 @@ query loadKendaraan($id: Int, $jenis: Int) {
                                                 noPolEdit: noPolEdit!,
                                                 noStnkEdit: noStnkEdit!,
                                                 noRangkaEdit: noRangkaEdit!,
+                                                idKendaraan:
+                                                    idKendaraan!.toString(),
                                               );
                                             }));
                                           },
@@ -264,6 +268,7 @@ query loadKendaraan($id: Int, $jenis: Int) {
                                 noPolEdit = e['no_registrasi'];
                                 noStnkEdit = e['no_stnk'];
                                 noRangkaEdit = e['no_rangka'];
+                                idKendaraan = e['id_kendaraan'].toString();
                                 setState(() {});
                               },
                               onTap: () {
@@ -316,6 +321,7 @@ query loadKendaraan($id: Int, $jenis: Int) {
                                     backgroundColor: MaterialStateProperty.all(
                                         Color.fromRGBO(52, 152, 219, 1))),
                                 onPressed: () {
+                                  hold = false;
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
                                     return TambahKendaraan(
@@ -327,6 +333,7 @@ query loadKendaraan($id: Int, $jenis: Int) {
                                       noPolEdit: '',
                                       noStnkEdit: '',
                                       noRangkaEdit: '',
+                                      idKendaraan: '',
                                     );
                                   }));
                                 },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:parqran/views/pemilikParkir/PemilikParkirMenu.dart';
 import 'package:parqran/views/pemilikParkir/daftarParkiran.dart';
 import 'package:parqran/views/pemilikParkir/managementParkir.dart';
 import 'package:parqran/views/pemilikParkir/partner.dart';
@@ -34,20 +35,20 @@ class _ParkirBotNavState extends State<ParkirBotNav> {
                       onPressed: () {
                         Navigator.pushReplacement(context,
                             MaterialPageRoute(builder: (context) {
-                          return DaftarParkiran();
+                          return const PemilikParkirMenu();
                         }));
                       },
-                      icon: FaIcon(FontAwesomeIcons.locationDot,
+                      icon: const FaIcon(FontAwesomeIcons.house,
                           color: Colors.white)),
                   IconButton(
                       onPressed: () {
-                        // Navigator.pushReplacement(context,
-                        //     MaterialPageRoute(builder: (context) {
-                        //   return DaftarMobil();
-                        // }));
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) {
+                          return const DaftarParkiran();
+                        }));
                       },
                       icon: FaIcon(
-                        FontAwesomeIcons.circleDollarToSlot,
+                        FontAwesomeIcons.locationDot,
                         color: Colors.white,
                       )),
                 ],

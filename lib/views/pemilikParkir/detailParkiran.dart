@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:parqran/component/bottomNavbar.dart';
 import 'package:parqran/component/floatButton.dart';
+import 'package:parqran/component/parkirBottomNavbar.dart';
+import 'package:parqran/component/parkirFloatButton.dart';
 import 'package:parqran/model/services.dart';
 import 'package:parqran/views/landingPage.dart';
+import 'package:parqran/views/pemilikParkir/pendapatan.dart';
 import 'package:parqran/views/pengendara/loadingPage.dart';
 import '../../model/person.dart';
 import '../../model/personCard.dart';
@@ -12,21 +15,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:restart_app/restart_app.dart';
 
+import '../pengendara/qrGenerate.dart';
+
 class DetailParkiran extends StatefulWidget {
-  final String nama;
-  final String merk;
-  final String warna;
-  final String no_registrasi;
-  final String no_stnk;
-  final String no_rangka;
   const DetailParkiran({
     Key? key,
-    required this.nama,
-    required this.merk,
-    required this.warna,
-    required this.no_registrasi,
-    required this.no_stnk,
-    required this.no_rangka,
   }) : super(key: key);
   @override
   State<DetailParkiran> createState() => _DetailParkiranState();
@@ -34,7 +27,7 @@ class DetailParkiran extends StatefulWidget {
 
 class _DetailParkiranState extends State<DetailParkiran> {
   bool hold = false;
-  Color warna = Colors.transparent;
+  Color warna = Color.fromRGBO(155, 89, 182, 1);
 
   @override
   void initState() {
@@ -58,32 +51,69 @@ class _DetailParkiranState extends State<DetailParkiran> {
               height: MediaQuery.of(context).size.height * 0.17,
               width: MediaQuery.of(context).size.width * 1,
               child: Container(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 18),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pop(
-                          context,
-                        );
-                      },
-                      child: Icon(
-                        Icons.arrow_back,
-                        size: 35,
-                        color: Color.fromRGBO(52, 152, 219, 1),
+                  // decoration:
+                  //     BoxDecoration(border: Border.all(color: Colors.black)),
+                  child: Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 18),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pop(
+                            context,
+                          );
+                        },
+                        child: Icon(
+                          Icons.arrow_back,
+                          size: 35,
+                          color: warna,
+                        ),
                       ),
                     ),
-                  ),
-                  Text(
-                    'Detail Motor',
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w400,
-                        color: Color.fromRGBO(52, 152, 219, 1)),
-                  ),
-                ],
+                    Text(
+                      'Detail Parkiran',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                          color: warna),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.433,
+                      height: MediaQuery.of(context).size.height * 0.1,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            width: 60,
+                            height: 60,
+                            child: ElevatedButton(
+                                style: ButtonStyle(
+                                    shape: MaterialStateProperty.all(
+                                        RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(50),
+                                    )),
+                                    backgroundColor:
+                                        MaterialStateProperty.all(warna)),
+                                onPressed: () {
+                                  Navigator.pushReplacement(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return Pendapatan();
+                                  }));
+                                },
+                                child: Center(
+                                  child: FaIcon(
+                                    FontAwesomeIcons.circleDollarToSlot,
+                                    size: 28,
+                                  ),
+                                )),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               )),
             ),
             Container(
@@ -103,7 +133,7 @@ class _DetailParkiranState extends State<DetailParkiran> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
                         child: Image.network(
-                          'https://www.yamaha-motor.co.id/uploads/products/featured_image/202203141101331391L39753.png',
+                          'http://gbparking.co.id/wp-content/uploads/2019/01/whatsapp-image-2018-04-12-at-165511-6663f53084225c5dffae1181f0807e16_600x400-600x380.jpeg',
                           fit: BoxFit.fill,
                         ),
                       ),
@@ -121,8 +151,7 @@ class _DetailParkiranState extends State<DetailParkiran> {
                                 RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(50),
                             )),
-                            backgroundColor: MaterialStateProperty.all(
-                                Color.fromRGBO(52, 152, 219, 1))),
+                            backgroundColor: MaterialStateProperty.all(warna)),
                         onPressed: () {},
                         child: Icon(Icons.camera_alt_rounded,
                             color: Colors.white)),
@@ -134,7 +163,7 @@ class _DetailParkiranState extends State<DetailParkiran> {
               padding: const EdgeInsets.only(top: 40),
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.75,
-                height: MediaQuery.of(context).size.height * 0.4,
+                height: MediaQuery.of(context).size.height * 0.2,
                 // decoration:
                 //     BoxDecoration(border: Border.all(color: Colors.black)),
                 child: Column(
@@ -147,22 +176,22 @@ class _DetailParkiranState extends State<DetailParkiran> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(right: 77),
+                                padding: const EdgeInsets.only(right: 79),
                                 child: Text(
-                                  'Merk',
+                                  'Nama',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 17,
-                                      color: Color.fromRGBO(52, 152, 219, 1)),
+                                      color: warna),
                                 ),
                               ),
                               Container(
                                 child: Text(
-                                  widget.merk + ' ' + widget.nama,
+                                  'Pamekasan Plaza',
                                   style: TextStyle(
                                       fontSize: 17,
                                       fontWeight: FontWeight.w300,
-                                      color: Color.fromRGBO(52, 152, 219, 1)),
+                                      color: warna),
                                 ),
                               )
                             ],
@@ -180,19 +209,19 @@ class _DetailParkiranState extends State<DetailParkiran> {
                               Padding(
                                 padding: const EdgeInsets.only(right: 66),
                                 child: Text(
-                                  'Warna',
+                                  'Alamat',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 17,
-                                      color: Color.fromRGBO(52, 152, 219, 1)),
+                                      color: warna),
                                 ),
                               ),
                               Text(
-                                widget.warna,
+                                'Jl. Niaga No. 132',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w300,
                                     fontSize: 17,
-                                    color: Color.fromRGBO(52, 152, 219, 1)),
+                                    color: warna),
                               ),
                             ],
                           ),
@@ -207,85 +236,107 @@ class _DetailParkiranState extends State<DetailParkiran> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(right: 41),
+                                padding: const EdgeInsets.only(right: 44),
                                 child: Text(
-                                  'No. Polisi',
+                                  'Koordinat',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 17,
-                                      color: Color.fromRGBO(52, 152, 219, 1)),
+                                      color: warna),
                                 ),
                               ),
                               Text(
-                                widget.no_registrasi,
+                                '-2323637, 2376235',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w300,
                                     fontSize: 17,
-                                    color: Color.fromRGBO(52, 152, 219, 1)),
+                                    color: warna),
                               ),
                             ],
                           ),
                         ),
                       ),
                     ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.75,
+                height: MediaQuery.of(context).size.height * 0.2,
+                // decoration:
+                //     BoxDecoration(border: Border.all(color: Colors.black)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
                     Container(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 30),
-                        child: Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 38),
-                                child: Text(
-                                  'No. STNK',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17,
-                                      color: Color.fromRGBO(52, 152, 219, 1)),
-                                ),
+                      // decoration: BoxDecoration(
+                      //     border: Border.all(color: Colors.black)),
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      height: MediaQuery.of(context).size.height * 0.15,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return QrGenerate();
+                          }));
+                        },
+                        child: Stack(
+                          children: [
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.21,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.09,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Color.fromRGBO(217, 240, 255, 1)),
                               ),
-                              Container(
-                                child: Text(
-                                  widget.no_stnk,
-                                  style: TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w300,
-                                      color: Color.fromRGBO(52, 152, 219, 1)),
-                                ),
-                              )
-                            ],
-                          ),
+                            ),
+                            Image.asset('assets/qrCode.png',
+                                width: 200, height: 200),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 5),
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Text('Generate Qr Code'),
+                              ),
+                            )
+                          ],
                         ),
                       ),
                     ),
                     Container(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 30),
-                        child: Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 25),
-                                child: Text(
-                                  'No. Rangka',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17,
-                                      color: Color.fromRGBO(52, 152, 219, 1)),
-                                ),
-                              ),
-                              Text(
-                                widget.no_rangka,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 17,
-                                    color: Color.fromRGBO(52, 152, 219, 1)),
-                              ),
-                            ],
+                      // decoration: BoxDecoration(
+                      //     border: Border.all(color: Colors.black)),
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      height: MediaQuery.of(context).size.height * 0.15,
+                      child: Stack(
+                        children: [
+                          Align(
+                            alignment: Alignment.topCenter,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.21,
+                              height: MediaQuery.of(context).size.height * 0.09,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Color.fromRGBO(217, 240, 255, 1)),
+                            ),
                           ),
-                        ),
+                          Image.asset('assets/download.png',
+                              width: 200, height: 200),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 5),
+                            child: Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Text('Download Qr Code'),
+                            ),
+                          )
+                        ],
                       ),
                     ),
                   ],
@@ -296,8 +347,8 @@ class _DetailParkiranState extends State<DetailParkiran> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FLoatButton(),
-      bottomNavigationBar: BottomNavbar(),
+      floatingActionButton: ParkirFloatButton(),
+      bottomNavigationBar: ParkirBotNav(),
     );
   }
 }

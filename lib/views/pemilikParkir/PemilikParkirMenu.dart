@@ -8,6 +8,7 @@ import 'package:parqran/model/person.dart';
 import 'package:parqran/views/pemilikParkir/daftarParkiran.dart';
 import 'package:parqran/views/pemilikParkir/managementParkir.dart';
 import 'package:parqran/views/pemilikParkir/partner.dart';
+import 'package:parqran/views/pemilikParkir/pendapatan.dart';
 import 'package:parqran/views/pengendara/daftarMobil.dart';
 import 'package:parqran/views/pengendara/daftarMotor.dart';
 import 'package:parqran/views/pengendara/historyParkir.dart';
@@ -64,8 +65,14 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
                     width: MediaQuery.of(context).size.width * 1,
                     child: Center(
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          Text(
+                            'Selamat Datang $nama',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Color.fromRGBO(155, 89, 182, 1)),
+                          ),
                           SizedBox(
                             width: 60,
                             height: 60,
@@ -134,26 +141,9 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
                                           ),
                                         ),
                                         Align(
-                                          alignment: Alignment.bottomRight,
+                                          alignment: Alignment.center,
                                           child: Stack(
                                             children: [
-                                              Align(
-                                                alignment: Alignment.topLeft,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 7, left: 20),
-                                                  child: Text(
-                                                    '12',
-                                                    style: TextStyle(
-                                                        fontSize: 23,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Color.fromRGBO(
-                                                            155, 89, 182, 1)),
-                                                  ),
-                                                ),
-                                              ),
                                               Center(
                                                 child: Container(
                                                   child: Image.asset(
@@ -172,81 +162,6 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
                                     ),
                                   ),
                                 ),
-                                GestureDetector(
-                                  onTap: () {},
-                                  child: Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.165,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.35,
-                                    child: Stack(
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topCenter,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                color: Color.fromRGBO(
-                                                    239, 201, 255, 1)),
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.135,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.295,
-                                          ),
-                                        ),
-                                        Align(
-                                          alignment: Alignment.bottomRight,
-                                          child: Stack(
-                                            children: [
-                                              Align(
-                                                alignment: Alignment.topLeft,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 7, left: 20),
-                                                  child: Text(
-                                                    '3',
-                                                    style: TextStyle(
-                                                        fontSize: 23,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Color.fromRGBO(
-                                                            155, 89, 182, 1)),
-                                                  ),
-                                                ),
-                                              ),
-                                              Center(
-                                                child: Container(
-                                                  child: Image.asset(
-                                                    'assets/monetary.png',
-                                                    fit: BoxFit.fill,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Align(
-                                            alignment: Alignment.bottomCenter,
-                                            child: Text('Pendapatan'))
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.2,
-                            width: MediaQuery.of(context).size.width * 1,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
                                 GestureDetector(
                                   onTap: () {
                                     Navigator.pushReplacement(context,
@@ -283,23 +198,6 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
                                           alignment: Alignment.bottomRight,
                                           child: Stack(
                                             children: [
-                                              Align(
-                                                alignment: Alignment.topLeft,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 7, left: 20),
-                                                  child: Text(
-                                                    '114',
-                                                    style: TextStyle(
-                                                        fontSize: 23,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Color.fromRGBO(
-                                                            155, 89, 182, 1)),
-                                                  ),
-                                                ),
-                                              ),
                                               Center(
                                                 child: Container(
                                                   child: Image.asset(
@@ -318,6 +216,15 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
                                     ),
                                   ),
                                 ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.2,
+                            width: MediaQuery.of(context).size.width * 1,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
                                 GestureDetector(
                                   onTap: () {
                                     Navigator.pushReplacement(context,
@@ -354,23 +261,6 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
                                           alignment: Alignment.bottomRight,
                                           child: Stack(
                                             children: [
-                                              Align(
-                                                alignment: Alignment.topLeft,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 7, left: 20),
-                                                  child: Text(
-                                                    '1',
-                                                    style: TextStyle(
-                                                        fontSize: 23,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Color.fromRGBO(
-                                                            155, 89, 182, 1)),
-                                                  ),
-                                                ),
-                                              ),
                                               Center(
                                                 child: Container(
                                                   child: Image.asset(
@@ -388,6 +278,13 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
                                       ],
                                     ),
                                   ),
+                                ),
+                                Container(
+                                  color: Colors.transparent,
+                                  height: MediaQuery.of(context).size.height *
+                                      0.165,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.35,
                                 ),
                               ],
                             ),

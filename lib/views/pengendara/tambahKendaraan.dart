@@ -24,6 +24,7 @@ class TambahKendaraan extends StatefulWidget {
   final String noPolEdit;
   final String noStnkEdit;
   final String noRangkaEdit;
+  final String idKendaraan;
   const TambahKendaraan({
     Key? key,
     required this.isMobil,
@@ -34,6 +35,7 @@ class TambahKendaraan extends StatefulWidget {
     required this.noPolEdit,
     required this.noStnkEdit,
     required this.noRangkaEdit,
+    required this.idKendaraan,
   }) : super(key: key);
   @override
   State<TambahKendaraan> createState() => _TambahKendaraanState();
@@ -101,6 +103,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
       tipe = '1';
       print(tipe);
     }
+    print(widget.idKendaraan);
   }
 
   @override
@@ -542,25 +545,31 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                       height:
                                           MediaQuery.of(context).size.height *
                                               0.075,
-                                      child: ElevatedButton(
-                                          style: ButtonStyle(
-                                              shape: MaterialStateProperty.all(
-                                                  RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
+                                      child: (widget.isEdit == true)
+                                          ? ElevatedButton(
+                                              style: ButtonStyle(
+                                                  shape: MaterialStateProperty.all(
+                                                      RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(
                                                               10))),
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                      Color.fromRGBO(
-                                                          52, 152, 219, 1))),
-                                          onPressed: () {
-                                            postVehicle();
-                                          },
-                                          child: Center(
-                                              child: Text('Tambah',
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight: FontWeight.w700)))),
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Color.fromRGBO(
+                                                              52, 152, 219, 1))),
+                                              onPressed: () {
+                                                postVehicle();
+                                              },
+                                              child: Center(
+                                                  child: Text('Update',
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight: FontWeight.w700))))
+                                          : ElevatedButton(
+                                              style: ButtonStyle(shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))), backgroundColor: MaterialStateProperty.all(Color.fromRGBO(52, 152, 219, 1))),
+                                              onPressed: () {
+                                                postVehicle();
+                                              },
+                                              child: Center(child: Text('Tambah', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)))),
                                     )
                                   ],
                                 ),

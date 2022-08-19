@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:parqran/component/bottomNavbar.dart';
 import 'package:parqran/component/floatButton.dart';
 import 'package:parqran/component/motor.dart';
@@ -6,7 +7,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:parqran/component/parkirBottomNavbar.dart';
 import 'package:parqran/component/parkirFloatButton.dart';
 import 'package:parqran/component/parkiran.dart';
+import 'package:parqran/model/person.dart';
+import 'package:parqran/model/services.dart';
+import 'package:parqran/views/pemilikParkir/detailParkiran.dart';
 import 'package:parqran/views/pemilikParkir/tambahParkir.dart';
+import 'package:provider/provider.dart';
 
 class DaftarParkiran extends StatefulWidget {
   const DaftarParkiran({Key? key}) : super(key: key);
@@ -18,6 +23,51 @@ class DaftarParkiran extends StatefulWidget {
 class _DaftarParkiranState extends State<DaftarParkiran> {
   bool hold = false;
   Color warna = Colors.transparent;
+  QueryResult? result;
+  List listParkiran = List.empty(growable: true);
+
+  loadParkiran(int idUser) async {
+    const String parkiran = r'''
+query loadParkiran($id: Int) {
+  Parkirans(id_pengguna: $id) {
+    nama
+   	koordinat
+	}
+}
+''';
+
+    final QueryOptions queryOptions = QueryOptions(
+        document: gql(parkiran), variables: <String, dynamic>{"id": idUser});
+    result = await Services.gqlQuery(queryOptions);
+    var response = result!.data!['Parkirans'];
+    for (var item in response) {
+      listParkiran.add({
+        "nama": item['nama'],
+        "koordinat": item['koordinat'],
+      });
+    }
+    print(response);
+    setState(() {
+      // notLoad = true;
+    });
+  }
+
+  getParkiran() async {
+    final String id_pengguna = await Provider.of<Person>(context, listen: false)
+        .getIdPengguna
+        .toString();
+    int idDriver = int.parse(id_pengguna);
+    if (idDriver != null) {
+      loadParkiran(idDriver);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getParkiran();
+  }
+
   Future<bool?> showWarning(BuildContext context) async => showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -124,32 +174,10 @@ class _DaftarParkiranState extends State<DaftarParkiran> {
                                 )),
                     ),
                     Column(
-                      children: [
-                        GestureDetector(
-                          onLongPressStart: (a) {
-                            setState(() {
-                              hold = true;
-                              warna = Color.fromRGBO(155, 89, 182, 1);
-                            });
-                          },
-                          child: Parkiran(
-                              lokasi: 'Pamekasan Mall',
-                              areaCode: '-126767 , 97721421',
-                              warna: warna),
-                        ),
-                        GestureDetector(
-                          onLongPressStart: (a) {
-                            setState(() {
-                              hold = true;
-                              warna = Color.fromRGBO(155, 89, 182, 1);
-                            });
-                          },
-                          child: Parkiran(
-                              lokasi: 'Pamekasan Mall',
-                              areaCode: '-126767 , 97721421',
-                              warna: warna),
-                        ),
-                      ],
+                      children: listParkiran.map((e) {
+                        return Parkiran(
+                            lokasi: e["nama"], areaCode: e['koordinat']);
+                      }).toList(),
                     )
                   ])
                 ],
@@ -184,9 +212,12 @@ class _DaftarParkiranState extends State<DaftarParkiran> {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
                                     return TambahParkiran(
-                                      latitude: -0,
-                                      longitude: 12,
-                                    );
+                                        latitude: -0,
+                                        longitude: 0,
+                                        namaParkiran: '',
+                                        alamatParkiran: '',
+                                        jamBukaParkiran: '',
+                                        jamTutupParkiran: '');
                                   }));
                                 },
                                 child: Icon(
