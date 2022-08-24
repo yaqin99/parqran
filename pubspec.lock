@@ -324,13 +324,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
-  gql_dio_link:
-    dependency: "direct main"
-    description:
-      name: gql_dio_link
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.2"
   gql_error_link:
     dependency: transitive
     description:
@@ -346,7 +339,7 @@ packages:
     source: hosted
     version: "0.4.0"
   gql_http_link:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: gql_http_link
       url: "https://pub.dartlang.org"
@@ -484,7 +477,7 @@ packages:
       name: path_provider_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.18"
+    version: "2.0.19"
   path_provider_ios:
     dependency: transitive
     description:
