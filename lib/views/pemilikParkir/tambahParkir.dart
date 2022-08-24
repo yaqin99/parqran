@@ -22,8 +22,18 @@ import 'package:restart_app/restart_app.dart';
 class TambahParkiran extends StatefulWidget {
   final double latitude;
   final double longitude;
+  final String namaParkiran;
+  final String alamatParkiran;
+  final String jamBukaParkiran;
+  final String jamTutupParkiran;
   const TambahParkiran(
-      {Key? key, required this.latitude, required this.longitude})
+      {Key? key,
+      required this.latitude,
+      required this.longitude,
+      required this.namaParkiran,
+      required this.alamatParkiran,
+      required this.jamBukaParkiran,
+      required this.jamTutupParkiran})
       : super(key: key);
   @override
   State<TambahParkiran> createState() => _TambahParkiranState();
@@ -32,14 +42,64 @@ class TambahParkiran extends StatefulWidget {
 class _TambahParkiranState extends State<TambahParkiran> {
   bool hold = false;
   TextEditingController timeinput = new TextEditingController();
+  TextEditingController jamTutupText = new TextEditingController();
   TextEditingController nama = new TextEditingController();
   TextEditingController alamat = new TextEditingController();
+  TimeOfDay selectedTime = TimeOfDay.now();
+  TimeOfDay jamTutup = TimeOfDay.now();
+  double? latitude;
+  double? longitude;
+  _initFormValue() {
+    timeinput.text = widget.jamBukaParkiran;
+    jamTutupText.text = widget.jamTutupParkiran;
+    nama.text = widget.namaParkiran;
+    alamat.text = widget.alamatParkiran;
+  }
+
+  _selectTime(BuildContext context) async {
+    final TimeOfDay? timeOfDay = await showTimePicker(
+      context: context,
+      initialTime: selectedTime,
+      initialEntryMode: TimePickerEntryMode.dial,
+    );
+    if (timeOfDay != null && timeOfDay != selectedTime) {
+      setState(() {
+        selectedTime = timeOfDay;
+
+        timeinput.text = selectedTime.hour.toString() +
+            '.' +
+            selectedTime.minute.toString() +
+            ' WIB';
+      });
+    }
+    print(selectedTime.hour);
+  }
+
+  _getJamTutup(BuildContext context) async {
+    final TimeOfDay? timeOfDay = await showTimePicker(
+      context: context,
+      initialTime: jamTutup,
+      initialEntryMode: TimePickerEntryMode.dial,
+    );
+    if (timeOfDay != null && timeOfDay != selectedTime) {
+      setState(() {
+        jamTutup = timeOfDay;
+
+        jamTutupText.text = jamTutup.hour.toString() +
+            '.' +
+            jamTutup.minute.toString() +
+            ' WIB';
+      });
+    }
+  }
 
   Future<Position> _determinePosition() async {
+    Position lokasi;
     bool serviceEnabled;
     LocationPermission permission;
-    Position lokasi;
+
     String? _selectedTime;
+    TimeOfDay selectedTime = TimeOfDay.now();
 
     // Test if location services are enabled.
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -71,29 +131,47 @@ class _TambahParkiranState extends State<TambahParkiran> {
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
     lokasi = await Geolocator.getCurrentPosition();
+    latitude = lokasi.latitude;
+    longitude = lokasi.longitude;
+
     setState(() {});
 
     return lokasi;
   }
 
   Color warna = Color.fromRGBO(155, 89, 182, 1);
-  var response;
-  postVehicle() async {
+
+  var result;
+  postParkiran() async {
+    String lokasi = latitude.toString() + longitude.toString();
     final String idPengguna =
         Provider.of<Person>(context, listen: false).getIdPengguna.toString();
+    String buka =
+        selectedTime.hour.toString() + ':' + selectedTime.minute.toString();
+    String tutup = jamTutup.hour.toString() + ':' + jamTutup.minute.toString();
+
+    result = await Services.postParkiran(
+      idPengguna,
+      nama.text,
+      alamat.text,
+      lokasi,
+      buka,
+      tutup,
+    );
 
     setState(() {
       nama.text = '';
       alamat.text = '';
+
+      timeinput.text = '';
+      jamTutupText.text = '';
       Navigator.pop(context);
     });
   }
 
   @override
   void initState() {
-    print(widget.latitude);
-    print(widget.longitude);
-
+    _determinePosition();
     // TODO: implement initState
     super.initState();
   }
@@ -283,7 +361,7 @@ class _TambahParkiranState extends State<TambahParkiran> {
                                 child: Row(
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.only(right: 30),
+                                      padding: const EdgeInsets.only(right: 28),
                                       child: Text(
                                         'Jam Buka',
                                         style: TextStyle(
@@ -298,7 +376,9 @@ class _TambahParkiranState extends State<TambahParkiran> {
                                       child: TextField(
                                         controller: timeinput,
                                         readOnly: true,
-                                        onTap: () {},
+                                        onTap: () {
+                                          _selectTime(context);
+                                        },
                                         decoration: InputDecoration(
                                             border: OutlineInputBorder(
                                               borderSide: BorderSide(
@@ -322,7 +402,48 @@ class _TambahParkiranState extends State<TambahParkiran> {
                                 child: Row(
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.only(right: 31),
+                                      padding: const EdgeInsets.only(right: 22),
+                                      child: Text(
+                                        'Jam Tutup',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 17,
+                                            color: warna),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.475,
+                                      child: TextField(
+                                        controller: jamTutupText,
+                                        readOnly: true,
+                                        onTap: () {
+                                          _getJamTutup(context);
+                                        },
+                                        decoration: InputDecoration(
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.brown),
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                            ),
+                                            filled: true,
+                                            hintStyle:
+                                                TextStyle(color: Colors.pink),
+                                            fillColor: Colors.white70),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(top: 10),
+                                // decoration: BoxDecoration(
+                                //     border: Border.all(color: Colors.black)),
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 28),
                                       child: Text(
                                         'Koordinat',
                                         style: TextStyle(
@@ -369,7 +490,16 @@ class _TambahParkiranState extends State<TambahParkiran> {
                                                     Navigator.push(context,
                                                         MaterialPageRoute(
                                                             builder: (context) {
-                                                      return GetMap();
+                                                      return GetMap(
+                                                          namaParkiran:
+                                                              nama.text,
+                                                          alamatParkiran:
+                                                              alamat.text,
+                                                          jamBukaParkiran:
+                                                              timeinput.text,
+                                                          jamTutupParkiran:
+                                                              jamTutupText
+                                                                  .text);
                                                     }));
                                                   },
                                                   child: Center(
@@ -420,7 +550,9 @@ class _TambahParkiranState extends State<TambahParkiran> {
                                               backgroundColor:
                                                   MaterialStateProperty.all(
                                                       warna)),
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            postParkiran();
+                                          },
                                           child: Center(
                                               child: Text('Tambah',
                                                   style: TextStyle(

@@ -27,6 +27,14 @@ class _DaftarMobilState extends State<DaftarMobil> {
   Color warna = Colors.transparent;
   List listMobil = List.empty(growable: true);
   QueryResult? result;
+  String? namaEdit;
+  String? merkEdit;
+  String? warnaEdit;
+  String? noPolEdit;
+  String? noStnkEdit;
+  String? noRangkaEdit;
+  String? fotoEdit;
+  String? idKendaraan;
 
   loadMobil(int idUser) async {
     const String mobil = r'''
@@ -36,6 +44,7 @@ query loadKendaraan($id: Int, $jenis: Int) {
     merk
     no_registrasi
     no_stnk
+    no_rangka
     jenis
     warna
     id_kendaraan
@@ -53,6 +62,7 @@ query loadKendaraan($id: Int, $jenis: Int) {
         "merk": item['merk'],
         "no_registrasi": item['no_registrasi'],
         "no_stnk": item['no_stnk'],
+        "no_rangka": item['no_rangka'],
         "jenis": item['jenis'],
         "warna": item['warna'],
         "id_kendaraan": item['id_kendaraan']
@@ -153,12 +163,20 @@ query loadKendaraan($id: Int, $jenis: Int) {
                                             )),
                                         IconButton(
                                           onPressed: () {
+                                            hold = false;
                                             Navigator.push(context,
                                                 MaterialPageRoute(
                                                     builder: (context) {
-                                              return const TambahKendaraan(
+                                              return TambahKendaraan(
+                                                isMobil: true,
                                                 isEdit: true,
-                                                isMobil: false,
+                                                namaEdit: namaEdit!,
+                                                merkEdit: merkEdit!,
+                                                warnaEdit: warnaEdit!,
+                                                noPolEdit: noPolEdit!,
+                                                noStnkEdit: noStnkEdit!,
+                                                noRangkaEdit: noRangkaEdit!,
+                                                idKendaraan: idKendaraan!,
                                               );
                                             }));
                                           },
@@ -235,6 +253,13 @@ query loadKendaraan($id: Int, $jenis: Int) {
                             return GestureDetector(
                                 onLongPress: () {
                                   hold = true;
+                                  namaEdit = e['nama'];
+                                  merkEdit = e['merk'];
+                                  warnaEdit = e['warna'];
+                                  noPolEdit = e['no_registrasi'];
+                                  noStnkEdit = e['no_stnk'];
+                                  noRangkaEdit = e['no_rangka'];
+                                  idKendaraan = e['id_kendaraan'].toString();
                                   setState(() {});
                                 },
                                 onTap: () {
@@ -284,11 +309,19 @@ query loadKendaraan($id: Int, $jenis: Int) {
                                     backgroundColor: MaterialStateProperty.all(
                                         Color.fromRGBO(52, 152, 219, 1))),
                                 onPressed: () {
+                                  hold = false;
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
                                     return TambahKendaraan(
-                                      isEdit: false,
                                       isMobil: true,
+                                      isEdit: false,
+                                      namaEdit: '',
+                                      merkEdit: '',
+                                      warnaEdit: '',
+                                      noPolEdit: '',
+                                      noStnkEdit: '',
+                                      noRangkaEdit: '',
+                                      idKendaraan: '',
                                     );
                                   }));
                                 },

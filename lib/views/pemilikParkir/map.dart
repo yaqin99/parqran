@@ -8,7 +8,24 @@ import 'package:parqran/views/pemilikParkir/tambahParkir.dart';
 import 'package:parqran/views/pengendara/loadingPage.dart';
 import 'package:provider/provider.dart';
 
-class GetMap extends StatelessWidget {
+class GetMap extends StatefulWidget {
+  final String namaParkiran;
+  final String alamatParkiran;
+  final String jamBukaParkiran;
+  final String jamTutupParkiran;
+  const GetMap(
+      {Key? key,
+      required this.namaParkiran,
+      required this.alamatParkiran,
+      required this.jamBukaParkiran,
+      required this.jamTutupParkiran})
+      : super(key: key);
+
+  @override
+  State<GetMap> createState() => _GetMapState();
+}
+
+class _GetMapState extends State<GetMap> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -30,6 +47,8 @@ class MapSampleState extends State<MapSample> {
   Position? getPosition2;
   double? latitude;
   double? longitude;
+
+  _setValue() {}
 
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
@@ -110,8 +129,7 @@ class MapSampleState extends State<MapSample> {
           controller.animateCamera(CameraUpdate.newLatLng(
               LatLng(lokasi!.latitude, lokasi!.longitude)));
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return TambahParkiran(
-                latitude: lokasi!.latitude, longitude: lokasi!.longitude);
+            return Text('ds');
           }));
         },
         label: Text('Get Lokasi'),

@@ -4,18 +4,17 @@ class Parkiran extends StatelessWidget {
   final String lokasi;
   final String areaCode;
 
-  final Color warna;
-  const Parkiran(
-      {Key? key,
-      required this.lokasi,
-      required this.areaCode,
-      required this.warna})
-      : super(key: key);
+  const Parkiran({
+    Key? key,
+    required this.lokasi,
+    required this.areaCode,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(border: Border.all(color: warna, width: 3)),
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.transparent, width: 3)),
       height: MediaQuery.of(context).size.height * 0.1524,
       width: MediaQuery.of(context).size.width * 1,
       child: Column(
@@ -67,7 +66,7 @@ class Parkiran extends StatelessWidget {
                         areaCode,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 20,
+                            fontSize: 15,
                             color: Color.fromRGBO(155, 89, 182, 1)),
                       ),
                     ),

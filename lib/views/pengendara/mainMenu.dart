@@ -72,7 +72,12 @@ class _MainMenuState extends State<MainMenu> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('Selamat Datang $nama'),
+                                Text(
+                                  'Selamat Datang $nama',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: Color.fromRGBO(52, 152, 219, 1)),
+                                ),
                                 // PersonName(person: person!),
                                 SizedBox(
                                   width: 60,
@@ -82,14 +87,14 @@ class _MainMenuState extends State<MainMenu> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => const Profil(addWarna: false),
+                                          builder: (context) =>
+                                              const Profil(addWarna: false),
                                         ),
                                       );
                                     },
                                     child: CircleAvatar(
-                                      backgroundImage: NetworkImage(foto),
-                                      radius: 10
-                                    ),
+                                        backgroundImage: NetworkImage(foto),
+                                        radius: 10),
                                   ),
                                 )
                               ],
@@ -137,8 +142,12 @@ class _MainMenuState extends State<MainMenu> {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               20),
-                                                      color: const Color.fromRGBO(
-                                                          217, 240, 255, 1)),
+                                                      color:
+                                                          const Color.fromRGBO(
+                                                              217,
+                                                              240,
+                                                              255,
+                                                              1)),
                                                   height: MediaQuery.of(context)
                                                           .size
                                                           .height *
@@ -154,8 +163,9 @@ class _MainMenuState extends State<MainMenu> {
                                                 child: Stack(
                                                   children: [
                                                     Container(
-                                                      margin: const EdgeInsets.only(
-                                                          bottom: 20),
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              bottom: 20),
                                                       child: Image.asset(
                                                         'assets/motorcyclenew.png',
                                                         fit: BoxFit.fill,
@@ -198,8 +208,12 @@ class _MainMenuState extends State<MainMenu> {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               20),
-                                                      color: const Color.fromRGBO(
-                                                          217, 240, 255, 1)),
+                                                      color:
+                                                          const Color.fromRGBO(
+                                                              217,
+                                                              240,
+                                                              255,
+                                                              1)),
                                                   height: MediaQuery.of(context)
                                                           .size
                                                           .height *
@@ -215,8 +229,9 @@ class _MainMenuState extends State<MainMenu> {
                                                 child: Stack(
                                                   children: [
                                                     Container(
-                                                      margin: const EdgeInsets.only(
-                                                          bottom: 20),
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              bottom: 20),
                                                       child: Image.asset(
                                                         'assets/carnew.png',
                                                         fit: BoxFit.fill,
@@ -270,8 +285,12 @@ class _MainMenuState extends State<MainMenu> {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               20),
-                                                      color: const Color.fromRGBO(
-                                                          217, 240, 255, 1)),
+                                                      color:
+                                                          const Color.fromRGBO(
+                                                              217,
+                                                              240,
+                                                              255,
+                                                              1)),
                                                   height: MediaQuery.of(context)
                                                           .size
                                                           .height *
@@ -287,8 +306,9 @@ class _MainMenuState extends State<MainMenu> {
                                                 child: Stack(
                                                   children: [
                                                     Container(
-                                                      margin: const EdgeInsets.only(
-                                                          bottom: 20),
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              bottom: 20),
                                                       child: Image.asset(
                                                         'assets/list.png',
                                                         fit: BoxFit.fill,
@@ -331,8 +351,12 @@ class _MainMenuState extends State<MainMenu> {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               20),
-                                                      color: const Color.fromRGBO(
-                                                          217, 240, 255, 1)),
+                                                      color:
+                                                          const Color.fromRGBO(
+                                                              217,
+                                                              240,
+                                                              255,
+                                                              1)),
                                                   height: MediaQuery.of(context)
                                                           .size
                                                           .height *
@@ -350,8 +374,9 @@ class _MainMenuState extends State<MainMenu> {
                                                       Alignment.topCenter,
                                                   children: [
                                                     Container(
-                                                      margin: const EdgeInsets.only(
-                                                          bottom: 20),
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              bottom: 20),
                                                       child: Image.asset(
                                                         'assets/pinjam.png',
                                                         fit: BoxFit.fill,
@@ -374,15 +399,6 @@ class _MainMenuState extends State<MainMenu> {
                                 ),
                               ]),
                         ),
-                        RaisedButton(
-                          onPressed: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return QrGenerate();
-                            }));
-                          },
-                          child: Text('Klik'),
-                        )
                       ],
                     ),
                   ),

@@ -18,11 +18,24 @@ import 'package:restart_app/restart_app.dart';
 class TambahKendaraan extends StatefulWidget {
   final bool isEdit;
   final bool isMobil;
-
+  final String namaEdit;
+  final String merkEdit;
+  final String warnaEdit;
+  final String noPolEdit;
+  final String noStnkEdit;
+  final String noRangkaEdit;
+  final String idKendaraan;
   const TambahKendaraan({
     Key? key,
     required this.isMobil,
     required this.isEdit,
+    required this.namaEdit,
+    required this.merkEdit,
+    required this.warnaEdit,
+    required this.noPolEdit,
+    required this.noStnkEdit,
+    required this.noRangkaEdit,
+    required this.idKendaraan,
   }) : super(key: key);
   @override
   State<TambahKendaraan> createState() => _TambahKendaraanState();
@@ -70,18 +83,33 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
     });
   }
 
-  tipeSet() {
+  initValue() {
+    if (widget.isEdit == true) {
+      nama.text = widget.namaEdit;
+      merk.text = widget.merkEdit;
+      warna.text = widget.warnaEdit;
+      noRegistrasi.text = widget.noPolEdit;
+      noRangka.text = widget.noRangkaEdit;
+      noStnk.text = widget.noStnkEdit;
+    }
+  }
+
+  setTipe() {
     if (widget.isMobil == false) {
       tipe = '0';
+      print(tipe);
     }
     if (widget.isMobil == true) {
       tipe = '1';
+      print(tipe);
     }
+    print(widget.idKendaraan);
   }
 
   @override
   void initState() {
-    tipeSet();
+    initValue();
+    setTipe();
     // TODO: implement initState
     super.initState();
   }
@@ -517,25 +545,31 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                       height:
                                           MediaQuery.of(context).size.height *
                                               0.075,
-                                      child: ElevatedButton(
-                                          style: ButtonStyle(
-                                              shape: MaterialStateProperty.all(
-                                                  RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
+                                      child: (widget.isEdit == true)
+                                          ? ElevatedButton(
+                                              style: ButtonStyle(
+                                                  shape: MaterialStateProperty.all(
+                                                      RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(
                                                               10))),
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                      Color.fromRGBO(
-                                                          52, 152, 219, 1))),
-                                          onPressed: () {
-                                            postVehicle();
-                                          },
-                                          child: Center(
-                                              child: Text('Tambah',
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight: FontWeight.w700)))),
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Color.fromRGBO(
+                                                              52, 152, 219, 1))),
+                                              onPressed: () {
+                                                postVehicle();
+                                              },
+                                              child: Center(
+                                                  child: Text('Update',
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight: FontWeight.w700))))
+                                          : ElevatedButton(
+                                              style: ButtonStyle(shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))), backgroundColor: MaterialStateProperty.all(Color.fromRGBO(52, 152, 219, 1))),
+                                              onPressed: () {
+                                                postVehicle();
+                                              },
+                                              child: Center(child: Text('Tambah', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)))),
                                     )
                                   ],
                                 ),

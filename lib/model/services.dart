@@ -17,6 +17,25 @@ abstract class Services {
     }
   }
 
+  static Future postParkiran(String id_pengguna, String nama, String alamat,
+      String koordinat, String jamBuka, String jamTutup) async {
+    try {
+      var data = await Dio().post('${dotenv.env['API']!}/parking', data: {
+        'id_pengguna': id_pengguna,
+        'nama': nama,
+        'alamat': alamat,
+        'koordinat': koordinat,
+        'jam_buka': jamBuka,
+        'jam_tutup': jamTutup,
+      });
+      print(data.data);
+      return data.data['data'];
+    } catch (e) {
+      print(e);
+      // throw ExcReption(e.toString());
+    }
+  }
+
   static GraphQLClient? client;
 
   static _checkGraphql() {

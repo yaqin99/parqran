@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:parqran/component/bottomNavbar.dart';
 import 'package:parqran/component/daftarKendaraanPinjam.dart';
 import 'package:parqran/component/daftarParkir.dart';
@@ -9,6 +10,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:parqran/component/parkirBottomNavbar.dart';
 import 'package:parqran/component/parkirFloatButton.dart';
 import 'package:parqran/component/parkirLocation.dart';
+import 'package:parqran/model/person.dart';
+import 'package:provider/provider.dart';
+
+import '../../model/services.dart';
 
 class ManageParkir extends StatefulWidget {
   const ManageParkir({Key? key}) : super(key: key);
@@ -23,6 +28,52 @@ class _ManageParkirState extends State<ManageParkir> {
   bool warnaPress = false;
   Color warnaText = Color.fromRGBO(155, 89, 182, 1);
   bool show = false;
+  QueryResult? result;
+  List listParkiran = List.empty(growable: true);
+  String? namaParkiran;
+  String? lokasi;
+  loadParkiran(int idUser) async {
+    const String parkiran = r'''
+query loadParkiran($id: Int) {
+  Parkirans(id_pengguna: $id) {
+    nama
+   	koordinat
+	}
+}
+''';
+
+    final QueryOptions queryOptions = QueryOptions(
+        document: gql(parkiran), variables: <String, dynamic>{"id": idUser});
+    result = await Services.gqlQuery(queryOptions);
+    var response = result!.data!['Parkirans'];
+    for (var item in response) {
+      listParkiran.add({
+        "nama": item['nama'],
+        "koordinat": item['koordinat'],
+      });
+    }
+    print(response);
+    setState(() {
+      // notLoad = true;
+    });
+  }
+
+  getParkiran() async {
+    final String id_pengguna = await Provider.of<Person>(context, listen: false)
+        .getIdPengguna
+        .toString();
+    int idDriver = int.parse(id_pengguna);
+    if (idDriver != null) {
+      loadParkiran(idDriver);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getParkiran();
+  }
+
   Future<bool?> showWarning(BuildContext context) async => showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -42,6 +93,7 @@ class _ManageParkirState extends State<ManageParkir> {
           ));
   @override
   Widget build(BuildContext context) {
+    bool notLoad = false;
     return WillPopScope(
       onWillPop: () async {
         print('Back Button Pressed');
@@ -84,55 +136,52 @@ class _ManageParkirState extends State<ManageParkir> {
                               color: Color.fromRGBO(155, 89, 182, 1))),
                       child:
                           ListView(scrollDirection: Axis.horizontal, children: [
-                        Row(
-                          children: [
-                            GestureDetector(
-                                onTap: () {
-                                  clicked = true;
-                                  setState(() {});
-                                },
-                                child: ParkirSwipeButton(nomer: '1')),
-                            GestureDetector(
-                                onTap: () {
-                                  clicked = true;
-                                  setState(() {});
-                                },
-                                child: ParkirSwipeButton(nomer: '2')),
-                            GestureDetector(
-                                onTap: () {
-                                  clicked = true;
-                                  setState(() {});
-                                },
-                                child: ParkirSwipeButton(nomer: '3')),
-                            GestureDetector(
-                                onTap: () {
-                                  clicked = true;
-                                  setState(() {});
-                                },
-                                child: ParkirSwipeButton(nomer: '4')),
-                            GestureDetector(
-                                onTap: () {
-                                  clicked = true;
-                                  setState(() {});
-                                },
-                                child: ParkirSwipeButton(nomer: '5')),
-                            GestureDetector(
-                                onTap: () {
-                                  clicked = true;
-                                  setState(() {});
-                                },
-                                child: ParkirSwipeButton(nomer: '6')),
-                            GestureDetector(
-                                onTap: () {
-                                  clicked = true;
-                                  setState(() {});
-                                },
-                                child: ParkirSwipeButton(nomer: '7')),
-                          ],
-                        ),
+                        (listParkiran.isEmpty)
+                            ? !notLoad
+                                ? Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.25,
+                                      ),
+                                      const Center(
+                                          child: CircularProgressIndicator(
+                                              color: Color.fromRGBO(
+                                                  155, 89, 182, 1)))
+                                    ],
+                                  )
+                                : Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Tidak ada Parkiran',
+                                        style: TextStyle(
+                                            color: warnaText,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 25),
+                                      )
+                                    ],
+                                  )
+                            : Row(
+                                children: listParkiran.map((e) {
+                                  var index = listParkiran.indexOf(e) + 1;
+                                  return GestureDetector(
+                                      onTap: () {
+                                        namaParkiran = e['nama'];
+                                        lokasi = e['koordinat'];
+                                        setState(() {});
+                                      },
+                                      child: ParkirSwipeButton(
+                                          nomer: index.toString()));
+                                }).toList(),
+                              ),
                       ]),
                     ),
-                    (clicked == true)
+                    (namaParkiran != null)
                         ? Padding(
                             padding: const EdgeInsets.only(top: 20),
                             child: Column(
@@ -186,7 +235,7 @@ class _ManageParkirState extends State<ManageParkir> {
                                                 MainAxisAlignment.spaceEvenly,
                                             children: [
                                               Text(
-                                                'Citayam Fashion Week',
+                                                namaParkiran!,
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w400,
                                                     fontSize: 20,
@@ -197,7 +246,7 @@ class _ManageParkirState extends State<ManageParkir> {
                                                 padding: const EdgeInsets.only(
                                                     top: 11, bottom: 11),
                                                 child: Text(
-                                                  '-1268681823, 12896414253',
+                                                  lokasi!,
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.w400,
