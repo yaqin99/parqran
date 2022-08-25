@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:parqran/component/pickVehicleButton.dart';
 import 'package:parqran/model/person.dart';
 import 'package:parqran/model/services.dart';
 import 'package:provider/provider.dart';
@@ -34,26 +33,53 @@ class _QrScanState extends State<QrScan> {
   String? id_pengguna;
   List<Kendaraan> listMotor = List.empty(growable: true);
   QueryResult? result;
+  int _idKendaraan = 0;
 
-  getMotor() async {
-    final String id_pengguna = Provider.of<Person>(context, listen: false).getIdPengguna.toString();
+  Future<void> getMotor(BuildContext context) async {
+    String id_pengguna = Provider.of<Person>(context, listen: false).getIdPengguna.toString();
     
     const String motor = r'''
-query loadKendaraan($id: Int) {
-  Kendaraans(id: $id) {
+query loadKendaraan($id_pengguna: Int) {
+  Kendaraans(id_pengguna: $id_pengguna) {
     nama
     id_kendaraan
 	}
 }
 ''';
 
-    final QueryOptions queryOptions = QueryOptions(document: gql(motor), variables: <String, dynamic>{"id": id_pengguna});
+    final QueryOptions queryOptions = QueryOptions(document: gql(motor), variables: <String, dynamic>{"id_pengguna": int.parse(id_pengguna)});
     result = await Services.gqlQuery(queryOptions);
     var response = result!.data!['Kendaraans'];
-    for (var item in response) {
-      listMotor.add(Kendaraan(item['id_kendaraan'], item['nama']));
+    if (response.length == 0) {
+      showDialog<void>(
+        context: context,
+        barrierDismissible: false, 
+        builder: ((context) {
+          return AlertDialog(
+            title: const Text('Peringatan'),
+            content: const Text('Anda belum memiliki kendaraan'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                }, 
+                child: const Text('Tambah Kendaraan')
+              )
+            ],
+          );
+        }),
+      );
+
+      return;
     }
-    print(listMotor);
+    
+    for (var i = 0; i < response.length; i++) {
+      listMotor.add(Kendaraan(response[i]['id_kendaraan'].toString(), response[i]['nama']));
+    }
+    if (response.length == 1) {
+      id_pengguna = response[0]['id_kendaraan'].toString();
+    }
     setState(() {});
   }
 
@@ -94,14 +120,6 @@ query loadKendaraan($id: Int) {
     print(_lokasi.longitude);
   }
 
-  getCamera() async {
-    await controller?.flipCamera();
-    await controller?.flipCamera();
-    print('getData Called');
-
-    setState(() {});
-  }
-
   @override
   void reassemble() {
     super.reassemble();
@@ -117,9 +135,13 @@ query loadKendaraan($id: Int) {
 
   @override
   void initState() {
-    getCamera();
     _determinePosition();
-    getMotor();
+    Future.delayed(Duration.zero, () async {
+      await getMotor(context);
+      await controller?.flipCamera();
+      await controller?.flipCamera();
+      setState(() {});
+    });
 
     super.initState();
   }
@@ -158,15 +180,37 @@ query loadKendaraan($id: Int) {
     height: MediaQuery.of(context).size.height * 0.07,
     child: ListView.builder(itemBuilder: ((context, index) {
       return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Container(
-          width: MediaQuery.of(context).size.width * 0.36,
-          decoration: BoxDecoration(
-            color: const Color.fromRGBO(52, 152, 219, 1),
-            borderRadius: BorderRadius.circular(16),
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              _idKendaraan = int.parse(listMotor[index].id);
+            });
+          },
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.36,
+            decoration: BoxDecoration(
+              color: const Color.fromRGBO(52, 152, 219, 1),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Center(
+              // child: PickVehicleButton(name: listMotor[index].nama)
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Text(
+                      listMotor[index].nama,
+                      style: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
+                    ),
+                  )
+                ],
+              )
+            )
+              // child: 
           ),
-          child: Center(
-            child: PickVehicleButton(name: listMotor[index].nama))
-          ),
+        ),
       ]);
     }), itemCount: listMotor.length, scrollDirection: Axis.horizontal),
   );
@@ -203,6 +247,7 @@ query loadKendaraan($id: Int) {
 
   checkToServer() async {
     if (data != null) {
+      print('send to server');
       // if (_lokasi) {
       //   Timer timer = new Timer(const Duration(seconds: 5), () {
       //     _determinePosition()
@@ -213,7 +258,7 @@ query loadKendaraan($id: Int) {
           'id_parkiran': data!.code,
           'origins': '${_lokasi.latitude},${_lokasi.longitude}',
           'id_pengguna': idPengguna,
-          'id_kendaraan': '1'
+          'id_kendaraan': _idKendaraan,
         });
       } catch (e) {
         print(e);

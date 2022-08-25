@@ -6,6 +6,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 abstract class Services {
   static Future postDataUser(String email, String nama, String foto) async {
+    print('sending data');
     try {
       var data = await Dio().post('${dotenv.env['API']!}/auth', data: {
         'email': email,
