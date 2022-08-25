@@ -137,35 +137,25 @@ query loadParkiran($id: Int) {
                       child:
                           ListView(scrollDirection: Axis.horizontal, children: [
                         (listParkiran.isEmpty)
-                            ? !notLoad
-                                ? Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.25,
-                                      ),
-                                      const Center(
-                                          child: CircularProgressIndicator(
-                                              color: Color.fromRGBO(
-                                                  155, 89, 182, 1)))
-                                    ],
-                                  )
-                                : Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
+                            ? Container(
+                                width:
+                                    MediaQuery.of(context).size.width * 0.876,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Center(
+                                      child: Text(
                                         'Tidak ada Parkiran',
                                         style: TextStyle(
                                             color: warnaText,
                                             fontWeight: FontWeight.bold,
                                             fontSize: 25),
-                                      )
-                                    ],
-                                  )
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )
                             : Row(
                                 children: listParkiran.map((e) {
                                   var index = listParkiran.indexOf(e) + 1;

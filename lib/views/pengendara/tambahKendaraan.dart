@@ -1,19 +1,20 @@
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:parqran/component/bottomNavbar.dart';
 import 'package:parqran/component/floatButton.dart';
 import 'package:parqran/model/services.dart';
-import 'package:parqran/views/landingPage.dart';
-import 'package:parqran/views/pengendara/loadingPage.dart';
 import '../../model/person.dart';
 import '../../model/personCard.dart';
 import 'package:provider/provider.dart';
 import '../../model/services.dart';
-import '../../model/kendaraan.dart';
 import 'dart:convert' as convert;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:restart_app/restart_app.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:open_file/open_file.dart';
 
 class TambahKendaraan extends StatefulWidget {
   final bool isEdit;
@@ -57,19 +58,60 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
   Color mobilText = Color.fromRGBO(52, 152, 219, 1);
   Color? warnaMotorButton;
   Color? warnaMobilButton;
+  File? fotoKendaraan;
+  PlatformFile? fotoStnk;
   var response;
-  postVehicle() async {
+
+  void openFile(PlatformFile file) {
+    OpenFile.open(file.path);
+  }
+
+  File? imageCamera;
+  Future _getImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? imagePicked =
+        await _picker.pickImage(source: ImageSource.camera);
+    fotoKendaraan = File(imagePicked!.path);
+    setState(() {});
+  }
+
+  uploadImage(File file) async {
+    String fileName = file.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      "file": await MultipartFile.fromFile(file.path, filename: fileName),
+    });
+    print(formData.files);
+    response = await Dio().post('${dotenv.env['API']!}/fl', data: formData);
+    print(response);
+  }
+
+  postVehicle(File file) async {
     final String idPengguna =
         Provider.of<Person>(context, listen: false).getIdPengguna.toString();
+    String fileName = file.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      "foto_kendaraan":
+          await MultipartFile.fromFile(file.path, filename: fileName),
+    });
+    print(formData);
     response = await AddKendaraan.postDataKendaraan(
-        int.parse(idPengguna),
-        tipe!,
-        nama.text,
-        merk.text,
-        warna.text,
-        noRegistrasi.text,
-        noRangka.text,
-        noStnk.text);
+      int.parse(idPengguna),
+      tipe!,
+      nama.text,
+      merk.text,
+      warna.text,
+      noRegistrasi.text,
+      noRangka.text,
+      noStnk.text,
+      FormData.fromMap({
+        "foto_kendaraan":
+            await MultipartFile.fromFile(file.path, filename: fileName),
+      }),
+      FormData.fromMap({
+        "foto_kendaraan":
+            await MultipartFile.fromFile(file.path, filename: fileName),
+      }),
+    );
 
     setState(() {
       nama.text = '';
@@ -94,6 +136,9 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
     }
   }
 
+  bool filePicked = false;
+  String? imagePath;
+
   setTipe() {
     if (widget.isMobil == false) {
       tipe = '0';
@@ -110,7 +155,6 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
   void initState() {
     initValue();
     setTipe();
-    // TODO: implement initState
     super.initState();
   }
 
@@ -170,30 +214,47 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.477,
-                            height: MediaQuery.of(context).size.height * 0.23,
-                            child: ElevatedButton(
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                      Color.fromRGBO(255, 255, 255, 1)),
-                                  shape: MaterialStateProperty.all(
-                                      RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(200),
-                                    side: BorderSide(
+                          (fotoKendaraan != null)
+                              ? Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.477,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.23,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child:
+                                        Image.file(File(fotoKendaraan!.path)),
+                                  ))
+                              : Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.477,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.23,
+                                  child: ElevatedButton(
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                const Color.fromRGBO(
+                                                    255, 255, 255, 1)),
+                                        shape: MaterialStateProperty.all(
+                                            RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(200),
+                                          side: BorderSide(
+                                              color: Color.fromRGBO(
+                                                  52, 152, 219, 1),
+                                              width: 3),
+                                        )),
+                                      ),
+                                      onPressed: () {},
+                                      child: FaIcon(
+                                        (widget.isMobil == false)
+                                            ? FontAwesomeIcons.motorcycle
+                                            : FontAwesomeIcons.car,
+                                        size: 100,
                                         color: Color.fromRGBO(52, 152, 219, 1),
-                                        width: 3),
-                                  )),
+                                      )),
                                 ),
-                                onPressed: () {},
-                                child: FaIcon(
-                                  (widget.isMobil == false)
-                                      ? FontAwesomeIcons.motorcycle
-                                      : FontAwesomeIcons.car,
-                                  size: 100,
-                                  color: Color.fromRGBO(52, 152, 219, 1),
-                                )),
-                          ),
                         ],
                       ),
                       Align(
@@ -209,7 +270,109 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                   )),
                                   backgroundColor: MaterialStateProperty.all(
                                       Color.fromRGBO(52, 152, 219, 1))),
-                              onPressed: () {},
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        scrollable: true,
+                                        title: Text('Pilih Opsi'),
+                                        content: Container(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.14,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  FilePickerResult? result =
+                                                      await FilePicker.platform
+                                                          .pickFiles(
+                                                    type: FileType.custom,
+                                                    allowedExtensions: [
+                                                      "jpg",
+                                                      "png"
+                                                    ],
+                                                  );
+
+                                                  if (result != null) {
+                                                    var data =
+                                                        result.files.first;
+                                                    fotoKendaraan =
+                                                        File(data.path!);
+                                                    uploadImage(fotoKendaraan!);
+                                                    setState(() {});
+                                                  } else {
+                                                    // User canceled the picker
+                                                  }
+                                                },
+                                                child: Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.315,
+                                                  child: Stack(
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                bottom: 15),
+                                                        child: Image.asset(
+                                                          'assets/folder.png',
+                                                          width: 150,
+                                                          height: 150,
+                                                        ),
+                                                      ),
+                                                      Positioned(
+                                                          bottom: 17,
+                                                          left: 31,
+                                                          child: Text(
+                                                              'Pilih File'))
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  await _getImage();
+                                                },
+                                                child: Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.315,
+                                                  child: Stack(
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                bottom: 15),
+                                                        child: Image.asset(
+                                                          'assets/camera.png',
+                                                          width: 150,
+                                                          height: 150,
+                                                        ),
+                                                      ),
+                                                      Positioned(
+                                                          bottom: 17,
+                                                          left: 18,
+                                                          child: Text(
+                                                              'Buka Kamera'))
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    });
+                              },
                               child: Icon(Icons.camera_alt_rounded,
                                   color: Colors.white)),
                         ),
@@ -507,7 +670,30 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                                                       152,
                                                                       219,
                                                                       1))),
-                                                  onPressed: () {},
+                                                  onPressed: () async {
+                                                    FilePickerResult? result =
+                                                        await FilePicker
+                                                            .platform
+                                                            .pickFiles(
+                                                      type: FileType.custom,
+                                                      allowedExtensions: [
+                                                        "jpg",
+                                                        "png"
+                                                      ],
+                                                    );
+
+                                                    if (result != null) {
+                                                      var data =
+                                                          result.files.first;
+                                                      fotoStnk = data;
+                                                      print(fotoStnk!.path);
+                                                      filePicked = true;
+
+                                                      setState(() {});
+                                                    } else {
+                                                      // User canceled the picker
+                                                    }
+                                                  },
                                                   child: Center(
                                                       child: Row(
                                                     children: [
@@ -557,7 +743,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                                           Color.fromRGBO(
                                                               52, 152, 219, 1))),
                                               onPressed: () {
-                                                postVehicle();
+                                                postVehicle(fotoKendaraan!);
                                               },
                                               child: Center(
                                                   child: Text('Update',
@@ -567,7 +753,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                           : ElevatedButton(
                                               style: ButtonStyle(shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))), backgroundColor: MaterialStateProperty.all(Color.fromRGBO(52, 152, 219, 1))),
                                               onPressed: () {
-                                                postVehicle();
+                                                postVehicle(fotoKendaraan!);
                                               },
                                               child: Center(child: Text('Tambah', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)))),
                                     )

@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -58,7 +60,9 @@ abstract class AddKendaraan {
       String warna,
       String no_registrasi,
       String no_rangka,
-      String no_stnk) async {
+      String no_stnk,
+      FormData fotoKendaraan,
+      FormData fotoStnk) async {
     try {
       var vehicle = await Dio().post('${dotenv.env['API']!}/vehicle', data: {
         'id_pengguna': id_pengguna,
@@ -69,7 +73,10 @@ abstract class AddKendaraan {
         'no_registrasi': no_registrasi,
         'no_rangka': no_rangka,
         'no_stnk': no_stnk,
+        'foto_kendaraan': fotoKendaraan,
+        'foto_stnk': fotoStnk,
       });
+      print(vehicle.data);
       return vehicle.data;
     } catch (e) {
       print(e);
