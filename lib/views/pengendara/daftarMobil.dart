@@ -38,8 +38,8 @@ class _DaftarMobilState extends State<DaftarMobil> {
 
   loadMobil(int idUser) async {
     const String mobil = r'''
-query loadKendaraan($id: Int, $jenis: Int) {
-  Kendaraans(id: $id, jenis: $jenis) {
+query loadKendaraan($id_pengguna: Int, $jenis: Int) {
+  Kendaraans(id_pengguna: $id_pengguna, jenis: $jenis) {
     nama
     merk
     no_registrasi
@@ -53,7 +53,7 @@ query loadKendaraan($id: Int, $jenis: Int) {
 ''';
     final QueryOptions queryOptions = QueryOptions(
         document: gql(mobil),
-        variables: <String, dynamic>{"id": idUser, "jenis": 1});
+        variables: <String, dynamic>{"id_pengguna": idUser, "jenis": 1});
     result = await Services.gqlQuery(queryOptions);
     var response = result!.data!['Kendaraans'];
     for (var item in response) {

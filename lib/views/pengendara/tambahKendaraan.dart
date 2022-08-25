@@ -80,7 +80,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
     FormData formData = FormData.fromMap({
       "file": await MultipartFile.fromFile(file.path, filename: fileName),
     });
-    print(formData.files);
+    print(formData);
     response = await Dio().post('${dotenv.env['API']!}/fl', data: formData);
     print(response);
   }
