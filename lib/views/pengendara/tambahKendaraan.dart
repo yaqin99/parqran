@@ -1,7 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
+import 'package:http_parser/http_parser.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:parqran/component/bottomNavbar.dart';
@@ -59,7 +60,9 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
   Color? warnaMotorButton;
   Color? warnaMobilButton;
   File? fotoKendaraan;
+
   PlatformFile? fotoStnk;
+  String? fotoKendaraanPath;
   var response;
 
   void openFile(PlatformFile file) {
@@ -67,22 +70,33 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
   }
 
   File? imageCamera;
-  Future _getImage() async {
+  Future _getImageCamera() async {
     final ImagePicker _picker = ImagePicker();
     final XFile? imagePicked =
         await _picker.pickImage(source: ImageSource.camera);
     fotoKendaraan = File(imagePicked!.path);
+    uploadImage(fotoKendaraan!);
+    setState(() {});
+  }
+
+  Future _getImageGalery() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? imagePicked =
+        await _picker.pickImage(source: ImageSource.gallery);
+    fotoKendaraan = File(imagePicked!.path);
+    uploadImage(fotoKendaraan!);
     setState(() {});
   }
 
   uploadImage(File file) async {
     String fileName = file.path.split('/').last;
     FormData formData = FormData.fromMap({
-      "file": await MultipartFile.fromFile(file.path, filename: fileName),
+      "file": await MultipartFile.fromFile(file.path,
+          filename: fileName, contentType: MediaType("image", "jpeg")),
     });
-    print(formData);
     response = await Dio().post('${dotenv.env['API']!}/fl', data: formData);
-    print(response);
+    var jsonValue = jsonDecode(response.toString());
+    return fotoKendaraanPath = jsonValue['path'].toString();
   }
 
   postVehicle(File file) async {
@@ -90,8 +104,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
         Provider.of<Person>(context, listen: false).getIdPengguna.toString();
     String fileName = file.path.split('/').last;
     FormData formData = FormData.fromMap({
-      "foto_kendaraan":
-          await MultipartFile.fromFile(file.path, filename: fileName),
+      "file": await MultipartFile.fromFile(file.path, filename: fileName),
     });
     print(formData);
     response = await AddKendaraan.postDataKendaraan(
@@ -103,14 +116,8 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
       noRegistrasi.text,
       noRangka.text,
       noStnk.text,
-      FormData.fromMap({
-        "foto_kendaraan":
-            await MultipartFile.fromFile(file.path, filename: fileName),
-      }),
-      FormData.fromMap({
-        "foto_kendaraan":
-            await MultipartFile.fromFile(file.path, filename: fileName),
-      }),
+      fotoKendaraanPath!,
+      fotoKendaraanPath!,
     );
 
     setState(() {
@@ -288,26 +295,26 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                             children: [
                                               GestureDetector(
                                                 onTap: () async {
-                                                  FilePickerResult? result =
-                                                      await FilePicker.platform
-                                                          .pickFiles(
-                                                    type: FileType.custom,
-                                                    allowedExtensions: [
-                                                      "jpg",
-                                                      "png"
-                                                    ],
-                                                  );
+                                                  _getImageGalery();
+                                                  // FilePickerResult? result =
+                                                  //     await FilePicker.platform
+                                                  //         .pickFiles(
+                                                  //   type: FileType.custom,
+                                                  //   allowedExtensions: [
+                                                  //     "jpg",
+                                                  //     "png"
+                                                  //   ],
+                                                  // );
 
-                                                  if (result != null) {
-                                                    var data =
-                                                        result.files.first;
-                                                    fotoKendaraan =
-                                                        File(data.path!);
-                                                    uploadImage(fotoKendaraan!);
-                                                    setState(() {});
-                                                  } else {
-                                                    // User canceled the picker
-                                                  }
+                                                  // if (result != null) {
+                                                  //   var data =
+                                                  //       result.files.first;
+
+                                                  //   uploadImage(data);
+                                                  //   setState(() {});
+                                                  // } else {
+                                                  //   // User canceled the picker
+                                                  // }
                                                 },
                                                 child: Container(
                                                   width: MediaQuery.of(context)
@@ -338,7 +345,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                               ),
                                               GestureDetector(
                                                 onTap: () async {
-                                                  await _getImage();
+                                                  await _getImageCamera();
                                                 },
                                                 child: Container(
                                                   width: MediaQuery.of(context)

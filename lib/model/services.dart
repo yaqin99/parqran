@@ -62,8 +62,8 @@ abstract class AddKendaraan {
       String no_registrasi,
       String no_rangka,
       String no_stnk,
-      FormData fotoKendaraan,
-      FormData fotoStnk) async {
+      String fotoKendaraan,
+      String fotoStnk) async {
     try {
       var vehicle = await Dio().post('${dotenv.env['API']!}/vehicle', data: {
         'id_pengguna': id_pengguna,

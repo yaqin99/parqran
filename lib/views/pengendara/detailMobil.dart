@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:parqran/component/bottomNavbar.dart';
@@ -19,6 +21,7 @@ class DetailMobil extends StatefulWidget {
   final String no_registrasi;
   final String no_stnk;
   final String no_rangka;
+  final String foto_kendaraan;
   const DetailMobil({
     Key? key,
     required this.nama,
@@ -27,6 +30,7 @@ class DetailMobil extends StatefulWidget {
     required this.no_registrasi,
     required this.no_stnk,
     required this.no_rangka,
+    required this.foto_kendaraan,
   }) : super(key: key);
   @override
   State<DetailMobil> createState() => _DetailMobilState();
@@ -101,12 +105,8 @@ class _DetailMobilState extends State<DetailMobil> {
                       width: MediaQuery.of(context).size.width * 0.477,
                       height: MediaQuery.of(context).size.height * 0.23,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: Image.network(
-                          'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/2020_Honda_Brio_Satya_S_1.2_DD1_%2820211001%29_01.jpg/800px-2020_Honda_Brio_Satya_S_1.2_DD1_%2820211001%29_01.jpg',
-                          fit: BoxFit.fill,
-                        ),
-                      ),
+                          borderRadius: BorderRadius.circular(100),
+                          child: Image.file(File(widget.foto_kendaraan))),
                     ),
                   ],
                 ),

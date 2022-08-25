@@ -48,6 +48,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
     jenis
     warna
     id_kendaraan
+    foto_kendaraan
 	}
 }
 ''';
@@ -65,7 +66,8 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
         "no_rangka": item['no_rangka'],
         "jenis": item['jenis'],
         "warna": item['warna'],
-        "id_kendaraan": item['id_kendaraan']
+        "id_kendaraan": item['id_kendaraan'],
+        "foto_kendaraan": item['foto_kendaraan']
       });
     }
     print(listMobil);
@@ -266,12 +268,14 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
                                     return DetailMobil(
-                                        nama: e['nama'],
-                                        merk: e['merk'],
-                                        warna: e['warna'],
-                                        no_registrasi: e['no_registrasi'],
-                                        no_stnk: e['no_stnk'],
-                                        no_rangka: 'Masih gak Ada');
+                                      nama: e['nama'],
+                                      merk: e['merk'],
+                                      warna: e['warna'],
+                                      no_registrasi: e['no_registrasi'],
+                                      no_stnk: e['no_stnk'],
+                                      no_rangka: 'Masih gak Ada',
+                                      foto_kendaraan: e['foto_kendaraan'],
+                                    );
                                   }));
                                 },
                                 child: Mobil(
