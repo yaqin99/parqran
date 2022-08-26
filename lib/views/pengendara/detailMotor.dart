@@ -11,6 +11,7 @@ import 'dart:convert' as convert;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:restart_app/restart_app.dart';
+import 'dart:io';
 
 class DetailMotor extends StatefulWidget {
   final String nama;
@@ -19,6 +20,7 @@ class DetailMotor extends StatefulWidget {
   final String no_registrasi;
   final String no_stnk;
   final String no_rangka;
+  final String foto_kendaraan;
   const DetailMotor({
     Key? key,
     required this.nama,
@@ -27,6 +29,7 @@ class DetailMotor extends StatefulWidget {
     required this.no_registrasi,
     required this.no_stnk,
     required this.no_rangka,
+    required this.foto_kendaraan,
   }) : super(key: key);
   @override
   State<DetailMotor> createState() => _DetailMotorState();
@@ -101,12 +104,9 @@ class _DetailMotorState extends State<DetailMotor> {
                       width: MediaQuery.of(context).size.width * 0.477,
                       height: MediaQuery.of(context).size.height * 0.23,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: Image.network(
-                          'https://www.yamaha-motor.co.id/uploads/products/featured_image/202203141101331391L39753.png',
-                          fit: BoxFit.fill,
-                        ),
-                      ),
+                          borderRadius: BorderRadius.circular(100),
+                          child: Image.file(
+                              File('localhost:8080/' + widget.foto_kendaraan))),
                     ),
                   ],
                 ),

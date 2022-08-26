@@ -9,6 +9,7 @@ import 'package:parqran/component/motor.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:parqran/model/services.dart';
 import 'package:parqran/views/pengendara/detailMotor.dart';
+import 'package:parqran/views/pengendara/mainMenu.dart';
 import 'package:parqran/views/pengendara/tambahKendaraan.dart';
 import 'package:provider/provider.dart';
 
@@ -52,6 +53,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
     jenis
     warna
     id_kendaraan
+    foto_kendaraan
 	}
 }
 ''';
@@ -70,7 +72,8 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
         "no_rangka": item['no_rangka'],
         "jenis": item['jenis'],
         "warna": item['warna'],
-        "id_kendaraan": item['id_kendaraan']
+        "id_kendaraan": item['id_kendaraan'],
+        "foto_kendaraan": item['foto_kendaraan']
       });
     }
     print(response);
@@ -98,23 +101,12 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
     super.initState();
   }
 
-  Future<bool?> showWarning(BuildContext context) async => showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-            title: Text('Are you sure want to Exit?'),
-            actions: [
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context, false);
-                  },
-                  child: Text('No')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context, true);
-                  },
-                  child: Text('Yes')),
-            ],
-          ));
+  Future<bool?> backToMenu(BuildContext context) async {
+    return Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) {
+      return MainMenu();
+    }));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +114,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
       onWillPop: () async {
         print('Back Button Pressed');
 
-        final shouldPop = await showWarning(context);
+        final shouldPop = await backToMenu(context);
         return shouldPop ?? false;
       },
       child: Scaffold(
@@ -276,12 +268,14 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
                                   return DetailMotor(
-                                      nama: e['nama'],
-                                      merk: e['merk'],
-                                      warna: e['warna'],
-                                      no_registrasi: e['no_registrasi'],
-                                      no_stnk: e['no_stnk'],
-                                      no_rangka: 'Masih gak Ada');
+                                    nama: e['nama'],
+                                    merk: e['merk'],
+                                    warna: e['warna'],
+                                    no_registrasi: e['no_registrasi'],
+                                    no_stnk: e['no_stnk'],
+                                    no_rangka: 'Masih gak Ada',
+                                    foto_kendaraan: e['foto_kendaraan'],
+                                  );
                                 }));
                               },
                               child: Motor(

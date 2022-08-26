@@ -8,6 +8,7 @@ import 'package:parqran/component/mobil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:parqran/model/person.dart';
 import 'package:parqran/views/pengendara/detailMobil.dart';
+import 'package:parqran/views/pengendara/mainMenu.dart';
 import 'package:parqran/views/pengendara/tambahKendaraan.dart';
 import 'package:provider/provider.dart';
 
@@ -94,23 +95,12 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
     super.initState();
   }
 
-  Future<bool?> showWarning(BuildContext context) async => showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-            title: Text('Are you sure want to Exit?'),
-            actions: [
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context, false);
-                  },
-                  child: Text('No')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context, true);
-                  },
-                  child: Text('Yes')),
-            ],
-          ));
+  Future<bool?> backToMenu(BuildContext context) async {
+    return Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) {
+      return MainMenu();
+    }));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +108,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
       onWillPop: () async {
         print('Back Button Pressed');
 
-        final shouldPop = await showWarning(context);
+        final shouldPop = await backToMenu(context);
         return shouldPop ?? false;
       },
       child: Scaffold(

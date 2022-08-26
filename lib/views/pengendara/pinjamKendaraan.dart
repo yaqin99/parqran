@@ -6,6 +6,7 @@ import 'package:parqran/component/history.dart';
 import 'package:parqran/component/motor.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:parqran/views/pengendara/confirmPinjam.dart';
+import 'package:parqran/views/pengendara/mainMenu.dart';
 
 class PinjamKendaraan extends StatefulWidget {
   const PinjamKendaraan({Key? key}) : super(key: key);
@@ -16,30 +17,20 @@ class PinjamKendaraan extends StatefulWidget {
 
 class _PinjamKendaraanState extends State<PinjamKendaraan> {
   bool show = false;
-  Future<bool?> showWarning(BuildContext context) async => showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-            title: Text('Are you sure want to Exit?'),
-            actions: [
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context, false);
-                  },
-                  child: Text('No')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context, true);
-                  },
-                  child: Text('Yes')),
-            ],
-          ));
+  Future<bool?> backToMenu(BuildContext context) async {
+    return Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) {
+      return MainMenu();
+    }));
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
         print('Back Button Pressed');
 
-        final shouldPop = await showWarning(context);
+        final shouldPop = await backToMenu(context);
         return shouldPop ?? false;
       },
       child: Scaffold(

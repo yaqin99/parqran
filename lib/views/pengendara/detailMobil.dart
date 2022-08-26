@@ -106,7 +106,8 @@ class _DetailMobilState extends State<DetailMobil> {
                       height: MediaQuery.of(context).size.height * 0.23,
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(100),
-                          child: Image.file(File(widget.foto_kendaraan))),
+                          child: Image.file(
+                              File('localhost:8080/' + widget.foto_kendaraan))),
                     ),
                   ],
                 ),

@@ -113,19 +113,19 @@ class _ProfilState extends State<Profil> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              GestureDetector(
-                                onTap: () async {
-                                  Navigator.pushReplacement(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return HistoryParkir();
-                                  }));
-                                },
-                                child: Icon(
-                                  Icons.list,
-                                  size: 35,
-                                  color: warna,
-                                ),
-                              ),
+                              // GestureDetector(
+                              //   onTap: () async {
+                              //     Navigator.pushReplacement(context,
+                              //         MaterialPageRoute(builder: (context) {
+                              //       return HistoryParkir();
+                              //     }));
+                              //   },
+                              //   child: Icon(
+                              //     Icons.list,
+                              //     size: 35,
+                              //     color: warna,
+                              //   ),
+                              // ),
                               Container(
                                 width: 20,
                               ),
