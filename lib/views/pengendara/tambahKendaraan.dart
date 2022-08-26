@@ -88,8 +88,8 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
     setState(() {});
   }
 
-  uploadImage(String path) async {
-    String fileName = path.split('/').last;
+  uploadImage(File file) async {
+    String fileName = file.path.split('/').last;
     FormData formData = FormData.fromMap({
       "file": await MultipartFile.fromFile(file.path,
           filename: fileName, contentType: MediaType("image", "jpeg")),

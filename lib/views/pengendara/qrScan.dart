@@ -240,8 +240,9 @@ query loadKendaraan($id_pengguna: Int) {
     setState(() => this.controller = controller);
     controller.scannedDataStream.listen(((scanData) => setState(() {
       data = scanData;
+      print('msg: ${data!}');
       controller.stopCamera();
-      Navigator.pop(context);
+      // Navigator.pop(context);
     })));
   }
 
@@ -253,16 +254,16 @@ query loadKendaraan($id_pengguna: Int) {
       //     _determinePosition()
       //   });
       // }
-      try {
-        await Dio().post('${dotenv.env['API']!}/distance', data: {
-          'id_parkiran': data!.code,
-          'origins': '${_lokasi.latitude},${_lokasi.longitude}',
-          'id_pengguna': idPengguna,
-          'id_kendaraan': _idKendaraan,
-        });
-      } catch (e) {
-        print(e);
-      }
+      // try {
+      //   await Dio().post('${dotenv.env['API']!}/distance', data: {
+      //     'id_parkiran': data!.code,
+      //     'origins': '${_lokasi.latitude},${_lokasi.longitude}',
+      //     'id_pengguna': idPengguna,
+      //     'id_kendaraan': _idKendaraan,
+      //   });
+      // } catch (e) {
+      //   print(e);
+      // }
     }
   }
 
