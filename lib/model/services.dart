@@ -1,6 +1,4 @@
 import 'package:dio/dio.dart';
-import 'dart:io';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 

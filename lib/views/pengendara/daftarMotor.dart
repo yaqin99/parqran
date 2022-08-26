@@ -1,9 +1,7 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:parqran/component/bottomNavbar.dart';
-import 'package:parqran/component/emptyMotor.dart';
 import 'package:parqran/component/floatButton.dart';
 import 'package:parqran/component/motor.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -13,7 +11,6 @@ import 'package:parqran/views/pengendara/mainMenu.dart';
 import 'package:parqran/views/pengendara/tambahKendaraan.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/kendaraan.dart';
 import '../../model/person.dart';
 
 class DaftarMotor extends StatefulWidget {
@@ -83,13 +80,11 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
   }
 
   getMotor() async {
-    final String id_pengguna = await Provider.of<Person>(context, listen: false)
+    final String id_pengguna = Provider.of<Person>(context, listen: false)
         .getIdPengguna
         .toString();
     int vehicleId = int.parse(id_pengguna);
-    if (vehicleId != null) {
-      loadMotor(vehicleId);
-    }
+    loadMotor(vehicleId);
   }
 
   bool notLoad = false;
@@ -104,7 +99,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
   Future<bool?> backToMenu(BuildContext context) async {
     return Navigator.pushReplacement(context,
         MaterialPageRoute(builder: (context) {
-      return MainMenu();
+      return const MainMenu();
     }));
   }
 
@@ -119,14 +114,14 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
       },
       child: Scaffold(
         body: Center(
-          child: Container(
+          child: SizedBox(
             // decoration: BoxDecoration(border: Border.all(color: Colors.black)),
             width: MediaQuery.of(context).size.width * 0.9,
             child: Stack(children: [
               ListView(
                 children: [
                   Column(children: [
-                    Container(
+                    SizedBox(
                       height: MediaQuery.of(context).size.height * 0.17,
                       width: MediaQuery.of(context).size.width * 1,
                       child: Container(
@@ -142,7 +137,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                           warna = Colors.transparent;
                                         });
                                       },
-                                      icon: FaIcon(
+                                      icon: const FaIcon(
                                         FontAwesomeIcons.xmark,
                                         size: 26,
                                         color: Color.fromRGBO(52, 152, 219, 1),
@@ -152,7 +147,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                       children: [
                                         IconButton(
                                             onPressed: () {},
-                                            icon: Icon(
+                                            icon: const Icon(
                                               Icons
                                                   .photo_size_select_actual_rounded,
                                               size: 26,
@@ -179,7 +174,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                               );
                                             }));
                                           },
-                                          icon: FaIcon(
+                                          icon: const FaIcon(
                                             FontAwesomeIcons.penToSquare,
                                             size: 26,
                                             color:
@@ -188,7 +183,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                         ),
                                         IconButton(
                                           onPressed: () {},
-                                          icon: FaIcon(
+                                          icon: const FaIcon(
                                             FontAwesomeIcons.trash,
                                             size: 26,
                                             color:
@@ -201,7 +196,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                 )
                               : Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
+                                  children: const [
                                     Text(
                                       'Daftar Motor',
                                       style: TextStyle(
@@ -235,16 +230,14 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                     height: MediaQuery.of(context).size.height *
                                         0.25,
                                   ),
-                                  Container(
-                                    child: Center(
-                                      child: Text(
-                                        'Not Found',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w200,
-                                            fontSize: 40,
-                                            color: Color.fromRGBO(
-                                                52, 152, 219, 1)),
-                                      ),
+                                  const Center(
+                                    child: Text(
+                                      'Not Found',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w200,
+                                          fontSize: 40,
+                                          color: Color.fromRGBO(
+                                              52, 152, 219, 1)),
                                     ),
                                   )
                                 ],
@@ -282,6 +275,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                 nama: e['nama'],
                                 noPol: e['no_registrasi'],
                                 warna: e['no_stnk'],
+                                foto: e['foto_kendaraan'],
                               ),
                             );
                           }).toList())
@@ -290,7 +284,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
               ),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: Container(
+                child: SizedBox(
                   // decoration:
                   //     BoxDecoration(border: Border.all(color: Colors.black)),
                   width: MediaQuery.of(context).size.width * 0.9,
@@ -313,7 +307,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                             borderRadius:
                                                 BorderRadius.circular(50))),
                                     backgroundColor: MaterialStateProperty.all(
-                                        Color.fromRGBO(52, 152, 219, 1))),
+                                        const Color.fromRGBO(52, 152, 219, 1))),
                                 onPressed: () {
                                   hold = false;
                                   Navigator.push(context,
@@ -331,7 +325,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                     );
                                   }));
                                 },
-                                child: Icon(
+                                child: const Icon(
                                   Icons.add,
                                   color: Colors.white,
                                 )),
@@ -346,8 +340,8 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: FLoatButton(),
-        bottomNavigationBar: BottomNavbar(),
+        floatingActionButton: const FLoatButton(),
+        bottomNavigationBar: const BottomNavbar(),
       ),
     );
   }

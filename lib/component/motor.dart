@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Motor extends StatelessWidget {
   final String nama;
   final String noPol;
   final String warna;
+  final String foto;
   const Motor({
     Key? key,
     required this.nama,
     required this.noPol,
     required this.warna,
+    required this.foto,
   }) : super(key: key);
 
   @override
@@ -23,7 +26,7 @@ class Motor extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
+              SizedBox(
                 height: MediaQuery.of(context).size.height * 0.13,
                 width: MediaQuery.of(context).size.width * 0.3,
                 child: Stack(
@@ -33,30 +36,25 @@ class Motor extends StatelessWidget {
                       child: Container(
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            color: Color.fromRGBO(217, 240, 255, 1)),
+                            color: const Color.fromRGBO(217, 240, 255, 1)),
                         height: MediaQuery.of(context).size.height * 0.135,
                         width: MediaQuery.of(context).size.width * 0.295,
                       ),
                     ),
                     Center(
-                      child: Container(
-                        child: Image.asset(
-                          'assets/motorcyclenew.png',
-                          fit: BoxFit.fill,
-                        ),
-                      ),
+                      child: Image.network('${dotenv.env['API']}${foto.replaceFirst(RegExp(r'^public'), '')}'),
                     ),
                   ],
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(left: 20),
+                margin: const EdgeInsets.only(left: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       nama,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
                           color: Color.fromRGBO(52, 152, 219, 1)),
@@ -65,7 +63,7 @@ class Motor extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 11, bottom: 11),
                       child: Text(
                         noPol,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
                             color: Color.fromRGBO(52, 152, 219, 1)),
@@ -73,7 +71,7 @@ class Motor extends StatelessWidget {
                     ),
                     Text(
                       warna,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
                           color: Color.fromRGBO(52, 152, 219, 1)),
