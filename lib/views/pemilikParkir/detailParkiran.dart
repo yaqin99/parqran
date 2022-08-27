@@ -1,19 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:parqran/component/bottomNavbar.dart';
-import 'package:parqran/component/floatButton.dart';
 import 'package:parqran/component/parkirBottomNavbar.dart';
 import 'package:parqran/component/parkirFloatButton.dart';
-import 'package:parqran/model/services.dart';
-import 'package:parqran/views/landingPage.dart';
 import 'package:parqran/views/pemilikParkir/pendapatan.dart';
-import 'package:parqran/views/pengendara/loadingPage.dart';
-import '../../model/person.dart';
-import '../../model/personCard.dart';
-import 'dart:convert' as convert;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:restart_app/restart_app.dart';
 
 import '../pengendara/qrGenerate.dart';
 
@@ -33,11 +22,11 @@ class DetailParkiran extends StatefulWidget {
 
 class _DetailParkiranState extends State<DetailParkiran> {
   bool hold = false;
-  Color warna = Color.fromRGBO(155, 89, 182, 1);
+  Color warna = const Color.fromRGBO(155, 89, 182, 1);
 
   @override
   void initState() {
-    // TODO: implement initState
+    
     super.initState();
   }
 
@@ -47,82 +36,77 @@ class _DetailParkiranState extends State<DetailParkiran> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Container(
+        child: SizedBox(
           // decoration: BoxDecoration(border: Border.all(color: Colors.black)),
           width: MediaQuery.of(context).size.width * 0.9,
           child: Column(children: [
-            Container(
+            SizedBox(
               // decoration:
               //     BoxDecoration(border: Border.all(color: Colors.black)),
               height: MediaQuery.of(context).size.height * 0.17,
               width: MediaQuery.of(context).size.width * 1,
-              child: Container(
-                  // decoration:
-                  //     BoxDecoration(border: Border.all(color: Colors.black)),
-                  child: Container(
+              child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 18),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(
+                      context,
+                    );
+                  },
+                  child: Icon(
+                    Icons.arrow_back,
+                    size: 35,
+                    color: warna,
+                  ),
+                ),
+              ),
+              Text(
+                'Detail Parkiran',
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                    color: warna),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.433,
+                height: MediaQuery.of(context).size.height * 0.1,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 18),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.pop(
-                            context,
-                          );
-                        },
-                        child: Icon(
-                          Icons.arrow_back,
-                          size: 35,
-                          color: warna,
-                        ),
-                      ),
+                    SizedBox(
+                      width: 60,
+                      height: 60,
+                      child: ElevatedButton(
+                          style: ButtonStyle(
+                              shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
+                              )),
+                              backgroundColor:
+                                  MaterialStateProperty.all(warna)),
+                          onPressed: () {
+                            Navigator.pushReplacement(context,
+                                MaterialPageRoute(builder: (context) {
+                              return Pendapatan();
+                            }));
+                          },
+                          child: const Center(
+                            child: FaIcon(
+                              FontAwesomeIcons.circleDollarToSlot,
+                              size: 28,
+                            ),
+                          )),
                     ),
-                    Text(
-                      'Detail Parkiran',
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                          color: warna),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.433,
-                      height: MediaQuery.of(context).size.height * 0.1,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Container(
-                            width: 60,
-                            height: 60,
-                            child: ElevatedButton(
-                                style: ButtonStyle(
-                                    shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50),
-                                    )),
-                                    backgroundColor:
-                                        MaterialStateProperty.all(warna)),
-                                onPressed: () {
-                                  Navigator.pushReplacement(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return Pendapatan();
-                                  }));
-                                },
-                                child: Center(
-                                  child: FaIcon(
-                                    FontAwesomeIcons.circleDollarToSlot,
-                                    size: 28,
-                                  ),
-                                )),
-                          ),
-                        ],
-                      ),
-                    )
                   ],
                 ),
-              )),
+              )
+              ],
+              ),
             ),
-            Container(
+            SizedBox(
               // decoration:
               //     BoxDecoration(border: Border.all(color: Colors.black)),
               width: MediaQuery.of(context).size.width * 0.4875,
@@ -148,7 +132,7 @@ class _DetailParkiranState extends State<DetailParkiran> {
                 ),
                 Align(
                   alignment: Alignment.bottomRight,
-                  child: Container(
+                  child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.146,
                     height: MediaQuery.of(context).size.height * 0.07,
                     child: ElevatedButton(
@@ -159,7 +143,7 @@ class _DetailParkiranState extends State<DetailParkiran> {
                             )),
                             backgroundColor: MaterialStateProperty.all(warna)),
                         onPressed: () {},
-                        child: Icon(Icons.camera_alt_rounded,
+                        child: const Icon(Icons.camera_alt_rounded,
                             color: Colors.white)),
                   ),
                 )
@@ -167,100 +151,86 @@ class _DetailParkiranState extends State<DetailParkiran> {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 40),
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.75,
                 height: MediaQuery.of(context).size.height * 0.2,
                 // decoration:
                 //     BoxDecoration(border: Border.all(color: Colors.black)),
                 child: Column(
                   children: [
-                    Container(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 79),
-                                child: Text(
-                                  'Nama',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17,
-                                      color: warna),
-                                ),
-                              ),
-                              Container(
-                                child: Text(
-                                  widget.nama,
-                                  style: TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w300,
-                                      color: warna),
-                                ),
-                              )
-                            ],
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 79),
+                            child: Text(
+                              'Nama',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 17,
+                                  color: warna),
+                            ),
                           ),
-                        ),
+                          Text(
+                            widget.nama,
+                            style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w300,
+                                color: warna),
+                          )
+                        ],
                       ),
                     ),
-                    Container(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 30),
-                        child: Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 66),
-                                child: Text(
-                                  'Alamat',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17,
-                                      color: warna),
-                                ),
-                              ),
-                              Text(
-                                widget.alamat,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 17,
-                                    color: warna),
-                              ),
-                            ],
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 66),
+                            child: Text(
+                              'Alamat',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 17,
+                                  color: warna),
+                            ),
                           ),
-                        ),
+                          Text(
+                            widget.alamat,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                fontSize: 17,
+                                color: warna),
+                          ),
+                        ],
                       ),
                     ),
-                    Container(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 30),
-                        child: Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 44),
-                                child: Text(
-                                  'Koordinat',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17,
-                                      color: warna),
-                                ),
-                              ),
-                              Text(
-                                widget.koordinat,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 17,
-                                    color: warna),
-                              ),
-                            ],
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 44),
+                            child: Text(
+                              'Koordinat',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 17,
+                                  color: warna),
+                            ),
                           ),
-                        ),
+                          Text(
+                            widget.koordinat,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                fontSize: 17,
+                                color: warna),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -269,7 +239,7 @@ class _DetailParkiranState extends State<DetailParkiran> {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 20),
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.75,
                 height: MediaQuery.of(context).size.height * 0.2,
                 // decoration:
@@ -278,7 +248,7 @@ class _DetailParkiranState extends State<DetailParkiran> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
+                    SizedBox(
                       // decoration: BoxDecoration(
                       //     border: Border.all(color: Colors.black)),
                       width: MediaQuery.of(context).size.width * 0.3,
@@ -300,13 +270,13 @@ class _DetailParkiranState extends State<DetailParkiran> {
                                     MediaQuery.of(context).size.height * 0.09,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
-                                    color: Color.fromRGBO(217, 240, 255, 1)),
+                                    color: const Color.fromRGBO(217, 240, 255, 1)),
                               ),
                             ),
                             Image.asset('assets/qrCode.png',
                                 width: 200, height: 200),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 5),
+                            const Padding(
+                              padding: EdgeInsets.only(bottom: 5),
                               child: Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Text('Generate Qr Code'),
@@ -316,7 +286,7 @@ class _DetailParkiranState extends State<DetailParkiran> {
                         ),
                       ),
                     ),
-                    Container(
+                    SizedBox(
                       // decoration: BoxDecoration(
                       //     border: Border.all(color: Colors.black)),
                       width: MediaQuery.of(context).size.width * 0.3,
@@ -330,13 +300,13 @@ class _DetailParkiranState extends State<DetailParkiran> {
                               height: MediaQuery.of(context).size.height * 0.09,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color: Color.fromRGBO(217, 240, 255, 1)),
+                                  color: const Color.fromRGBO(217, 240, 255, 1)),
                             ),
                           ),
                           Image.asset('assets/download.png',
                               width: 200, height: 200),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 5),
+                          const Padding(
+                            padding: EdgeInsets.only(bottom: 5),
                             child: Align(
                               alignment: Alignment.bottomCenter,
                               child: Text('Download Qr Code'),
@@ -353,8 +323,8 @@ class _DetailParkiranState extends State<DetailParkiran> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: ParkirFloatButton(),
-      bottomNavigationBar: ParkirBotNav(),
+      floatingActionButton: const ParkirFloatButton(),
+      bottomNavigationBar: const ParkirBotNav(),
     );
   }
 }
