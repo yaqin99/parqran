@@ -29,7 +29,6 @@ class QrScan extends StatefulWidget {
 class _QrScanState extends State<QrScan> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
-  Barcode? data;
   String? id_pengguna;
   List<Kendaraan> listMotor = List.empty(growable: true);
   QueryResult? result;
@@ -239,14 +238,15 @@ query loadKendaraan($id_pengguna: Int) {
   void onQRViewCreated(QRViewController controller) {
     setState(() => this.controller = controller);
     controller.scannedDataStream.listen(((scanData) => setState(() {
-      data = scanData;
-      print('msg: ${data!}');
+      Barcode data = scanData;
+      // print('msg: ${data!.code}');
+      checkToServer(data.code);
       controller.stopCamera();
       // Navigator.pop(context);
     })));
   }
 
-  checkToServer() async {
+  checkToServer(String? data) async {
     if (data != null) {
       print('send to server');
       // if (_lokasi) {
@@ -254,16 +254,16 @@ query loadKendaraan($id_pengguna: Int) {
       //     _determinePosition()
       //   });
       // }
-      // try {
-      //   await Dio().post('${dotenv.env['API']!}/distance', data: {
-      //     'id_parkiran': data!.code,
-      //     'origins': '${_lokasi.latitude},${_lokasi.longitude}',
-      //     'id_pengguna': idPengguna,
-      //     'id_kendaraan': _idKendaraan,
-      //   });
-      // } catch (e) {
-      //   print(e);
-      // }
+      try {
+        await Dio().post('${dotenv.env['API']!}/distance', data: {
+          'id_parkiran': data,
+          'origins': '${_lokasi.latitude},${_lokasi.longitude}',
+          'id_pengguna': idPengguna,
+          'id_kendaraan': _idKendaraan,
+        });
+      } catch (e) {
+        print(e);
+      }
     }
   }
 
