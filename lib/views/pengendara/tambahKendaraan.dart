@@ -63,9 +63,9 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
   Color? warnaMotorButton;
   Color? warnaMobilButton;
   File? fotoKendaraan;
-
-  PlatformFile? fotoStnk;
+  File? fotoStnk;
   String? fotoKendaraanPath;
+  String? fotoStnkPath;
   var response;
 
   void openFile(PlatformFile file) {
@@ -83,12 +83,47 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
   }
 
   Future _getImageGalery() async {
+    fotoKendaraan = null;
+    FilePickerResult? imagePicked = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ["jpg", "png"],
+    );
+    if (imagePicked!.files.first.size > 1000000) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Ukuran Gambar Terlalu Besar'),
+        action: SnackBarAction(label: 'Ok', onPressed: () {}),
+      ));
+    }
+    if (imagePicked.files.first.size < 1000000) {
+      fotoKendaraan = File(imagePicked.files.first.path!);
+      uploadImage(fotoKendaraan!);
+    }
+
+    Navigator.of(context, rootNavigator: true).pop();
+
+    setState(() {});
+  }
+
+  Future _getStnkPict() async {
     final ImagePicker _picker = ImagePicker();
     final XFile? imagePicked =
         await _picker.pickImage(source: ImageSource.gallery);
-    fotoKendaraan = File(imagePicked!.path);
-    uploadImage(fotoKendaraan!);
+    fotoStnk = File(imagePicked!.path);
+
+    uploadStnk(fotoStnk!);
+    Navigator.of(context, rootNavigator: true).pop();
     setState(() {});
+  }
+
+  uploadStnk(File file) async {
+    String fileName = file.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      "file": await MultipartFile.fromFile(file.path,
+          filename: fileName, contentType: MediaType("image", "jpeg")),
+    });
+    response = await Dio().post('${dotenv.env['API']!}/fl', data: formData);
+    var jsonValue = jsonDecode(response.toString());
+    return fotoStnkPath = jsonValue['path'].toString();
   }
 
   uploadImage(File file) async {
@@ -105,11 +140,18 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
   postVehicle(File file) async {
     final String idPengguna =
         Provider.of<Person>(context, listen: false).getIdPengguna.toString();
-    String fileName = file.path.split('/').last;
-    FormData formData = FormData.fromMap({
-      "file": await MultipartFile.fromFile(file.path, filename: fileName),
-    });
-    print(formData);
+
+    if (nama.text.isEmpty ||
+        merk.text.isEmpty ||
+        noRegistrasi.text.isEmpty ||
+        noRangka.text.isEmpty ||
+        noStnk.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: const Text('Mohon lengkapi Semua Data'),
+        action: SnackBarAction(label: 'Ok', onPressed: () {}),
+      ));
+    }
+
     response = await AddKendaraan.postDataKendaraan(
       int.parse(idPengguna),
       tipe!,
@@ -120,7 +162,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
       noRangka.text,
       noStnk.text,
       fotoKendaraanPath!,
-      fotoKendaraanPath!,
+      fotoStnkPath!,
     );
 
     setState(() {
@@ -307,25 +349,6 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                               GestureDetector(
                                                 onTap: () async {
                                                   _getImageGalery();
-                                                  // FilePickerResult? result =
-                                                  //     await FilePicker.platform
-                                                  //         .pickFiles(
-                                                  //   type: FileType.custom,
-                                                  //   allowedExtensions: [
-                                                  //     "jpg",
-                                                  //     "png"
-                                                  //   ],
-                                                  // );
-
-                                                  // if (result != null) {
-                                                  //   var data =
-                                                  //       result.files.first;
-
-                                                  //   uploadImage(data);
-                                                  //   setState(() {});
-                                                  // } else {
-                                                  //   // User canceled the picker
-                                                  // }
                                                 },
                                                 child: Container(
                                                   width: MediaQuery.of(context)
@@ -689,28 +712,94 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                                                       219,
                                                                       1))),
                                                   onPressed: () async {
-                                                    FilePickerResult? result =
-                                                        await FilePicker
-                                                            .platform
-                                                            .pickFiles(
-                                                      type: FileType.custom,
-                                                      allowedExtensions: [
-                                                        "jpg",
-                                                        "png"
-                                                      ],
-                                                    );
-
-                                                    if (result != null) {
-                                                      var data =
-                                                          result.files.first;
-                                                      fotoStnk = data;
-                                                      print(fotoStnk!.path);
-                                                      filePicked = true;
-
-                                                      setState(() {});
-                                                    } else {
-                                                      // User canceled the picker
-                                                    }
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (BuildContext
+                                                            context) {
+                                                          return AlertDialog(
+                                                            scrollable: true,
+                                                            title: Text(
+                                                                'Pilih Opsi'),
+                                                            content: Container(
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.14,
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceAround,
+                                                                children: [
+                                                                  GestureDetector(
+                                                                    onTap:
+                                                                        () async {
+                                                                      await _getStnkPict();
+                                                                    },
+                                                                    child:
+                                                                        Container(
+                                                                      width: MediaQuery.of(context)
+                                                                              .size
+                                                                              .width *
+                                                                          0.315,
+                                                                      child:
+                                                                          Stack(
+                                                                        children: [
+                                                                          Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.only(bottom: 15),
+                                                                            child:
+                                                                                Image.asset(
+                                                                              'assets/folder.png',
+                                                                              width: 150,
+                                                                              height: 150,
+                                                                            ),
+                                                                          ),
+                                                                          Positioned(
+                                                                              bottom: 17,
+                                                                              left: 31,
+                                                                              child: Text('Pilih File'))
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  GestureDetector(
+                                                                    onTap:
+                                                                        () async {
+                                                                      await _getStnkPict();
+                                                                    },
+                                                                    child:
+                                                                        Container(
+                                                                      width: MediaQuery.of(context)
+                                                                              .size
+                                                                              .width *
+                                                                          0.315,
+                                                                      child:
+                                                                          Stack(
+                                                                        children: [
+                                                                          Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.only(bottom: 15),
+                                                                            child:
+                                                                                Image.asset(
+                                                                              'assets/camera.png',
+                                                                              width: 150,
+                                                                              height: 150,
+                                                                            ),
+                                                                          ),
+                                                                          Positioned(
+                                                                              bottom: 17,
+                                                                              left: 18,
+                                                                              child: Text('Buka Kamera'))
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          );
+                                                        });
                                                   },
                                                   child: Center(
                                                       child: Row(
