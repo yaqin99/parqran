@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:parqran/component/bottomNavbar.dart';
-import 'package:parqran/component/floatButton.dart';
-import 'package:parqran/component/motor.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:parqran/component/parkirBottomNavbar.dart';
 import 'package:parqran/component/parkirFloatButton.dart';
@@ -22,7 +19,7 @@ class DaftarParkiran extends StatefulWidget {
 
 class _DaftarParkiranState extends State<DaftarParkiran> {
   bool hold = false;
-  Color warna = Color.fromRGBO(155, 89, 182, 1);
+  Color warna = const Color.fromRGBO(155, 89, 182, 1);
   QueryResult? result;
   List listParkiran = List.empty(growable: true);
 
@@ -50,20 +47,18 @@ query loadParkiran($id: Int) {
     }
     print(response);
     setState(() {
-      // notLoad = true;
+      notLoad = true;
     });
   }
 
   bool notLoad = false;
 
   getParkiran() async {
-    final String id_pengguna = await Provider.of<Person>(context, listen: false)
+    final String id_pengguna = Provider.of<Person>(context, listen: false)
         .getIdPengguna
         .toString();
     int idDriver = int.parse(id_pengguna);
-    if (idDriver != null) {
-      loadParkiran(idDriver);
-    }
+    loadParkiran(idDriver);
   }
 
   @override
@@ -75,18 +70,18 @@ query loadParkiran($id: Int) {
   Future<bool?> showWarning(BuildContext context) async => showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-            title: Text('Are you sure want to Exit?'),
+            title: const Text('Are you sure want to Exit?'),
             actions: [
               ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context, false);
                   },
-                  child: Text('No')),
+                  child: const Text('No')),
               ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context, true);
                   },
-                  child: Text('Yes')),
+                  child: const Text('Yes')),
             ],
           ));
 
@@ -101,14 +96,14 @@ query loadParkiran($id: Int) {
       },
       child: Scaffold(
         body: Center(
-          child: Container(
+          child: SizedBox(
             // decoration: BoxDecoration(border: Border.all(color: Colors.black)),
             width: MediaQuery.of(context).size.width * 0.9,
             child: Stack(children: [
               ListView(
                 children: [
                   Column(children: [
-                    Container(
+                    SizedBox(
                       height: MediaQuery.of(context).size.height * 0.17,
                       width: MediaQuery.of(context).size.width * 1,
                       child: Container(
@@ -124,7 +119,7 @@ query loadParkiran($id: Int) {
                                           warna = Colors.transparent;
                                         });
                                       },
-                                      icon: FaIcon(
+                                      icon: const FaIcon(
                                         FontAwesomeIcons.xmark,
                                         size: 26,
                                         color: Color.fromRGBO(155, 89, 182, 1),
@@ -134,7 +129,7 @@ query loadParkiran($id: Int) {
                                       children: [
                                         IconButton(
                                             onPressed: () {},
-                                            icon: Icon(
+                                            icon: const Icon(
                                               Icons
                                                   .photo_size_select_actual_rounded,
                                               size: 26,
@@ -143,7 +138,7 @@ query loadParkiran($id: Int) {
                                             )),
                                         IconButton(
                                           onPressed: () {},
-                                          icon: FaIcon(
+                                          icon: const FaIcon(
                                             FontAwesomeIcons.penToSquare,
                                             size: 26,
                                             color:
@@ -152,7 +147,7 @@ query loadParkiran($id: Int) {
                                         ),
                                         IconButton(
                                           onPressed: () {},
-                                          icon: FaIcon(
+                                          icon: const FaIcon(
                                             FontAwesomeIcons.trash,
                                             size: 26,
                                             color:
@@ -179,8 +174,8 @@ query loadParkiran($id: Int) {
                         ? !notLoad
                             ? Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Center(
+                                children: const [
+                                  Center(
                                       child: CircularProgressIndicator(
                                           color:
                                               Color.fromRGBO(155, 89, 182, 1)))
@@ -193,15 +188,13 @@ query loadParkiran($id: Int) {
                                     height: MediaQuery.of(context).size.height *
                                         0.25,
                                   ),
-                                  Container(
-                                    child: Center(
-                                      child: Text(
-                                        'Not Found',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w200,
-                                            fontSize: 40,
-                                            color: warna),
-                                      ),
+                                  Center(
+                                    child: Text(
+                                      'Not Found',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w200,
+                                          fontSize: 40,
+                                          color: warna),
                                     ),
                                   )
                                 ],
@@ -229,7 +222,7 @@ query loadParkiran($id: Int) {
               ),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: Container(
+                child: SizedBox(
                   // decoration:
                   //     BoxDecoration(border: Border.all(color: Colors.black)),
                   width: MediaQuery.of(context).size.width * 0.9,
@@ -265,7 +258,7 @@ query loadParkiran($id: Int) {
                                         jamTutupParkiran: '');
                                   }));
                                 },
-                                child: Icon(
+                                child: const Icon(
                                   Icons.add,
                                   color: Colors.white,
                                 )),
@@ -280,8 +273,8 @@ query loadParkiran($id: Int) {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: ParkirFloatButton(),
-        bottomNavigationBar: ParkirBotNav(),
+        floatingActionButton: const ParkirFloatButton(),
+        bottomNavigationBar: const ParkirBotNav(),
       ),
     );
   }

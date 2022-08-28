@@ -1,23 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:parqran/component/bottomNavbar.dart';
-import 'package:parqran/component/floatButton.dart';
 import 'package:parqran/component/parkirBottomNavbar.dart';
 import 'package:parqran/component/parkirFloatButton.dart';
-import 'package:parqran/model/mapProv.dart';
 import 'package:parqran/model/services.dart';
-import 'package:parqran/views/landingPage.dart';
 import 'package:parqran/views/pemilikParkir/map.dart';
-import 'package:parqran/views/pengendara/loadingPage.dart';
 import '../../model/person.dart';
-import '../../model/personCard.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
-import 'dart:convert' as convert;
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:restart_app/restart_app.dart';
 
 class TambahParkiran extends StatefulWidget {
   final double latitude;
@@ -41,10 +29,10 @@ class TambahParkiran extends StatefulWidget {
 
 class _TambahParkiranState extends State<TambahParkiran> {
   bool hold = false;
-  TextEditingController timeinput = new TextEditingController();
-  TextEditingController jamTutupText = new TextEditingController();
-  TextEditingController nama = new TextEditingController();
-  TextEditingController alamat = new TextEditingController();
+  TextEditingController timeinput = TextEditingController();
+  TextEditingController jamTutupText = TextEditingController();
+  TextEditingController nama = TextEditingController();
+  TextEditingController alamat = TextEditingController();
   TimeOfDay selectedTime = TimeOfDay.now();
   TimeOfDay jamTutup = TimeOfDay.now();
   double? latitude;
@@ -65,11 +53,7 @@ class _TambahParkiranState extends State<TambahParkiran> {
     if (timeOfDay != null && timeOfDay != selectedTime) {
       setState(() {
         selectedTime = timeOfDay;
-
-        timeinput.text = selectedTime.hour.toString() +
-            '.' +
-            selectedTime.minute.toString() +
-            ' WIB';
+        timeinput.text = '${selectedTime.hour}.${selectedTime.minute}';
       });
     }
     print(selectedTime.hour);
@@ -84,11 +68,7 @@ class _TambahParkiranState extends State<TambahParkiran> {
     if (timeOfDay != null && timeOfDay != selectedTime) {
       setState(() {
         jamTutup = timeOfDay;
-
-        jamTutupText.text = jamTutup.hour.toString() +
-            '.' +
-            jamTutup.minute.toString() +
-            ' WIB';
+        jamTutupText.text = '${jamTutup.hour}.${jamTutup.minute}';
       });
     }
   }
@@ -135,20 +115,18 @@ class _TambahParkiranState extends State<TambahParkiran> {
     longitude = lokasi.longitude;
 
     setState(() {});
-
     return lokasi;
   }
 
-  Color warna = Color.fromRGBO(155, 89, 182, 1);
+  Color warna = const Color.fromRGBO(155, 89, 182, 1);
 
   var result;
   postParkiran() async {
     String lokasi = latitude.toString() + longitude.toString();
     final String idPengguna =
         Provider.of<Person>(context, listen: false).getIdPengguna.toString();
-    String buka =
-        selectedTime.hour.toString() + ':' + selectedTime.minute.toString();
-    String tutup = jamTutup.hour.toString() + ':' + jamTutup.minute.toString();
+    String buka = '${selectedTime.hour}:${selectedTime.minute}';
+    String tutup = '${jamTutup.hour}:${jamTutup.minute}';
 
     result = await Services.postParkiran(
       idPengguna,
@@ -172,7 +150,7 @@ class _TambahParkiranState extends State<TambahParkiran> {
   @override
   void initState() {
     _determinePosition();
-    // TODO: implement initState
+    
     super.initState();
   }
 
@@ -185,48 +163,47 @@ class _TambahParkiranState extends State<TambahParkiran> {
 
     return Scaffold(
       body: Center(
-        child: Container(
+        child: SizedBox(
           // decoration: BoxDecoration(border: Border.all(color: Colors.black)),
           width: MediaQuery.of(context).size.width * 0.9,
           child: Stack(children: [
             ListView(children: [
               Column(
                 children: [
-                  Container(
+                  SizedBox(
                     // decoration:
                     //     BoxDecoration(border: Border.all(color: Colors.black)),
                     height: MediaQuery.of(context).size.height * 0.17,
                     width: MediaQuery.of(context).size.width * 1,
-                    child: Container(
-                        child: Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 18),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.pop(
-                                context,
-                              );
-                            },
-                            child: Icon(
-                              Icons.arrow_back,
-                              size: 35,
-                              color: warna,
-                            ),
-                          ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 18),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pop(
+                            context,
+                          );
+                        },
+                        child: Icon(
+                          Icons.arrow_back,
+                          size: 35,
+                          color: warna,
                         ),
-                        Text(
-                          'Tambah Parkiran',
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w400,
-                              color: warna),
-                        ),
+                      ),
+                    ),
+                    Text(
+                      'Tambah Parkiran',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
+                          color: warna),
+                    ),
                       ],
-                    )),
+                    ),
                   ),
-                  Container(
+                  SizedBox(
                     // decoration:
                     //     BoxDecoration(border: Border.all(color: Colors.black)),
                     width: MediaQuery.of(context).size.width * 0.4875,
@@ -235,13 +212,13 @@ class _TambahParkiranState extends State<TambahParkiran> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Container(
+                          SizedBox(
                             width: MediaQuery.of(context).size.width * 0.477,
                             height: MediaQuery.of(context).size.height * 0.23,
                             child: ElevatedButton(
                                 style: ButtonStyle(
                                   backgroundColor: MaterialStateProperty.all(
-                                      Color.fromRGBO(255, 255, 255, 1)),
+                                      const Color.fromRGBO(255, 255, 255, 1)),
                                   shape: MaterialStateProperty.all(
                                       RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(200),
@@ -255,7 +232,7 @@ class _TambahParkiranState extends State<TambahParkiran> {
                       ),
                       Align(
                         alignment: Alignment.bottomRight,
-                        child: Container(
+                        child: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.146,
                           height: MediaQuery.of(context).size.height * 0.07,
                           child: ElevatedButton(
@@ -267,7 +244,7 @@ class _TambahParkiranState extends State<TambahParkiran> {
                                   backgroundColor:
                                       MaterialStateProperty.all(warna)),
                               onPressed: () {},
-                              child: Icon(Icons.camera_alt_rounded,
+                              child: const Icon(Icons.camera_alt_rounded,
                                   color: Colors.white)),
                         ),
                       )
@@ -277,48 +254,44 @@ class _TambahParkiranState extends State<TambahParkiran> {
                     padding: const EdgeInsets.only(top: 40),
                     child: Column(
                       children: [
-                        Container(
+                        SizedBox(
                           width: MediaQuery.of(context).size.width * 0.75,
                           child: Column(
                             children: [
-                              Container(
-                                // decoration: BoxDecoration(
-                                //     border: Border.all(color: Colors.black)),
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 62),
-                                      child: Text(
-                                        'Nama',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 17,
-                                            color: warna),
-                                      ),
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 62),
+                                    child: Text(
+                                      'Nama',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 17,
+                                          color: warna),
                                     ),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.475,
-                                      child: TextField(
-                                        controller: nama,
-                                        decoration: InputDecoration(
-                                            border: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Colors.brown),
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0),
-                                            ),
-                                            filled: true,
-                                            hintStyle:
-                                                TextStyle(color: Colors.pink),
-                                            fillColor: Colors.white70),
-                                      ),
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.475,
+                                    child: TextField(
+                                      controller: nama,
+                                      decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderSide: const BorderSide(
+                                                color: Colors.brown),
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                          ),
+                                          filled: true,
+                                          hintStyle:
+                                              const TextStyle(color: Colors.pink),
+                                          fillColor: Colors.white70),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                               Container(
-                                margin: EdgeInsets.only(top: 10),
+                                margin: const EdgeInsets.only(top: 10),
                                 // decoration: BoxDecoration(
                                 //     border: Border.all(color: Colors.black)),
                                 child: Row(
@@ -340,14 +313,14 @@ class _TambahParkiranState extends State<TambahParkiran> {
                                         controller: alamat,
                                         decoration: InputDecoration(
                                             border: OutlineInputBorder(
-                                              borderSide: BorderSide(
+                                              borderSide: const BorderSide(
                                                   color: Colors.brown),
                                               borderRadius:
                                                   BorderRadius.circular(10.0),
                                             ),
                                             filled: true,
                                             hintStyle:
-                                                TextStyle(color: Colors.pink),
+                                                const TextStyle(color: Colors.pink),
                                             fillColor: Colors.white70),
                                       ),
                                     ),
@@ -355,7 +328,7 @@ class _TambahParkiranState extends State<TambahParkiran> {
                                 ),
                               ),
                               Container(
-                                margin: EdgeInsets.only(top: 10),
+                                margin: const EdgeInsets.only(top: 10),
                                 // decoration: BoxDecoration(
                                 //     border: Border.all(color: Colors.black)),
                                 child: Row(
@@ -381,14 +354,14 @@ class _TambahParkiranState extends State<TambahParkiran> {
                                         },
                                         decoration: InputDecoration(
                                             border: OutlineInputBorder(
-                                              borderSide: BorderSide(
+                                              borderSide: const BorderSide(
                                                   color: Colors.brown),
                                               borderRadius:
                                                   BorderRadius.circular(10.0),
                                             ),
                                             filled: true,
                                             hintStyle:
-                                                TextStyle(color: Colors.pink),
+                                                const TextStyle(color: Colors.pink),
                                             fillColor: Colors.white70),
                                       ),
                                     ),
@@ -396,7 +369,7 @@ class _TambahParkiranState extends State<TambahParkiran> {
                                 ),
                               ),
                               Container(
-                                margin: EdgeInsets.only(top: 10),
+                                margin: const EdgeInsets.only(top: 10),
                                 // decoration: BoxDecoration(
                                 //     border: Border.all(color: Colors.black)),
                                 child: Row(
@@ -422,14 +395,14 @@ class _TambahParkiranState extends State<TambahParkiran> {
                                         },
                                         decoration: InputDecoration(
                                             border: OutlineInputBorder(
-                                              borderSide: BorderSide(
+                                              borderSide: const BorderSide(
                                                   color: Colors.brown),
                                               borderRadius:
                                                   BorderRadius.circular(10.0),
                                             ),
                                             filled: true,
                                             hintStyle:
-                                                TextStyle(color: Colors.pink),
+                                                const TextStyle(color: Colors.pink),
                                             fillColor: Colors.white70),
                                       ),
                                     ),
@@ -437,7 +410,7 @@ class _TambahParkiranState extends State<TambahParkiran> {
                                 ),
                               ),
                               Container(
-                                margin: EdgeInsets.only(top: 10),
+                                margin: const EdgeInsets.only(top: 10),
                                 // decoration: BoxDecoration(
                                 //     border: Border.all(color: Colors.black)),
                                 child: Row(
@@ -466,7 +439,7 @@ class _TambahParkiranState extends State<TambahParkiran> {
                                                 0.075,
                                         child: Row(
                                           children: [
-                                            Container(
+                                            SizedBox(
                                               width: MediaQuery.of(context)
                                                       .size
                                                       .width *
@@ -507,7 +480,7 @@ class _TambahParkiranState extends State<TambahParkiran> {
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
                                                             .center,
-                                                    children: [
+                                                    children: const [
                                                       Text('Browse',
                                                           style: TextStyle(
                                                               color:
@@ -526,7 +499,7 @@ class _TambahParkiranState extends State<TambahParkiran> {
                                 ),
                               ),
                               Container(
-                                margin: EdgeInsets.only(top: 30),
+                                margin: const EdgeInsets.only(top: 30),
                                 width:
                                     MediaQuery.of(context).size.width * 0.950,
                                 height:
@@ -534,7 +507,7 @@ class _TambahParkiranState extends State<TambahParkiran> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Container(
+                                    SizedBox(
                                       width: MediaQuery.of(context).size.width *
                                           0.469,
                                       height:
@@ -553,7 +526,7 @@ class _TambahParkiranState extends State<TambahParkiran> {
                                           onPressed: () {
                                             postParkiran();
                                           },
-                                          child: Center(
+                                          child: const Center(
                                               child: Text('Tambah',
                                                   style: TextStyle(
                                                       color: Colors.white,
@@ -563,19 +536,19 @@ class _TambahParkiranState extends State<TambahParkiran> {
                                   ],
                                 ),
                               ),
-                              Container(
+                              SizedBox(
                                 width:
                                     MediaQuery.of(context).size.width * 0.469,
                                 height:
                                     MediaQuery.of(context).size.height * 0.075,
                               ),
-                              Container(
+                              SizedBox(
                                 width:
                                     MediaQuery.of(context).size.width * 0.469,
                                 height:
                                     MediaQuery.of(context).size.height * 0.075,
                               ),
-                              Container(
+                              SizedBox(
                                 width:
                                     MediaQuery.of(context).size.width * 0.469,
                                 height:
@@ -594,8 +567,8 @@ class _TambahParkiranState extends State<TambahParkiran> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: ParkirFloatButton(),
-      bottomNavigationBar: ParkirBotNav(),
+      floatingActionButton: const ParkirFloatButton(),
+      bottomNavigationBar: const ParkirBotNav(),
     );
   }
 }
