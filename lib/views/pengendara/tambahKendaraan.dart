@@ -8,6 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:parqran/component/bottomNavbar.dart';
 import 'package:parqran/component/floatButton.dart';
 import 'package:parqran/model/services.dart';
+import 'package:parqran/views/pengendara/daftarMobil.dart';
+import 'package:parqran/views/pengendara/daftarMotor.dart';
+import 'package:parqran/views/pengendara/mainMenu.dart';
 import '../../model/person.dart';
 import '../../model/personCard.dart';
 import 'package:provider/provider.dart';
@@ -122,13 +125,21 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
 
     setState(() {
       nama.text = '';
-      tipe = '';
+
       merk.text = '';
       warna.text = '';
       noRegistrasi.text = '';
       noRangka.text = '';
       noStnk.text = '';
-      Navigator.pop(context);
+      (tipe == '0')
+          ? Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) {
+              return const DaftarMotor();
+            }))
+          : Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) {
+              return const DaftarMobil();
+            }));
     });
   }
 

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:parqran/component/bottomNavbar.dart';
@@ -10,7 +9,6 @@ import 'package:parqran/views/pengendara/detailMotor.dart';
 import 'package:parqran/views/pengendara/mainMenu.dart';
 import 'package:parqran/views/pengendara/tambahKendaraan.dart';
 import 'package:provider/provider.dart';
-
 import '../../model/person.dart';
 
 class DaftarMotor extends StatefulWidget {
@@ -80,9 +78,8 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
   }
 
   getMotor() async {
-    final String id_pengguna = Provider.of<Person>(context, listen: false)
-        .getIdPengguna
-        .toString();
+    final String id_pengguna =
+        Provider.of<Person>(context, listen: false).getIdPengguna.toString();
     int vehicleId = int.parse(id_pengguna);
     loadMotor(vehicleId);
   }
@@ -236,8 +233,8 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                       style: TextStyle(
                                           fontWeight: FontWeight.w200,
                                           fontSize: 40,
-                                          color: Color.fromRGBO(
-                                              52, 152, 219, 1)),
+                                          color:
+                                              Color.fromRGBO(52, 152, 219, 1)),
                                     ),
                                   )
                                 ],
