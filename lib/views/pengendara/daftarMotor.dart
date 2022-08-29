@@ -34,7 +34,18 @@ class _DaftarMotorState extends State<DaftarMotor> {
   String? noStnkEdit;
   String? noRangkaEdit;
   String? fotoEdit;
-  String? idKendaraan;
+  int? idKendaraan;
+
+  _deleteKendaraan(int id) async {
+    try {
+      var response = await Services.deleteKendaraan(id);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+        return DaftarMotor();
+      }));
+    } catch (e) {
+      print(e);
+    }
+  }
 
   loadMotor(int idUser) async {
     const String motor = r'''
@@ -179,7 +190,9 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                           ),
                                         ),
                                         IconButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            _deleteKendaraan(idKendaraan!);
+                                          },
                                           icon: const FaIcon(
                                             FontAwesomeIcons.trash,
                                             size: 26,
@@ -250,7 +263,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                 noPolEdit = e['no_registrasi'];
                                 noStnkEdit = e['no_stnk'];
                                 noRangkaEdit = e['no_rangka'];
-                                idKendaraan = e['id_kendaraan'].toString();
+                                idKendaraan = e['id_kendaraan'];
                                 setState(() {});
                               },
                               onTap: () {

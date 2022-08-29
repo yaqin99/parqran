@@ -37,6 +37,19 @@ abstract class Services {
     }
   }
 
+  static Future deleteKendaraan(int idKendaraan) async {
+    print('deleting data ...');
+    try {
+      var data = await Dio()
+          .delete('${dotenv.env['API']!}/vehicle/' + idKendaraan.toString());
+      print(data);
+      return data.data['data'];
+    } catch (e) {
+      print(e);
+      // throw ExcReption(e.toString());
+    }
+  }
+
   static GraphQLClient? client;
 
   static _checkGraphql() {
@@ -52,26 +65,26 @@ abstract class Services {
 
 abstract class AddKendaraan {
   static Future postDataKendaraan(
-      int id_pengguna,
+      int idPengguna,
       String jenis,
       String nama,
       String merk,
       String warna,
-      String no_registrasi,
-      String no_rangka,
-      String no_stnk,
+      String noRegistrasi,
+      String noRangka,
+      String noStnk,
       String fotoKendaraan,
       String fotoStnk) async {
     try {
       var vehicle = await Dio().post('${dotenv.env['API']!}/vehicle', data: {
-        'id_pengguna': id_pengguna,
+        'id_pengguna': idPengguna,
         'jenis': jenis,
         'nama': nama,
         'merk': merk,
         'warna': warna,
-        'no_registrasi': no_registrasi,
-        'no_rangka': no_rangka,
-        'no_stnk': no_stnk,
+        'no_registrasi': noRegistrasi,
+        'no_rangka': noRangka,
+        'no_stnk': noStnk,
         'foto_kendaraan': fotoKendaraan,
         'foto_stnk': fotoStnk,
       });

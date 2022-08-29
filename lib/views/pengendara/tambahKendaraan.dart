@@ -64,6 +64,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
   Color? warnaMobilButton;
   File? fotoKendaraan;
   File? fotoStnk;
+  String stnkName = '';
   String? fotoKendaraanPath;
   String? fotoStnkPath;
   var response;
@@ -105,11 +106,20 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
   }
 
   Future _getStnkPict() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? imagePicked =
-        await _picker.pickImage(source: ImageSource.gallery);
-    fotoStnk = File(imagePicked!.path);
-
+    FilePickerResult? imagePicked = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ["jpg", "png"],
+    );
+    if (imagePicked!.files.first.size > 1000000) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Ukuran Gambar Terlalu Besar'),
+        action: SnackBarAction(label: 'Ok', onPressed: () {}),
+      ));
+    }
+    if (imagePicked.files.first.size < 1000000) {
+      fotoStnk = File(imagePicked.files.first.path!);
+      uploadImage(fotoStnk!);
+    }
     uploadStnk(fotoStnk!);
     Navigator.of(context, rootNavigator: true).pop();
     setState(() {});
@@ -117,12 +127,14 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
 
   uploadStnk(File file) async {
     String fileName = file.path.split('/').last;
+    stnkName = fileName;
     FormData formData = FormData.fromMap({
       "file": await MultipartFile.fromFile(file.path,
           filename: fileName, contentType: MediaType("image", "jpeg")),
     });
     response = await Dio().post('${dotenv.env['API']!}/fl', data: formData);
     var jsonValue = jsonDecode(response.toString());
+    setState(() {});
     return fotoStnkPath = jsonValue['path'].toString();
   }
 
@@ -547,8 +559,8 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                 //     border: Border.all(color: Colors.black)),
                                 child: Row(
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 32),
+                                    const Padding(
+                                      padding: EdgeInsets.only(right: 32),
                                       child: Text(
                                         'No. Polisi',
                                         style: TextStyle(
@@ -618,13 +630,13 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                 ),
                               ),
                               Container(
-                                margin: EdgeInsets.only(top: 10),
+                                margin: const EdgeInsets.only(top: 10),
                                 // decoration: BoxDecoration(
                                 //     border: Border.all(color: Colors.black)),
                                 child: Row(
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 17),
+                                    const Padding(
+                                      padding: EdgeInsets.only(right: 17),
                                       child: Text(
                                         'No. Rangka',
                                         style: TextStyle(
@@ -641,7 +653,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                         controller: noRangka,
                                         decoration: InputDecoration(
                                             border: OutlineInputBorder(
-                                              borderSide: BorderSide(
+                                              borderSide: const BorderSide(
                                                   color: Colors.brown),
                                               borderRadius:
                                                   BorderRadius.circular(10.0),
@@ -661,8 +673,8 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                 //     border: Border.all(color: Colors.black)),
                                 child: Row(
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 33),
+                                    const Padding(
+                                      padding: EdgeInsets.only(right: 33),
                                       child: Text(
                                         'Foto Stnk',
                                         style: TextStyle(
@@ -705,12 +717,12 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                                                           10))),
                                                       backgroundColor:
                                                           MaterialStateProperty
-                                                              .all(Color
-                                                                  .fromRGBO(
-                                                                      52,
-                                                                      152,
-                                                                      219,
-                                                                      1))),
+                                                              .all(const Color
+                                                                      .fromRGBO(
+                                                                  52,
+                                                                  152,
+                                                                  219,
+                                                                  1))),
                                                   onPressed: () async {
                                                     showDialog(
                                                         context: context,
@@ -718,7 +730,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                                             context) {
                                                           return AlertDialog(
                                                             scrollable: true,
-                                                            title: Text(
+                                                            title: const Text(
                                                                 'Pilih Opsi'),
                                                             content: Container(
                                                               height: MediaQuery.of(
@@ -787,7 +799,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                                                               height: 150,
                                                                             ),
                                                                           ),
-                                                                          Positioned(
+                                                                          const Positioned(
                                                                               bottom: 17,
                                                                               left: 18,
                                                                               child: Text('Buka Kamera'))
@@ -803,14 +815,18 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                                   },
                                                   child: Center(
                                                       child: Row(
-                                                    children: [
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: const [
                                                       Text('Tambah Foto',
                                                           style: TextStyle(
                                                               color:
                                                                   Colors.white,
                                                               fontWeight:
                                                                   FontWeight
-                                                                      .w700)),
+                                                                      .w700,
+                                                              fontSize: 20)),
                                                       Icon(
                                                           Icons
                                                               .camera_alt_rounded,
@@ -852,7 +868,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                               onPressed: () {
                                                 postVehicle(fotoKendaraan!);
                                               },
-                                              child: Center(
+                                              child: const Center(
                                                   child: Text('Update',
                                                       style: TextStyle(
                                                           color: Colors.white,
@@ -862,7 +878,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                               onPressed: () {
                                                 postVehicle(fotoKendaraan!);
                                               },
-                                              child: Center(child: Text('Tambah', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)))),
+                                              child: const Center(child: Text('Tambah', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)))),
                                     )
                                   ],
                                 ),
