@@ -7,6 +7,7 @@ import 'package:parqran/component/motor.dart';
 import 'package:parqran/component/mobil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:parqran/model/person.dart';
+import 'package:parqran/views/pengendara/daftarMotor.dart';
 import 'package:parqran/views/pengendara/detailMobil.dart';
 import 'package:parqran/views/pengendara/mainMenu.dart';
 import 'package:parqran/views/pengendara/tambahKendaraan.dart';
@@ -35,7 +36,18 @@ class _DaftarMobilState extends State<DaftarMobil> {
   String? noStnkEdit;
   String? noRangkaEdit;
   String? fotoEdit;
-  String? idKendaraan;
+  int? idKendaraan;
+
+  _deleteKendaraan(int id) async {
+    try {
+      var response = await Services.deleteKendaraan(id);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+        return DaftarMotor();
+      }));
+    } catch (e) {
+      print(e);
+    }
+  }
 
   loadMobil(int idUser) async {
     const String mobil = r'''
@@ -168,7 +180,8 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                                 noPolEdit: noPolEdit!,
                                                 noStnkEdit: noStnkEdit!,
                                                 noRangkaEdit: noRangkaEdit!,
-                                                idKendaraan: idKendaraan!,
+                                                idKendaraan:
+                                                    idKendaraan!.toString(),
                                               );
                                             }));
                                           },
@@ -180,7 +193,9 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                           ),
                                         ),
                                         IconButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            _deleteKendaraan(idKendaraan!);
+                                          },
                                           icon: FaIcon(
                                             FontAwesomeIcons.trash,
                                             size: 26,
@@ -251,7 +266,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                   noPolEdit = e['no_registrasi'];
                                   noStnkEdit = e['no_stnk'];
                                   noRangkaEdit = e['no_rangka'];
-                                  idKendaraan = e['id_kendaraan'].toString();
+                                  idKendaraan = e['id_kendaraan'];
                                   setState(() {});
                                 },
                                 onTap: () {
