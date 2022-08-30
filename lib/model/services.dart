@@ -50,6 +50,41 @@ abstract class Services {
     }
   }
 
+  static Future updateKendaraan(
+    int idPengguna,
+    String jenis,
+    String nama,
+    String merk,
+    String warna,
+    String noRegistrasi,
+    String noRangka,
+    String noStnk,
+    String fotoKendaraan,
+    String fotoStnk,
+    int idKendaraan,
+  ) async {
+    print('updating data ...');
+    try {
+      var data =
+          await Dio().put('${dotenv.env['API']!}/vehicle/$idKendaraan', data: {
+        'id_pengguna': idPengguna,
+        'jenis': jenis,
+        'nama': nama,
+        'merk': merk,
+        'warna': warna,
+        'no_registrasi': noRegistrasi,
+        'no_rangka': noRangka,
+        'no_stnk': noStnk,
+        'foto_kendaraan': fotoKendaraan,
+        'foto_stnk': fotoStnk,
+      });
+      return data.data['data'];
+    } catch (e) {
+      print(e);
+      // throw ExcReption(e.toString());
+    }
+  }
+
   static GraphQLClient? client;
 
   static _checkGraphql() {

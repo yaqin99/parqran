@@ -29,7 +29,9 @@ class TambahKendaraan extends StatefulWidget {
   final String noPolEdit;
   final String noStnkEdit;
   final String noRangkaEdit;
-  final String idKendaraan;
+  final int idKendaraan;
+  final fotoKendaraanEdit;
+  final fotoStnkEdit;
   const TambahKendaraan({
     Key? key,
     required this.isMobil,
@@ -41,6 +43,8 @@ class TambahKendaraan extends StatefulWidget {
     required this.noStnkEdit,
     required this.noRangkaEdit,
     required this.idKendaraan,
+    required this.fotoKendaraanEdit,
+    required this.fotoStnkEdit,
   }) : super(key: key);
   @override
   State<TambahKendaraan> createState() => _TambahKendaraanState();
@@ -68,6 +72,13 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
   String? fotoKendaraanPath;
   String? fotoStnkPath;
   var response;
+
+  initFotoValue() {
+    if (widget.fotoKendaraanEdit != '' && widget.fotoStnkEdit != '') {
+      fotoKendaraanPath = widget.fotoKendaraanEdit;
+      fotoStnkPath = widget.fotoStnkEdit;
+    }
+  }
 
   void openFile(PlatformFile file) {
     OpenFile.open(file.path);
@@ -118,7 +129,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
     }
     if (imagePicked.files.first.size < 1000000) {
       fotoStnk = File(imagePicked.files.first.path!);
-      uploadImage(fotoStnk!);
+      uploadStnk(fotoStnk!);
     }
     uploadStnk(fotoStnk!);
     Navigator.of(context, rootNavigator: true).pop();
@@ -149,7 +160,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
     return fotoKendaraanPath = jsonValue['path'].toString();
   }
 
-  postVehicle(File file) async {
+  postVehicle() async {
     final String idPengguna =
         Provider.of<Person>(context, listen: false).getIdPengguna.toString();
 
@@ -164,18 +175,73 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
       ));
     }
 
-    response = await AddKendaraan.postDataKendaraan(
-      int.parse(idPengguna),
-      tipe!,
-      nama.text,
-      merk.text,
-      warna.text,
-      noRegistrasi.text,
-      noRangka.text,
-      noStnk.text,
-      fotoKendaraanPath!,
-      fotoStnkPath!,
-    );
+    if (widget.isEdit == false) {
+      response = await AddKendaraan.postDataKendaraan(
+        int.parse(idPengguna),
+        tipe!,
+        nama.text,
+        merk.text,
+        warna.text,
+        noRegistrasi.text,
+        noRangka.text,
+        noStnk.text,
+        fotoKendaraanPath!,
+        fotoStnkPath!,
+      );
+
+      setState(() {
+        nama.text = '';
+
+        merk.text = '';
+        warna.text = '';
+        noRegistrasi.text = '';
+        noRangka.text = '';
+        noStnk.text = '';
+        (tipe == '0')
+            ? Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) {
+                return const DaftarMotor();
+              }))
+            : Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) {
+                return const DaftarMobil();
+              }));
+      });
+    }
+
+    if (widget.isEdit == true) {
+      response = await Services.updateKendaraan(
+        int.parse(idPengguna),
+        tipe!,
+        nama.text,
+        merk.text,
+        warna.text,
+        noRegistrasi.text,
+        noRangka.text,
+        noStnk.text,
+        fotoKendaraanPath!,
+        fotoStnkPath!,
+        widget.idKendaraan,
+      );
+      setState(() {
+        nama.text = '';
+
+        merk.text = '';
+        warna.text = '';
+        noRegistrasi.text = '';
+        noRangka.text = '';
+        noStnk.text = '';
+        (tipe == '0')
+            ? Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) {
+                return const DaftarMotor();
+              }))
+            : Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) {
+                return const DaftarMobil();
+              }));
+      });
+    }
 
     setState(() {
       nama.text = '';
@@ -227,6 +293,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
   void initState() {
     initValue();
     setTipe();
+    initFotoValue();
     super.initState();
   }
 
@@ -297,36 +364,51 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                     child:
                                         Image.file(File(fotoKendaraan!.path)),
                                   ))
-                              : Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.477,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.23,
-                                  child: ElevatedButton(
-                                      style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                const Color.fromRGBO(
-                                                    255, 255, 255, 1)),
-                                        shape: MaterialStateProperty.all(
-                                            RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(200),
-                                          side: BorderSide(
-                                              color: Color.fromRGBO(
-                                                  52, 152, 219, 1),
-                                              width: 3),
-                                        )),
+                              : (widget.fotoKendaraanEdit != '')
+                                  ? Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.477,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.23,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(50),
+                                        child: Image.network(
+                                            '${dotenv.env['API']}${widget.fotoKendaraanEdit.replaceFirst(RegExp(r'^public'), '')}'),
                                       ),
-                                      onPressed: () {},
-                                      child: FaIcon(
-                                        (widget.isMobil == false)
-                                            ? FontAwesomeIcons.motorcycle
-                                            : FontAwesomeIcons.car,
-                                        size: 100,
-                                        color: Color.fromRGBO(52, 152, 219, 1),
-                                      )),
-                                ),
+                                    )
+                                  : Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.477,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.23,
+                                      child: ElevatedButton(
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    const Color.fromRGBO(
+                                                        255, 255, 255, 1)),
+                                            shape: MaterialStateProperty.all(
+                                                RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(200),
+                                              side: BorderSide(
+                                                  color: Color.fromRGBO(
+                                                      52, 152, 219, 1),
+                                                  width: 3),
+                                            )),
+                                          ),
+                                          onPressed: () {},
+                                          child: FaIcon(
+                                            (widget.isMobil == false)
+                                                ? FontAwesomeIcons.motorcycle
+                                                : FontAwesomeIcons.car,
+                                            size: 100,
+                                            color:
+                                                Color.fromRGBO(52, 152, 219, 1),
+                                          )),
+                                    ),
                         ],
                       ),
                       Align(
@@ -348,7 +430,8 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                     builder: (BuildContext context) {
                                       return AlertDialog(
                                         scrollable: true,
-                                        title: Text('Pilih Opsi'),
+                                        title:
+                                            const Text('Ambil Foto Kendaraan'),
                                         content: Container(
                                           height: MediaQuery.of(context)
                                                   .size
@@ -731,7 +814,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                                           return AlertDialog(
                                                             scrollable: true,
                                                             title: const Text(
-                                                                'Pilih Opsi'),
+                                                                'Ambil Foto Stnk'),
                                                             content: Container(
                                                               height: MediaQuery.of(
                                                                           context)
@@ -866,7 +949,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                                           Color.fromRGBO(
                                                               52, 152, 219, 1))),
                                               onPressed: () {
-                                                postVehicle(fotoKendaraan!);
+                                                postVehicle();
                                               },
                                               child: const Center(
                                                   child: Text('Update',
@@ -876,7 +959,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                           : ElevatedButton(
                                               style: ButtonStyle(shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))), backgroundColor: MaterialStateProperty.all(Color.fromRGBO(52, 152, 219, 1))),
                                               onPressed: () {
-                                                postVehicle(fotoKendaraan!);
+                                                postVehicle();
                                               },
                                               child: const Center(child: Text('Tambah', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)))),
                                     )

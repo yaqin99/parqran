@@ -44,7 +44,7 @@ class Motor extends StatelessWidget {
                     Container(
                       child: Center(
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(50),
                           child: Image.network(
                             '${dotenv.env['API']}${foto.replaceFirst(RegExp(r'^public'), '')}',
                             fit: BoxFit.fill,

@@ -35,6 +35,8 @@ class _DaftarMotorState extends State<DaftarMotor> {
   String? noRangkaEdit;
   String? fotoEdit;
   int? idKendaraan;
+  String? fotoKendaraan;
+  String? fotoStnk;
 
   _deleteKendaraan(int id) async {
     try {
@@ -60,6 +62,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
     warna
     id_kendaraan
     foto_kendaraan
+    foto_stnk
 	}
 }
 ''';
@@ -79,13 +82,12 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
         "jenis": item['jenis'],
         "warna": item['warna'],
         "id_kendaraan": item['id_kendaraan'],
-        "foto_kendaraan": item['foto_kendaraan']
+        "foto_kendaraan": item['foto_kendaraan'],
+        "foto_stnk": item['foto_stnk'],
       });
     }
     print(response);
-    setState(() {
-      notLoad = true;
-    });
+    notLoad = true;
   }
 
   getMotor() async {
@@ -177,8 +179,10 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                                 noPolEdit: noPolEdit!,
                                                 noStnkEdit: noStnkEdit!,
                                                 noRangkaEdit: noRangkaEdit!,
-                                                idKendaraan:
-                                                    idKendaraan!.toString(),
+                                                idKendaraan: idKendaraan!,
+                                                fotoKendaraanEdit:
+                                                    fotoKendaraan,
+                                                fotoStnkEdit: fotoStnk,
                                               );
                                             }));
                                           },
@@ -264,6 +268,8 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                 noStnkEdit = e['no_stnk'];
                                 noRangkaEdit = e['no_rangka'];
                                 idKendaraan = e['id_kendaraan'];
+                                fotoKendaraan = e['foto_kendaraan'];
+                                fotoStnk = e['foto_stnk'];
                                 setState(() {});
                               },
                               onTap: () {
@@ -277,7 +283,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                     no_registrasi: e['no_registrasi'],
                                     no_stnk: e['no_stnk'],
                                     no_rangka: 'Masih gak Ada',
-                                    foto_kendaraan: e['foto_kendaraan'],
+                                    foto: e['foto_kendaraan'],
                                   );
                                 }));
                               },
@@ -322,7 +328,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                   hold = false;
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return TambahKendaraan(
+                                    return const TambahKendaraan(
                                       isMobil: false,
                                       isEdit: false,
                                       namaEdit: '',
@@ -331,7 +337,9 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                       noPolEdit: '',
                                       noStnkEdit: '',
                                       noRangkaEdit: '',
-                                      idKendaraan: '',
+                                      idKendaraan: 0,
+                                      fotoKendaraanEdit: '',
+                                      fotoStnkEdit: '',
                                     );
                                   }));
                                 },
