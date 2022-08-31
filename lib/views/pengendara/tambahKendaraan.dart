@@ -168,51 +168,23 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
     final String idPengguna =
         Provider.of<Person>(context, listen: false).getIdPengguna.toString();
 
-    if (nama.text.isEmpty ||
-        merk.text.isEmpty ||
-        noRegistrasi.text.isEmpty ||
-        noRangka.text.isEmpty ||
-        noStnk.text.isEmpty ||
-        fotoKendaraanPath!.isEmpty ||
-        fotoStnkPath!.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: const Text('Mohon lengkapi Semua Data'),
-        action: SnackBarAction(label: 'Ok', onPressed: () {}),
-      ));
+    if (fotoKendaraan == null) {
+      if (widget.fotoKendaraanEdit != '') {}
+      if (widget.fotoKendaraanEdit == '') {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text('Foto Kendaraan tidak boleh kosong'),
+          action: SnackBarAction(label: 'Ok', onPressed: () {}),
+        ));
+      }
     }
-
-    if (widget.isEdit == false) {
-      response = await AddKendaraan.postDataKendaraan(
-        int.parse(idPengguna),
-        tipe!,
-        nama.text,
-        merk.text,
-        warna.text,
-        noRegistrasi.text,
-        noRangka.text,
-        noStnk.text,
-        fotoKendaraanPath!,
-        fotoStnkPath!,
-      );
-
-      setState(() {
-        nama.text = '';
-
-        merk.text = '';
-        warna.text = '';
-        noRegistrasi.text = '';
-        noRangka.text = '';
-        noStnk.text = '';
-        (tipe == '0')
-            ? Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) {
-                return const DaftarMotor();
-              }))
-            : Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) {
-                return const DaftarMobil();
-              }));
-      });
+    if (fotoStnk == null) {
+      if (widget.fotoStnkEdit != '') {}
+      if (widget.fotoStnkEdit == '') {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text('Foto Stnk tidak boleh kosong'),
+          action: SnackBarAction(label: 'Ok', onPressed: () {}),
+        ));
+      }
     }
 
     if (widget.isEdit == true) {
@@ -249,24 +221,92 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
       });
     }
 
-    setState(() {
-      nama.text = '';
+    if (widget.isEdit == false) {
+      if (nama.text.isEmpty ||
+          merk.text.isEmpty ||
+          warna.text.isEmpty ||
+          noRegistrasi.text.isEmpty ||
+          noRangka.text.isEmpty ||
+          noStnk.text.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text('Mohon lengkapi Semua Data'),
+          action: SnackBarAction(label: 'Ok', onPressed: () {}),
+        ));
+        return;
+      }
+    }
+    if (widget.isEdit == true) {
+      if (nama.text.isEmpty ||
+          merk.text.isEmpty ||
+          warna.text.isEmpty ||
+          noRegistrasi.text.isEmpty ||
+          noRangka.text.isEmpty ||
+          noStnk.text.isEmpty) {
+        return;
+      }
+    }
 
-      merk.text = '';
-      warna.text = '';
-      noRegistrasi.text = '';
-      noRangka.text = '';
-      noStnk.text = '';
-      (tipe == '0')
-          ? Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) {
-              return const DaftarMotor();
-            }))
-          : Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) {
-              return const DaftarMobil();
-            }));
-    });
+    if (fotoKendaraan != null && fotoStnk != null) {
+      if (nama.text.isNotEmpty ||
+          merk.text.isNotEmpty ||
+          warna.text.isNotEmpty ||
+          noRegistrasi.text.isNotEmpty ||
+          noRangka.text.isNotEmpty ||
+          noStnk.text.isNotEmpty) {
+        if (widget.isEdit == false) {
+          response = await AddKendaraan.postDataKendaraan(
+            int.parse(idPengguna),
+            tipe!,
+            nama.text,
+            merk.text,
+            warna.text,
+            noRegistrasi.text,
+            noRangka.text,
+            noStnk.text,
+            fotoKendaraanPath!,
+            fotoStnkPath!,
+          );
+
+          setState(() {
+            nama.text = '';
+
+            merk.text = '';
+            warna.text = '';
+            noRegistrasi.text = '';
+            noRangka.text = '';
+            noStnk.text = '';
+            (tipe == '0')
+                ? Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) {
+                    return const DaftarMotor();
+                  }))
+                : Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) {
+                    return const DaftarMobil();
+                  }));
+          });
+        }
+      }
+    }
+
+    // setState(() {
+    //   nama.text = '';
+
+    //   merk.text = '';
+    //   warna.text = '';
+    //   noRegistrasi.text = '';
+    //   noRangka.text = '';
+    //   noStnk.text = '';
+    //   (tipe == '0')
+    //       ? Navigator.pushReplacement(context,
+    //           MaterialPageRoute(builder: (context) {
+    //           return const DaftarMotor();
+    //         }))
+    //       : Navigator.pushReplacement(context,
+    //           MaterialPageRoute(builder: (context) {
+    //           return const DaftarMobil();
+    //         }));
+    // });
   }
 
   initValue() {

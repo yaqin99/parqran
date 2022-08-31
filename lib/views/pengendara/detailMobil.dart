@@ -111,7 +111,6 @@ class _DetailMobilState extends State<DetailMobil> {
                         borderRadius: BorderRadius.circular(100),
                         child: Image.network(
                           '${dotenv.env['API']}${widget.foto.replaceFirst(RegExp(r'^public'), '')}',
-                          fit: BoxFit.fill,
                         ),
                       ),
                     ),
