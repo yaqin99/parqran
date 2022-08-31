@@ -175,7 +175,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                                 MaterialPageRoute(
                                                     builder: (context) {
                                               return TambahKendaraan(
-                                                isMobil: true,
+                                                isMobil: false,
                                                 isEdit: true,
                                                 namaEdit: namaEdit!,
                                                 merkEdit: merkEdit!,
