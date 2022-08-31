@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Mobil extends StatelessWidget {
   final String nama;
   final String noPol;
   final String noStnk;
+  final String foto;
+
   const Mobil({
     Key? key,
     required this.nama,
     required this.noPol,
     required this.noStnk,
+    required this.foto,
   }) : super(key: key);
 
   @override
@@ -28,20 +32,20 @@ class Mobil extends StatelessWidget {
                 width: MediaQuery.of(context).size.width * 0.3,
                 child: Stack(
                   children: [
-                    Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Color.fromRGBO(217, 240, 255, 1)),
-                        height: MediaQuery.of(context).size.height * 0.135,
-                        width: MediaQuery.of(context).size.width * 0.295,
-                      ),
-                    ),
+                    // Align(
+                    //   alignment: Alignment.center,
+                    //   child: Container(
+                    //     decoration: BoxDecoration(
+                    //         borderRadius: BorderRadius.circular(20),
+                    //         color: Color.fromRGBO(217, 240, 255, 1)),
+                    //     height: MediaQuery.of(context).size.height * 0.135,
+                    //     width: MediaQuery.of(context).size.width * 0.295,
+                    //   ),
+                    // ),
                     Center(
                       child: Container(
-                        child: Image.asset(
-                          'assets/carnew.png',
+                        child: Image.network(
+                          '${dotenv.env['API']}${foto.replaceFirst(RegExp(r'^public'), '')}',
                           fit: BoxFit.fill,
                         ),
                       ),

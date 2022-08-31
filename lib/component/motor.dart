@@ -31,16 +31,6 @@ class Motor extends StatelessWidget {
                 width: MediaQuery.of(context).size.width * 0.3,
                 child: Stack(
                   children: [
-                    // Align(
-                    //   alignment: Alignment.center,
-                    //   child: Container(
-                    //     decoration: BoxDecoration(
-                    //         borderRadius: BorderRadius.circular(20),
-                    //         color: const Color.fromRGBO(217, 240, 255, 1)),
-                    //     height: MediaQuery.of(context).size.height * 0.135,
-                    //     width: MediaQuery.of(context).size.width * 0.295,
-                    //   ),
-                    // ),
                     Container(
                       child: Center(
                         child: ClipRRect(

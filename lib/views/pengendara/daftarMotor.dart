@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:parqran/component/bottomNavbar.dart';
+import 'package:parqran/component/emptyMotor.dart';
 import 'package:parqran/component/floatButton.dart';
 import 'package:parqran/component/motor.dart';
+import 'package:parqran/component/mobil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:parqran/model/services.dart';
-import 'package:parqran/views/pengendara/detailMotor.dart';
+import 'package:parqran/model/person.dart';
+import 'package:parqran/views/pengendara/daftarMotor.dart';
+import 'package:parqran/views/pengendara/detailMobil.dart';
 import 'package:parqran/views/pengendara/mainMenu.dart';
 import 'package:parqran/views/pengendara/tambahKendaraan.dart';
 import 'package:provider/provider.dart';
-import '../../model/person.dart';
+
+import '../../component/emptyMobil.dart';
+import '../../model/kendaraan.dart';
+import '../../model/services.dart';
 
 class DaftarMotor extends StatefulWidget {
   const DaftarMotor({Key? key}) : super(key: key);
@@ -19,14 +25,10 @@ class DaftarMotor extends StatefulWidget {
 }
 
 class _DaftarMotorState extends State<DaftarMotor> {
-  String? selected;
   bool hold = false;
   Color warna = Colors.transparent;
-  Color backColor = Colors.black;
-  String? id_pengguna;
-  List listMotor = List.empty(growable: true);
+  List listMobil = List.empty(growable: true);
   QueryResult? result;
-  late AnimationController controller;
   String? namaEdit;
   String? merkEdit;
   String? warnaEdit;
@@ -36,7 +38,7 @@ class _DaftarMotorState extends State<DaftarMotor> {
   String? fotoEdit;
   int? idKendaraan;
   String? fotoKendaraan;
-  String? fotoStnk;
+  String fotoStnk = '';
 
   _deleteKendaraan(int id) async {
     try {
@@ -50,7 +52,7 @@ class _DaftarMotorState extends State<DaftarMotor> {
   }
 
   loadMotor(int idUser) async {
-    const String motor = r'''
+    const String mobil = r'''
 query loadKendaraan($id_pengguna: Int, $jenis: Int) {
   Kendaraans(id_pengguna: $id_pengguna, jenis: $jenis) {
     nama
@@ -66,14 +68,13 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
 	}
 }
 ''';
-
     final QueryOptions queryOptions = QueryOptions(
-        document: gql(motor),
+        document: gql(mobil),
         variables: <String, dynamic>{"id_pengguna": idUser, "jenis": 0});
     result = await Services.gqlQuery(queryOptions);
     var response = result!.data!['Kendaraans'];
     for (var item in response) {
-      listMotor.add({
+      listMobil.add({
         "nama": item['nama'],
         "merk": item['merk'],
         "no_registrasi": item['no_registrasi'],
@@ -86,30 +87,33 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
         "foto_stnk": item['foto_stnk'],
       });
     }
-    print(response);
-    notLoad = true;
-  }
-
-  getMotor() async {
-    final String id_pengguna =
-        Provider.of<Person>(context, listen: false).getIdPengguna.toString();
-    int vehicleId = int.parse(id_pengguna);
-    loadMotor(vehicleId);
+    print(listMobil);
+    setState(() {
+      notLoad = true;
+    });
   }
 
   bool notLoad = false;
 
+  getMobil() {
+    final String idPengguna =
+        Provider.of<Person>(context, listen: false).getIdPengguna.toString();
+    int vehicleId = int.parse(idPengguna);
+    if (vehicleId != null) {
+      loadMotor(vehicleId);
+    }
+  }
+
   @override
   void initState() {
-    getMotor();
-
+    getMobil();
     super.initState();
   }
 
   Future<bool?> backToMenu(BuildContext context) async {
     return Navigator.pushReplacement(context,
         MaterialPageRoute(builder: (context) {
-      return const MainMenu();
+      return MainMenu();
     }));
   }
 
@@ -124,14 +128,14 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
       },
       child: Scaffold(
         body: Center(
-          child: SizedBox(
+          child: Container(
             // decoration: BoxDecoration(border: Border.all(color: Colors.black)),
             width: MediaQuery.of(context).size.width * 0.9,
             child: Stack(children: [
               ListView(
                 children: [
                   Column(children: [
-                    SizedBox(
+                    Container(
                       height: MediaQuery.of(context).size.height * 0.17,
                       width: MediaQuery.of(context).size.width * 1,
                       child: Container(
@@ -147,7 +151,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                           warna = Colors.transparent;
                                         });
                                       },
-                                      icon: const FaIcon(
+                                      icon: FaIcon(
                                         FontAwesomeIcons.xmark,
                                         size: 26,
                                         color: Color.fromRGBO(52, 152, 219, 1),
@@ -171,7 +175,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                                 MaterialPageRoute(
                                                     builder: (context) {
                                               return TambahKendaraan(
-                                                isMobil: false,
+                                                isMobil: true,
                                                 isEdit: true,
                                                 namaEdit: namaEdit!,
                                                 merkEdit: merkEdit!,
@@ -181,7 +185,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                                 noRangkaEdit: noRangkaEdit!,
                                                 idKendaraan: idKendaraan!,
                                                 fotoKendaraanEdit:
-                                                    fotoKendaraan,
+                                                    fotoKendaraan!,
                                                 fotoStnkEdit: fotoStnk,
                                               );
                                             }));
@@ -197,7 +201,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                           onPressed: () {
                                             _deleteKendaraan(idKendaraan!);
                                           },
-                                          icon: const FaIcon(
+                                          icon: FaIcon(
                                             FontAwesomeIcons.trash,
                                             size: 26,
                                             color:
@@ -222,7 +226,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                   ],
                                 )),
                     ),
-                    (listMotor.isEmpty)
+                    (listMobil.isEmpty)
                         ? !notLoad
                             ? Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -257,50 +261,48 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                 ],
                               )
                         : Column(
-                            children: listMotor.map((e) {
+                            children: listMobil.map((e) {
                             return GestureDetector(
-                              onLongPress: () {
-                                hold = true;
-                                namaEdit = e['nama'];
-                                merkEdit = e['merk'];
-                                warnaEdit = e['warna'];
-                                noPolEdit = e['no_registrasi'];
-                                noStnkEdit = e['no_stnk'];
-                                noRangkaEdit = e['no_rangka'];
-                                idKendaraan = e['id_kendaraan'];
-                                fotoKendaraan = e['foto_kendaraan'];
-                                fotoStnk = e['foto_stnk'];
-                                setState(() {});
-                              },
-                              onTap: () {
-                                hold = false;
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return DetailMotor(
-                                    nama: e['nama'],
-                                    merk: e['merk'],
-                                    warna: e['warna'],
-                                    no_registrasi: e['no_registrasi'],
-                                    no_stnk: e['no_stnk'],
-                                    no_rangka: 'Masih gak Ada',
-                                    foto: e['foto_kendaraan'],
-                                  );
-                                }));
-                              },
-                              child: Motor(
-                                nama: e['nama'],
-                                noPol: e['no_registrasi'],
-                                warna: e['no_stnk'],
-                                foto: e['foto_kendaraan'],
-                              ),
-                            );
+                                onLongPress: () {
+                                  hold = true;
+                                  namaEdit = e['nama'];
+                                  merkEdit = e['merk'];
+                                  warnaEdit = e['warna'];
+                                  noPolEdit = e['no_registrasi'];
+                                  noStnkEdit = e['no_stnk'];
+                                  noRangkaEdit = e['no_rangka'];
+                                  idKendaraan = e['id_kendaraan'];
+                                  fotoKendaraan = e['foto_kendaraan'];
+                                  fotoStnk = e['foto_stnk'];
+                                  setState(() {});
+                                },
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return DetailMobil(
+                                      nama: e['nama'],
+                                      merk: e['merk'],
+                                      warna: e['warna'],
+                                      no_registrasi: e['no_registrasi'],
+                                      no_stnk: e['no_stnk'],
+                                      no_rangka: e['no_rangka'],
+                                      foto: e['foto_kendaraan'],
+                                    );
+                                  }));
+                                },
+                                child: Mobil(
+                                  nama: e['nama'],
+                                  noPol: e['no_registrasi'],
+                                  noStnk: e['no_stnk'],
+                                  foto: e['foto_kendaraan'],
+                                ));
                           }).toList())
                   ])
                 ],
               ),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: SizedBox(
+                child: Container(
                   // decoration:
                   //     BoxDecoration(border: Border.all(color: Colors.black)),
                   width: MediaQuery.of(context).size.width * 0.9,
@@ -323,7 +325,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                             borderRadius:
                                                 BorderRadius.circular(50))),
                                     backgroundColor: MaterialStateProperty.all(
-                                        const Color.fromRGBO(52, 152, 219, 1))),
+                                        Color.fromRGBO(52, 152, 219, 1))),
                                 onPressed: () {
                                   hold = false;
                                   Navigator.push(context,
@@ -343,7 +345,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                     );
                                   }));
                                 },
-                                child: const Icon(
+                                child: Icon(
                                   Icons.add,
                                   color: Colors.white,
                                 )),
@@ -358,8 +360,8 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: const FLoatButton(),
-        bottomNavigationBar: const BottomNavbar(),
+        floatingActionButton: FLoatButton(),
+        bottomNavigationBar: BottomNavbar(),
       ),
     );
   }

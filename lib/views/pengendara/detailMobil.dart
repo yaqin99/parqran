@@ -9,6 +9,8 @@ import 'package:parqran/views/landingPage.dart';
 import 'package:parqran/views/pengendara/loadingPage.dart';
 import '../../model/person.dart';
 import '../../model/personCard.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'dart:convert' as convert;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,7 +23,8 @@ class DetailMobil extends StatefulWidget {
   final String no_registrasi;
   final String no_stnk;
   final String no_rangka;
-  final String foto_kendaraan;
+  final String foto;
+
   const DetailMobil({
     Key? key,
     required this.nama,
@@ -30,7 +33,7 @@ class DetailMobil extends StatefulWidget {
     required this.no_registrasi,
     required this.no_stnk,
     required this.no_rangka,
-    required this.foto_kendaraan,
+    required this.foto,
   }) : super(key: key);
   @override
   State<DetailMobil> createState() => _DetailMobilState();
@@ -105,30 +108,15 @@ class _DetailMobilState extends State<DetailMobil> {
                       width: MediaQuery.of(context).size.width * 0.477,
                       height: MediaQuery.of(context).size.height * 0.23,
                       child: ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: Image.file(
-                              File('localhost:8080/' + widget.foto_kendaraan))),
+                        borderRadius: BorderRadius.circular(100),
+                        child: Image.network(
+                          '${dotenv.env['API']}${widget.foto.replaceFirst(RegExp(r'^public'), '')}',
+                          fit: BoxFit.fill,
+                        ),
+                      ),
                     ),
                   ],
                 ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.146,
-                    height: MediaQuery.of(context).size.height * 0.07,
-                    child: ElevatedButton(
-                        style: ButtonStyle(
-                            shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
-                            )),
-                            backgroundColor: MaterialStateProperty.all(
-                                Color.fromRGBO(52, 152, 219, 1))),
-                        onPressed: () {},
-                        child: Icon(Icons.camera_alt_rounded,
-                            color: Colors.white)),
-                  ),
-                )
               ]),
             ),
             Padding(

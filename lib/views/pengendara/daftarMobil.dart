@@ -38,13 +38,13 @@ class _DaftarMobilState extends State<DaftarMobil> {
   String? fotoEdit;
   int? idKendaraan;
   String? fotoKendaraan;
-  String? fotoStnk;
+  String fotoStnk = '';
 
   _deleteKendaraan(int id) async {
     try {
       var response = await Services.deleteKendaraan(id);
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-        return DaftarMotor();
+        return DaftarMobil();
       }));
     } catch (e) {
       print(e);
@@ -185,8 +185,8 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                                 noRangkaEdit: noRangkaEdit!,
                                                 idKendaraan: idKendaraan!,
                                                 fotoKendaraanEdit:
-                                                    fotoKendaraan,
-                                                fotoStnkEdit: fotoEdit,
+                                                    fotoKendaraan!,
+                                                fotoStnkEdit: fotoStnk,
                                               );
                                             }));
                                           },
@@ -285,15 +285,17 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                       warna: e['warna'],
                                       no_registrasi: e['no_registrasi'],
                                       no_stnk: e['no_stnk'],
-                                      no_rangka: 'Masih gak Ada',
-                                      foto_kendaraan: e['foto_kendaraan'],
+                                      no_rangka: e['no_rangka'],
+                                      foto: e['foto_kendaraan'],
                                     );
                                   }));
                                 },
                                 child: Mobil(
-                                    nama: e['nama'],
-                                    noPol: e['no_registrasi'],
-                                    noStnk: e['no_stnk']));
+                                  nama: e['nama'],
+                                  noPol: e['no_registrasi'],
+                                  noStnk: e['no_stnk'],
+                                  foto: e['foto_kendaraan'],
+                                ));
                           }).toList())
                   ])
                 ],

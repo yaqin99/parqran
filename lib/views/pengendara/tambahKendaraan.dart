@@ -30,8 +30,8 @@ class TambahKendaraan extends StatefulWidget {
   final String noStnkEdit;
   final String noRangkaEdit;
   final int idKendaraan;
-  final fotoKendaraanEdit;
-  final fotoStnkEdit;
+  final String fotoKendaraanEdit;
+  final String fotoStnkEdit;
   const TambahKendaraan({
     Key? key,
     required this.isMobil,
@@ -74,9 +74,13 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
   var response;
 
   initFotoValue() {
-    if (widget.fotoKendaraanEdit != '' && widget.fotoStnkEdit != '') {
+    if (widget.fotoKendaraanEdit != '') {
       fotoKendaraanPath = widget.fotoKendaraanEdit;
+      print(fotoKendaraanPath);
+    }
+    if (widget.fotoStnkEdit != '') {
       fotoStnkPath = widget.fotoStnkEdit;
+      print(fotoStnkPath);
     }
   }
 
@@ -168,7 +172,9 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
         merk.text.isEmpty ||
         noRegistrasi.text.isEmpty ||
         noRangka.text.isEmpty ||
-        noStnk.text.isEmpty) {
+        noStnk.text.isEmpty ||
+        fotoKendaraanPath!.isEmpty ||
+        fotoStnkPath!.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text('Mohon lengkapi Semua Data'),
         action: SnackBarAction(label: 'Ok', onPressed: () {}),
@@ -291,9 +297,9 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
 
   @override
   void initState() {
+    initFotoValue();
     initValue();
     setTipe();
-    initFotoValue();
     super.initState();
   }
 
