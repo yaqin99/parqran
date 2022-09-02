@@ -22,6 +22,14 @@ class _DaftarParkiranState extends State<DaftarParkiran> {
   Color warna = const Color.fromRGBO(155, 89, 182, 1);
   QueryResult? result;
   List listParkiran = List.empty(growable: true);
+  String? nama;
+  String? koordinat;
+  String? alamat;
+  String? foto;
+  String? fotoEdit;
+  String? buka;
+  String? tutup;
+  int? idPengguna;
 
   loadParkiran(int idUser) async {
     const String parkiran = r'''
@@ -30,6 +38,9 @@ query loadParkiran($id: Int) {
     nama
    	koordinat
     alamat
+    foto
+    jam_buka
+    jam_tutup
 	}
 }
 ''';
@@ -42,7 +53,10 @@ query loadParkiran($id: Int) {
       listParkiran.add({
         "nama": item['nama'],
         "koordinat": item['koordinat'],
-        "alamat": item['alamat']
+        "alamat": item['alamat'],
+        "foto": item['foto'],
+        "jam_buka": item['jam_buka'],
+        "jam_tutup": item['jam_tutup'],
       });
     }
     print(response);
@@ -52,13 +66,12 @@ query loadParkiran($id: Int) {
   }
 
   bool notLoad = false;
-
+  int? idDriver;
   getParkiran() async {
-    final String id_pengguna = Provider.of<Person>(context, listen: false)
-        .getIdPengguna
-        .toString();
-    int idDriver = int.parse(id_pengguna);
-    loadParkiran(idDriver);
+    final String id_pengguna =
+        Provider.of<Person>(context, listen: false).getIdPengguna.toString();
+    idDriver = int.parse(id_pengguna);
+    loadParkiran(idDriver!);
   }
 
   @override
@@ -116,7 +129,6 @@ query loadParkiran($id: Int) {
                                       onPressed: () {
                                         setState(() {
                                           hold = false;
-                                          warna = Colors.transparent;
                                         });
                                       },
                                       icon: const FaIcon(
@@ -127,17 +139,31 @@ query loadParkiran($id: Int) {
                                     ),
                                     Row(
                                       children: [
+                                        // IconButton(
+                                        //     onPressed: () {},
+                                        //     icon: const Icon(
+                                        //       Icons
+                                        //           .photo_size_select_actual_rounded,
+                                        //       size: 26,
+                                        //       color: Color.fromRGBO(
+                                        //           155, 89, 182, 1),
+                                        //     )),
                                         IconButton(
-                                            onPressed: () {},
-                                            icon: const Icon(
-                                              Icons
-                                                  .photo_size_select_actual_rounded,
-                                              size: 26,
-                                              color: Color.fromRGBO(
-                                                  155, 89, 182, 1),
-                                            )),
-                                        IconButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                              return TambahParkiran(
+                                                isEdit: true,
+                                                koordinat: koordinat!,
+                                                namaParkiran: nama!,
+                                                alamatParkiran: alamat!,
+                                                jamBukaParkiran: buka!,
+                                                jamTutupParkiran: tutup!,
+                                                foto: fotoEdit!,
+                                              );
+                                            }));
+                                          },
                                           icon: const FaIcon(
                                             FontAwesomeIcons.penToSquare,
                                             size: 26,
@@ -202,13 +228,26 @@ query loadParkiran($id: Int) {
                         : Column(
                             children: listParkiran.map((e) {
                               return GestureDetector(
+                                onLongPress: () {
+                                  hold = true;
+                                  nama = e['nama'];
+                                  koordinat = e['koordinat'];
+                                  alamat = e['alamat'];
+                                  foto = e['foto'];
+                                  buka = e['jam_buka'];
+                                  tutup = e['jam_tutup'];
+                                  fotoEdit = e['foto'];
+                                  setState(() {});
+                                },
                                 onTap: () {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
                                     return DetailParkiran(
-                                        nama: e['nama'],
-                                        koordinat: e['koordinat'],
-                                        alamat: e['alamat']);
+                                      nama: e['nama'],
+                                      koordinat: e['koordinat'],
+                                      alamat: e['alamat'],
+                                      foto: e['foto'],
+                                    );
                                   }));
                                 },
                                 child: Parkiran(
@@ -249,13 +288,15 @@ query loadParkiran($id: Int) {
                                 onPressed: () {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return TambahParkiran(
-                                        latitude: -0,
-                                        longitude: 0,
-                                        namaParkiran: '',
-                                        alamatParkiran: '',
-                                        jamBukaParkiran: '',
-                                        jamTutupParkiran: '');
+                                    return const TambahParkiran(
+                                      koordinat: '0',
+                                      isEdit: false,
+                                      namaParkiran: '',
+                                      alamatParkiran: '',
+                                      jamBukaParkiran: '',
+                                      jamTutupParkiran: '',
+                                      foto: '',
+                                    );
                                   }));
                                 },
                                 child: const Icon(

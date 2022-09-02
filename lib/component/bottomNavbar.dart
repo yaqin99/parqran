@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:parqran/views/pengendara/daftarMobil.dart';
 import 'package:parqran/views/pengendara/daftarMotor.dart';
-import 'package:parqran/views/pengendara/historyParkir.dart';
 import 'package:parqran/views/pengendara/mainMenu.dart';
 import 'package:parqran/views/pengendara/pinjamKendaraan.dart';
 
@@ -17,7 +16,7 @@ class _BottomNavbarState extends State<BottomNavbar> {
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
-      shape: CircularNotchedRectangle(),
+      shape: const CircularNotchedRectangle(),
       color: Color.fromRGBO(52, 152, 219, 1),
       child: Container(
         child: Row(

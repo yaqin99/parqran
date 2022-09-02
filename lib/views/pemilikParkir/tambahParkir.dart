@@ -16,20 +16,23 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 
 class TambahParkiran extends StatefulWidget {
-  final double latitude;
-  final double longitude;
+  final String koordinat;
+  final bool isEdit;
   final String namaParkiran;
   final String alamatParkiran;
   final String jamBukaParkiran;
   final String jamTutupParkiran;
+  final String foto ; 
   const TambahParkiran(
       {Key? key,
-      required this.latitude,
-      required this.longitude,
+      required this.koordinat,
+      required this.isEdit,
       required this.namaParkiran,
       required this.alamatParkiran,
       required this.jamBukaParkiran,
-      required this.jamTutupParkiran})
+      required this.jamTutupParkiran,
+      required this.foto
+      })
       : super(key: key);
   @override
   State<TambahParkiran> createState() => _TambahParkiranState();
@@ -45,7 +48,7 @@ class _TambahParkiranState extends State<TambahParkiran> {
   TimeOfDay jamTutup = TimeOfDay.now();
   double? latitude;
   double? longitude;
-  _initFormValue() {
+  initFormValue() {
     timeinput.text = widget.jamBukaParkiran;
     jamTutupText.text = widget.jamTutupParkiran;
     nama.text = widget.namaParkiran;
@@ -204,7 +207,7 @@ class _TambahParkiranState extends State<TambahParkiran> {
   @override
   void initState() {
     _determinePosition();
-
+    initFormValue();
     super.initState();
   }
 
@@ -248,7 +251,9 @@ class _TambahParkiranState extends State<TambahParkiran> {
                           ),
                         ),
                         Text(
-                          'Tambah Parkiran',
+                          (widget.isEdit == true)
+                              ? 'Update Parkiran'
+                              : 'Tambah Parkiran',
                           style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w400,
@@ -266,7 +271,7 @@ class _TambahParkiranState extends State<TambahParkiran> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          (fotoParkiran != null)
+                          (widget.isEdit == true)
                               ? Container(
                                   width:
                                       MediaQuery.of(context).size.width * 0.477,
@@ -274,30 +279,46 @@ class _TambahParkiranState extends State<TambahParkiran> {
                                       MediaQuery.of(context).size.height * 0.23,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(100),
-                                    child: Image.file(File(fotoParkiran!.path)),
+                                    child: Image.network(
+                                      '${dotenv.env['API']}${widget.foto.replaceFirst(RegExp(r'^public'), '')}',
+                                    ),
                                   ))
-                              : SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.477,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.23,
-                                  child: ElevatedButton(
-                                      style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                const Color.fromRGBO(
-                                                    255, 255, 255, 1)),
-                                        shape: MaterialStateProperty.all(
-                                            RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(200),
-                                          side: BorderSide(
-                                              color: warna, width: 3),
-                                        )),
-                                      ),
-                                      onPressed: () {},
-                                      child: Image.asset('assets/map.png')),
-                                ),
+                              : (fotoParkiran != null)
+                                  ? Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.477,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.23,
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        child: Image.file(
+                                            File(fotoParkiran!.path)),
+                                      ))
+                                  : SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.477,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.23,
+                                      child: ElevatedButton(
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    const Color.fromRGBO(
+                                                        255, 255, 255, 1)),
+                                            shape: MaterialStateProperty.all(
+                                                RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(200),
+                                              side: BorderSide(
+                                                  color: warna, width: 3),
+                                            )),
+                                          ),
+                                          onPressed: () {},
+                                          child: Image.asset('assets/map.png')),
+                                    ),
                         ],
                       ),
                       Align(
@@ -666,25 +687,33 @@ class _TambahParkiranState extends State<TambahParkiran> {
                                       height:
                                           MediaQuery.of(context).size.height *
                                               0.075,
-                                      child: ElevatedButton(
-                                          style: ButtonStyle(
-                                              shape: MaterialStateProperty.all(
-                                                  RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
+                                      child: (widget.isEdit == true)
+                                          ? ElevatedButton(
+                                              style: ButtonStyle(
+                                                  shape: MaterialStateProperty.all(
+                                                      RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(
                                                               10))),
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                      warna)),
-                                          onPressed: () {
-                                            postParkiran();
-                                          },
-                                          child: const Center(
-                                              child: Text('Tambah',
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.w700)))),
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          warna)),
+                                              onPressed: () {
+                                                postParkiran();
+                                              },
+                                              child: const Center(
+                                                  child: Text('Update',
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight: FontWeight
+                                                              .w700))))
+                                          : ElevatedButton(
+                                              style: ButtonStyle(
+                                                  shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                                                  backgroundColor: MaterialStateProperty.all(warna)),
+                                              onPressed: () {
+                                                postParkiran();
+                                              },
+                                              child: const Center(child: Text('Tambah', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)))),
                                     )
                                   ],
                                 ),

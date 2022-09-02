@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:parqran/component/parkirBottomNavbar.dart';
 import 'package:parqran/component/parkirFloatButton.dart';
 import 'package:parqran/views/pemilikParkir/pendapatan.dart';
@@ -10,11 +11,13 @@ class DetailParkiran extends StatefulWidget {
   final String nama;
   final String koordinat;
   final String alamat;
+  final String foto;
   const DetailParkiran({
     Key? key,
     required this.nama,
     required this.koordinat,
     required this.alamat,
+    required this.foto,
   }) : super(key: key);
   @override
   State<DetailParkiran> createState() => _DetailParkiranState();
@@ -26,7 +29,6 @@ class _DetailParkiranState extends State<DetailParkiran> {
 
   @override
   void initState() {
-    
     super.initState();
   }
 
@@ -46,64 +48,64 @@ class _DetailParkiranState extends State<DetailParkiran> {
               height: MediaQuery.of(context).size.height * 0.17,
               width: MediaQuery.of(context).size.width * 1,
               child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 18),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(
-                      context,
-                    );
-                  },
-                  child: Icon(
-                    Icons.arrow_back,
-                    size: 35,
-                    color: warna,
-                  ),
-                ),
-              ),
-              Text(
-                'Detail Parkiran',
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                    color: warna),
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.433,
-                height: MediaQuery.of(context).size.height * 0.1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    SizedBox(
-                      width: 60,
-                      height: 60,
-                      child: ElevatedButton(
-                          style: ButtonStyle(
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50),
-                              )),
-                              backgroundColor:
-                                  MaterialStateProperty.all(warna)),
-                          onPressed: () {
-                            Navigator.pushReplacement(context,
-                                MaterialPageRoute(builder: (context) {
-                              return Pendapatan();
-                            }));
-                          },
-                          child: const Center(
-                            child: FaIcon(
-                              FontAwesomeIcons.circleDollarToSlot,
-                              size: 28,
-                            ),
-                          )),
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 18),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(
+                          context,
+                        );
+                      },
+                      child: Icon(
+                        Icons.arrow_back,
+                        size: 35,
+                        color: warna,
+                      ),
                     ),
-                  ],
-                ),
-              )
-              ],
+                  ),
+                  Text(
+                    'Detail Parkiran',
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                        color: warna),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.433,
+                    height: MediaQuery.of(context).size.height * 0.1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: ElevatedButton(
+                              style: ButtonStyle(
+                                  shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50),
+                                  )),
+                                  backgroundColor:
+                                      MaterialStateProperty.all(warna)),
+                              onPressed: () {
+                                Navigator.pushReplacement(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return Pendapatan();
+                                }));
+                              },
+                              child: const Center(
+                                child: FaIcon(
+                                  FontAwesomeIcons.circleDollarToSlot,
+                                  size: 28,
+                                ),
+                              )),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
               ),
             ),
             SizedBox(
@@ -123,8 +125,7 @@ class _DetailParkiranState extends State<DetailParkiran> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
                         child: Image.network(
-                          'http://gbparking.co.id/wp-content/uploads/2019/01/whatsapp-image-2018-04-12-at-165511-6663f53084225c5dffae1181f0807e16_600x400-600x380.jpeg',
-                          fit: BoxFit.fill,
+                          '${dotenv.env['API']}${widget.foto.replaceFirst(RegExp(r'^public'), '')}',
                         ),
                       ),
                     ),
@@ -176,7 +177,7 @@ class _DetailParkiranState extends State<DetailParkiran> {
                           Text(
                             widget.nama,
                             style: TextStyle(
-                                fontSize: 17,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w300,
                                 color: warna),
                           )
@@ -202,7 +203,7 @@ class _DetailParkiranState extends State<DetailParkiran> {
                             widget.alamat,
                             style: TextStyle(
                                 fontWeight: FontWeight.w300,
-                                fontSize: 17,
+                                fontSize: 14,
                                 color: warna),
                           ),
                         ],
@@ -227,7 +228,7 @@ class _DetailParkiranState extends State<DetailParkiran> {
                             widget.koordinat,
                             style: TextStyle(
                                 fontWeight: FontWeight.w300,
-                                fontSize: 17,
+                                fontSize: 14,
                                 color: warna),
                           ),
                         ],
@@ -270,7 +271,8 @@ class _DetailParkiranState extends State<DetailParkiran> {
                                     MediaQuery.of(context).size.height * 0.09,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
-                                    color: const Color.fromRGBO(217, 240, 255, 1)),
+                                    color:
+                                        const Color.fromRGBO(217, 240, 255, 1)),
                               ),
                             ),
                             Image.asset('assets/qrCode.png',
@@ -300,7 +302,8 @@ class _DetailParkiranState extends State<DetailParkiran> {
                               height: MediaQuery.of(context).size.height * 0.09,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color: const Color.fromRGBO(217, 240, 255, 1)),
+                                  color:
+                                      const Color.fromRGBO(217, 240, 255, 1)),
                             ),
                           ),
                           Image.asset('assets/download.png',
