@@ -1,11 +1,19 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:parqran/component/parkirBottomNavbar.dart';
 import 'package:parqran/component/parkirFloatButton.dart';
 import 'package:parqran/model/services.dart';
+import 'package:parqran/views/pemilikParkir/daftarParkiran.dart';
 import 'package:parqran/views/pemilikParkir/map.dart';
 import '../../model/person.dart';
 import 'package:provider/provider.dart';
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 
 class TambahParkiran extends StatefulWidget {
   final double latitude;
@@ -119,15 +127,58 @@ class _TambahParkiranState extends State<TambahParkiran> {
   }
 
   Color warna = const Color.fromRGBO(155, 89, 182, 1);
-
+  File? fotoParkiran;
+  String? fotoParkiranPath;
   var result;
+
+  uploadImage(File file) async {
+    String fileName = file.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      "file": await MultipartFile.fromFile(file.path,
+          filename: fileName, contentType: MediaType("image", "jpeg")),
+    });
+    var response = await Dio().post('${dotenv.env['API']!}/fl', data: formData);
+    var jsonValue = jsonDecode(response.toString());
+    return fotoParkiranPath = jsonValue['path'].toString();
+  }
+
+  Future _getImageGalery() async {
+    fotoParkiran = null;
+    FilePickerResult? imagePicked = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ["jpg", "png"],
+    );
+    if (imagePicked!.files.first.size > 1000000) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Ukuran Gambar Terlalu Besar'),
+        action: SnackBarAction(label: 'Ok', onPressed: () {}),
+      ));
+    }
+    if (imagePicked.files.first.size < 1000000) {
+      fotoParkiran = File(imagePicked.files.first.path!);
+      uploadImage(fotoParkiran!);
+    }
+
+    Navigator.of(context, rootNavigator: true).pop();
+
+    setState(() {});
+  }
+
   postParkiran() async {
     String lokasi = latitude.toString() + longitude.toString();
     final String idPengguna =
         Provider.of<Person>(context, listen: false).getIdPengguna.toString();
     String buka = '${selectedTime.hour}:${selectedTime.minute}';
     String tutup = '${jamTutup.hour}:${jamTutup.minute}';
-
+    print({
+      "id_Pengguna": idPengguna,
+      "nama": nama.text,
+      "alamat": alamat.text,
+      "lokasi": lokasi,
+      "buka": buka,
+      "tutup": tutup,
+      "foto_kendaraan": fotoParkiranPath,
+    });
     result = await Services.postParkiran(
       idPengguna,
       nama.text,
@@ -135,6 +186,7 @@ class _TambahParkiranState extends State<TambahParkiran> {
       lokasi,
       buka,
       tutup,
+      fotoParkiranPath!,
     );
 
     setState(() {
@@ -143,14 +195,16 @@ class _TambahParkiranState extends State<TambahParkiran> {
 
       timeinput.text = '';
       jamTutupText.text = '';
-      Navigator.pop(context);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+        return const DaftarParkiran();
+      }));
     });
   }
 
   @override
   void initState() {
     _determinePosition();
-    
+
     super.initState();
   }
 
@@ -178,28 +232,28 @@ class _TambahParkiranState extends State<TambahParkiran> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 18),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.pop(
-                            context,
-                          );
-                        },
-                        child: Icon(
-                          Icons.arrow_back,
-                          size: 35,
-                          color: warna,
+                        Padding(
+                          padding: const EdgeInsets.only(right: 18),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pop(
+                                context,
+                              );
+                            },
+                            child: Icon(
+                              Icons.arrow_back,
+                              size: 35,
+                              color: warna,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    Text(
-                      'Tambah Parkiran',
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                          color: warna),
-                    ),
+                        Text(
+                          'Tambah Parkiran',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w400,
+                              color: warna),
+                        ),
                       ],
                     ),
                   ),
@@ -212,22 +266,38 @@ class _TambahParkiranState extends State<TambahParkiran> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.477,
-                            height: MediaQuery.of(context).size.height * 0.23,
-                            child: ElevatedButton(
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                      const Color.fromRGBO(255, 255, 255, 1)),
-                                  shape: MaterialStateProperty.all(
-                                      RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(200),
-                                    side: BorderSide(color: warna, width: 3),
-                                  )),
+                          (fotoParkiran != null)
+                              ? Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.477,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.23,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child: Image.file(File(fotoParkiran!.path)),
+                                  ))
+                              : SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.477,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.23,
+                                  child: ElevatedButton(
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                const Color.fromRGBO(
+                                                    255, 255, 255, 1)),
+                                        shape: MaterialStateProperty.all(
+                                            RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(200),
+                                          side: BorderSide(
+                                              color: warna, width: 3),
+                                        )),
+                                      ),
+                                      onPressed: () {},
+                                      child: Image.asset('assets/map.png')),
                                 ),
-                                onPressed: () {},
-                                child: Image.asset('assets/map.png')),
-                          ),
                         ],
                       ),
                       Align(
@@ -243,7 +313,90 @@ class _TambahParkiranState extends State<TambahParkiran> {
                                   )),
                                   backgroundColor:
                                       MaterialStateProperty.all(warna)),
-                              onPressed: () {},
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        scrollable: true,
+                                        title: const Text('Pilih Opsi'),
+                                        content: Container(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.14,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  _getImageGalery();
+                                                },
+                                                child: Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.315,
+                                                  child: Stack(
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                bottom: 15),
+                                                        child: Image.asset(
+                                                          'assets/folder.png',
+                                                          width: 150,
+                                                          height: 150,
+                                                        ),
+                                                      ),
+                                                      Positioned(
+                                                          bottom: 17,
+                                                          left: 31,
+                                                          child: Text(
+                                                              'Pilih File'))
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  // await _getImageCamera();
+                                                },
+                                                child: Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.315,
+                                                  child: Stack(
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                bottom: 15),
+                                                        child: Image.asset(
+                                                          'assets/camera.png',
+                                                          width: 150,
+                                                          height: 150,
+                                                        ),
+                                                      ),
+                                                      Positioned(
+                                                          bottom: 17,
+                                                          left: 18,
+                                                          child: Text(
+                                                              'Buka Kamera'))
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    });
+                              },
                               child: const Icon(Icons.camera_alt_rounded,
                                   color: Colors.white)),
                         ),
@@ -283,8 +436,8 @@ class _TambahParkiranState extends State<TambahParkiran> {
                                                 BorderRadius.circular(10.0),
                                           ),
                                           filled: true,
-                                          hintStyle:
-                                              const TextStyle(color: Colors.pink),
+                                          hintStyle: const TextStyle(
+                                              color: Colors.pink),
                                           fillColor: Colors.white70),
                                     ),
                                   ),
@@ -319,8 +472,8 @@ class _TambahParkiranState extends State<TambahParkiran> {
                                                   BorderRadius.circular(10.0),
                                             ),
                                             filled: true,
-                                            hintStyle:
-                                                const TextStyle(color: Colors.pink),
+                                            hintStyle: const TextStyle(
+                                                color: Colors.pink),
                                             fillColor: Colors.white70),
                                       ),
                                     ),
@@ -360,8 +513,8 @@ class _TambahParkiranState extends State<TambahParkiran> {
                                                   BorderRadius.circular(10.0),
                                             ),
                                             filled: true,
-                                            hintStyle:
-                                                const TextStyle(color: Colors.pink),
+                                            hintStyle: const TextStyle(
+                                                color: Colors.pink),
                                             fillColor: Colors.white70),
                                       ),
                                     ),
@@ -401,8 +554,8 @@ class _TambahParkiranState extends State<TambahParkiran> {
                                                   BorderRadius.circular(10.0),
                                             ),
                                             filled: true,
-                                            hintStyle:
-                                                const TextStyle(color: Colors.pink),
+                                            hintStyle: const TextStyle(
+                                                color: Colors.pink),
                                             fillColor: Colors.white70),
                                       ),
                                     ),

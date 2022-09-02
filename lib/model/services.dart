@@ -18,16 +18,17 @@ abstract class Services {
     }
   }
 
-  static Future postParkiran(String id_pengguna, String nama, String alamat,
-      String koordinat, String jamBuka, String jamTutup) async {
+  static Future postParkiran(String idPengguna, String nama, String alamat,
+      String koordinat, String jamBuka, String jamTutup, String foto) async {
     try {
-      var data = await Dio().post('${dotenv.env['API']!}/parking', data: {
-        'id_pengguna': id_pengguna,
+      var data = await Dio().post('${dotenv.env['API']!}/parkiran', data: {
+        'id_pengguna': idPengguna,
         'nama': nama,
         'alamat': alamat,
         'koordinat': koordinat,
         'jam_buka': jamBuka,
         'jam_tutup': jamTutup,
+        'foto': foto,
       });
       print(data.data);
       return data.data['data'];

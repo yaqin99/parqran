@@ -18,7 +18,6 @@ import '../../model/services.dart';
 import 'dart:convert' as convert;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:open_file/open_file.dart';
 
 class TambahKendaraan extends StatefulWidget {
   final bool isEdit;
@@ -82,10 +81,6 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
       fotoStnkPath = widget.fotoStnkEdit;
       print(fotoStnkPath);
     }
-  }
-
-  void openFile(PlatformFile file) {
-    OpenFile.open(file.path);
   }
 
   File? imageCamera;
@@ -476,8 +471,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                     builder: (BuildContext context) {
                                       return AlertDialog(
                                         scrollable: true,
-                                        title:
-                                            const Text('Ambil Foto Kendaraan'),
+                                        title: const Text('Pilih Opsi'),
                                         content: Container(
                                           height: MediaQuery.of(context)
                                                   .size
@@ -860,7 +854,7 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                                           return AlertDialog(
                                                             scrollable: true,
                                                             title: const Text(
-                                                                'Ambil Foto Stnk'),
+                                                                'Pilih Opsi'),
                                                             content: Container(
                                                               height: MediaQuery.of(
                                                                           context)
