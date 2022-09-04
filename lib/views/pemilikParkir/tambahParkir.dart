@@ -22,7 +22,8 @@ class TambahParkiran extends StatefulWidget {
   final String alamatParkiran;
   final String jamBukaParkiran;
   final String jamTutupParkiran;
-  final String foto ; 
+  final String foto;
+  final int idParkiranEdit;
   const TambahParkiran(
       {Key? key,
       required this.koordinat,
@@ -31,8 +32,8 @@ class TambahParkiran extends StatefulWidget {
       required this.alamatParkiran,
       required this.jamBukaParkiran,
       required this.jamTutupParkiran,
-      required this.foto
-      })
+      required this.foto,
+      required this.idParkiranEdit})
       : super(key: key);
   @override
   State<TambahParkiran> createState() => _TambahParkiranState();
@@ -48,11 +49,16 @@ class _TambahParkiranState extends State<TambahParkiran> {
   TimeOfDay jamTutup = TimeOfDay.now();
   double? latitude;
   double? longitude;
+  File? fotoParkiran;
+  String? fotoParkiranPath;
   initFormValue() {
-    timeinput.text = widget.jamBukaParkiran;
-    jamTutupText.text = widget.jamTutupParkiran;
-    nama.text = widget.namaParkiran;
-    alamat.text = widget.alamatParkiran;
+    if (widget.isEdit == true) {
+      timeinput.text = widget.jamBukaParkiran;
+      jamTutupText.text = widget.jamTutupParkiran;
+      nama.text = widget.namaParkiran;
+      alamat.text = widget.alamatParkiran;
+      fotoParkiranPath = widget.foto;
+    }
   }
 
   _selectTime(BuildContext context) async {
@@ -130,8 +136,7 @@ class _TambahParkiranState extends State<TambahParkiran> {
   }
 
   Color warna = const Color.fromRGBO(155, 89, 182, 1);
-  File? fotoParkiran;
-  String? fotoParkiranPath;
+
   var result;
 
   uploadImage(File file) async {
@@ -173,35 +178,51 @@ class _TambahParkiranState extends State<TambahParkiran> {
         Provider.of<Person>(context, listen: false).getIdPengguna.toString();
     String buka = '${selectedTime.hour}:${selectedTime.minute}';
     String tutup = '${jamTutup.hour}:${jamTutup.minute}';
-    print({
-      "id_Pengguna": idPengguna,
-      "nama": nama.text,
-      "alamat": alamat.text,
-      "lokasi": lokasi,
-      "buka": buka,
-      "tutup": tutup,
-      "foto_kendaraan": fotoParkiranPath,
-    });
-    result = await Services.postParkiran(
-      idPengguna,
-      nama.text,
-      alamat.text,
-      lokasi,
-      buka,
-      tutup,
-      fotoParkiranPath!,
-    );
 
-    setState(() {
-      nama.text = '';
-      alamat.text = '';
+    if (widget.isEdit == false) {
+      result = await Services.postParkiran(
+        int.parse(idPengguna),
+        nama.text,
+        alamat.text,
+        lokasi,
+        buka,
+        tutup,
+        fotoParkiranPath!,
+      );
+      setState(() {
+        nama.text = '';
+        alamat.text = '';
 
-      timeinput.text = '';
-      jamTutupText.text = '';
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-        return const DaftarParkiran();
-      }));
-    });
+        timeinput.text = '';
+        jamTutupText.text = '';
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) {
+          return const DaftarParkiran();
+        }));
+      });
+    }
+    if (widget.isEdit == true) {
+      result = await Services.updateParkiran(
+          int.parse(idPengguna),
+          nama.text,
+          alamat.text,
+          lokasi,
+          buka,
+          tutup,
+          fotoParkiranPath!,
+          widget.idParkiranEdit);
+      setState(() {
+        nama.text = '';
+        alamat.text = '';
+
+        timeinput.text = '';
+        jamTutupText.text = '';
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) {
+          return const DaftarParkiran();
+        }));
+      });
+    }
   }
 
   @override
@@ -272,17 +293,32 @@ class _TambahParkiranState extends State<TambahParkiran> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           (widget.isEdit == true)
-                              ? Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.477,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.23,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(100),
-                                    child: Image.network(
-                                      '${dotenv.env['API']}${widget.foto.replaceFirst(RegExp(r'^public'), '')}',
-                                    ),
-                                  ))
+                              ? (fotoParkiran == null)
+                                  ? Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.477,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.23,
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        child: Image.network(
+                                          '${dotenv.env['API']}${widget.foto.replaceFirst(RegExp(r'^public'), '')}',
+                                        ),
+                                      ))
+                                  : Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.477,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.23,
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        child: Image.file(
+                                            File(fotoParkiran!.path)),
+                                      ))
                               : (fotoParkiran != null)
                                   ? Container(
                                       width: MediaQuery.of(context).size.width *

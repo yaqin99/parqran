@@ -159,15 +159,6 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                     ),
                                     Row(
                                       children: [
-                                        // IconButton(
-                                        //     onPressed: () {},
-                                        //     icon: const Icon(
-                                        //       Icons
-                                        //           .photo_size_select_actual_rounded,
-                                        //       size: 26,
-                                        //       color: Color.fromRGBO(
-                                        //           52, 152, 219, 1),
-                                        //     )),
                                         IconButton(
                                           onPressed: () {
                                             hold = false;

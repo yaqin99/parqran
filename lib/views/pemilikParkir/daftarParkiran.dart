@@ -6,6 +6,7 @@ import 'package:parqran/component/parkirFloatButton.dart';
 import 'package:parqran/component/parkiran.dart';
 import 'package:parqran/model/person.dart';
 import 'package:parqran/model/services.dart';
+import 'package:parqran/views/pemilikParkir/PemilikParkirMenu.dart';
 import 'package:parqran/views/pemilikParkir/detailParkiran.dart';
 import 'package:parqran/views/pemilikParkir/tambahParkir.dart';
 import 'package:provider/provider.dart';
@@ -29,12 +30,14 @@ class _DaftarParkiranState extends State<DaftarParkiran> {
   String? fotoEdit;
   String? buka;
   String? tutup;
+  int? idParkiran;
   int? idPengguna;
 
   loadParkiran(int idUser) async {
     const String parkiran = r'''
 query loadParkiran($id: Int) {
   Parkirans(id_pengguna: $id) {
+    id_parkiran
     nama
    	koordinat
     alamat
@@ -51,6 +54,7 @@ query loadParkiran($id: Int) {
     var response = result!.data!['Parkirans'];
     for (var item in response) {
       listParkiran.add({
+        "id_parkiran": item['id_parkiran'],
         "nama": item['nama'],
         "koordinat": item['koordinat'],
         "alamat": item['alamat'],
@@ -59,7 +63,7 @@ query loadParkiran($id: Int) {
         "jam_tutup": item['jam_tutup'],
       });
     }
-    print(response);
+    print(listParkiran);
     setState(() {
       notLoad = true;
     });
@@ -80,23 +84,23 @@ query loadParkiran($id: Int) {
     getParkiran();
   }
 
-  Future<bool?> showWarning(BuildContext context) async => showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-            title: const Text('Are you sure want to Exit?'),
-            actions: [
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context, false);
-                  },
-                  child: const Text('No')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context, true);
-                  },
-                  child: const Text('Yes')),
-            ],
-          ));
+  _deleteParkiran(int id) async {
+    try {
+      var response = await Services.deleteParkiran(id);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+        return DaftarParkiran();
+      }));
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<bool?> backToMenu(BuildContext context) async {
+    return Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) {
+      return const PemilikParkirMenu();
+    }));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +108,7 @@ query loadParkiran($id: Int) {
       onWillPop: () async {
         print('Back Button Pressed');
 
-        final shouldPop = await showWarning(context);
+        final shouldPop = await backToMenu(context);
         return shouldPop ?? false;
       },
       child: Scaffold(
@@ -139,15 +143,6 @@ query loadParkiran($id: Int) {
                                     ),
                                     Row(
                                       children: [
-                                        // IconButton(
-                                        //     onPressed: () {},
-                                        //     icon: const Icon(
-                                        //       Icons
-                                        //           .photo_size_select_actual_rounded,
-                                        //       size: 26,
-                                        //       color: Color.fromRGBO(
-                                        //           155, 89, 182, 1),
-                                        //     )),
                                         IconButton(
                                           onPressed: () {
                                             Navigator.push(context,
@@ -161,6 +156,7 @@ query loadParkiran($id: Int) {
                                                 jamBukaParkiran: buka!,
                                                 jamTutupParkiran: tutup!,
                                                 foto: fotoEdit!,
+                                                idParkiranEdit: idParkiran!,
                                               );
                                             }));
                                           },
@@ -172,7 +168,9 @@ query loadParkiran($id: Int) {
                                           ),
                                         ),
                                         IconButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            _deleteParkiran(idParkiran!);
+                                          },
                                           icon: const FaIcon(
                                             FontAwesomeIcons.trash,
                                             size: 26,
@@ -230,6 +228,7 @@ query loadParkiran($id: Int) {
                               return GestureDetector(
                                 onLongPress: () {
                                   hold = true;
+                                  idParkiran = e['id_parkiran'];
                                   nama = e['nama'];
                                   koordinat = e['koordinat'];
                                   alamat = e['alamat'];
@@ -237,6 +236,7 @@ query loadParkiran($id: Int) {
                                   buka = e['jam_buka'];
                                   tutup = e['jam_tutup'];
                                   fotoEdit = e['foto'];
+                                  print(idParkiran);
                                   setState(() {});
                                 },
                                 onTap: () {
@@ -296,6 +296,7 @@ query loadParkiran($id: Int) {
                                       jamBukaParkiran: '',
                                       jamTutupParkiran: '',
                                       foto: '',
+                                      idParkiranEdit: 0,
                                     );
                                   }));
                                 },

@@ -18,7 +18,7 @@ abstract class Services {
     }
   }
 
-  static Future postParkiran(String idPengguna, String nama, String alamat,
+  static Future postParkiran(int idPengguna, String nama, String alamat,
       String koordinat, String jamBuka, String jamTutup, String foto) async {
     try {
       var data = await Dio().post('${dotenv.env['API']!}/parkiran', data: {
@@ -43,6 +43,19 @@ abstract class Services {
     try {
       var data = await Dio()
           .delete('${dotenv.env['API']!}/vehicle/' + idKendaraan.toString());
+      print(data);
+      return data.data['data'];
+    } catch (e) {
+      print(e);
+      // throw ExcReption(e.toString());
+    }
+  }
+
+  static Future deleteParkiran(int idParkiran) async {
+    print('deleting Parkiran ...');
+    try {
+      var data = await Dio()
+          .delete('${dotenv.env['API']!}/parkiran/' + idParkiran.toString());
       print(data);
       return data.data['data'];
     } catch (e) {
@@ -78,6 +91,34 @@ abstract class Services {
         'no_stnk': noStnk,
         'foto_kendaraan': fotoKendaraan,
         'foto_stnk': fotoStnk,
+      });
+      return data.data['data'];
+    } catch (e) {
+      print(e);
+      // throw ExcReption(e.toString());
+    }
+  }
+
+  static Future updateParkiran(
+      int idPengguna,
+      String nama,
+      String alamat,
+      String koordinat,
+      String jamBuka,
+      String jamTutup,
+      String foto,
+      int idParkiran) async {
+    print('updating data parkiran ...');
+    try {
+      var data =
+          await Dio().put('${dotenv.env['API']!}/parkiran/$idParkiran', data: {
+        'id_pengguna': idPengguna,
+        'nama': nama,
+        'alamat': alamat,
+        'koordinat': koordinat,
+        'jam_buka': jamBuka,
+        'jam_tutup': jamTutup,
+        'foto': foto,
       });
       return data.data['data'];
     } catch (e) {

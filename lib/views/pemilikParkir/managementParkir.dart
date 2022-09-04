@@ -11,6 +11,7 @@ import 'package:parqran/component/parkirBottomNavbar.dart';
 import 'package:parqran/component/parkirFloatButton.dart';
 import 'package:parqran/component/parkirLocation.dart';
 import 'package:parqran/model/person.dart';
+import 'package:parqran/views/pemilikParkir/PemilikParkirMenu.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/services.dart';
@@ -74,23 +75,13 @@ query loadParkiran($id: Int) {
     getParkiran();
   }
 
-  Future<bool?> showWarning(BuildContext context) async => showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-            title: Text('Are you sure want to Exit?'),
-            actions: [
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context, false);
-                  },
-                  child: Text('No')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context, true);
-                  },
-                  child: Text('Yes')),
-            ],
-          ));
+  Future<bool?> backToMenu(BuildContext context) async {
+    return Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) {
+      return const PemilikParkirMenu();
+    }));
+  }
+
   @override
   Widget build(BuildContext context) {
     bool notLoad = false;
@@ -98,7 +89,7 @@ query loadParkiran($id: Int) {
       onWillPop: () async {
         print('Back Button Pressed');
 
-        final shouldPop = await showWarning(context);
+        final shouldPop = await backToMenu(context);
         return shouldPop ?? false;
       },
       child: Scaffold(
