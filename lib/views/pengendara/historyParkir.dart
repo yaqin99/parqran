@@ -1,15 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:parqran/component/bottomNavbar.dart';
 import 'package:parqran/component/floatButton.dart';
 import 'package:parqran/component/history.dart';
-import 'package:parqran/component/motor.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:parqran/model/person.dart';
 import 'package:parqran/model/services.dart';
 import 'package:parqran/views/pengendara/mainMenu.dart';
 import 'package:provider/provider.dart';
-
-import '../../model/person.dart';
 
 class HistoryParkir extends StatefulWidget {
   const HistoryParkir({Key? key}) : super(key: key);
@@ -20,59 +20,40 @@ class HistoryParkir extends StatefulWidget {
 
 class _HistoryParkirState extends State<HistoryParkir> {
   String? id_pengguna;
-  List listMotor = List.empty(growable: true);
+  List historys = List.empty(growable: true);
   QueryResult? result;
-  var data;
-
-  loadMotor(int idUser) async {
-    const String motor = r'''
-query loadKendaraan($id: Int, $jenis: Int) {
-  Kendaraans(id: $id, jenis: $jenis) {
-    nama
-    merk
-    no_registrasi
-    no_stnk
-    jenis
-    warna
-    id_kendaraan
-	}
-}
-''';
-
-    final QueryOptions queryOptions = QueryOptions(
-        document: gql(motor), variables: <String, dynamic>{"id": idUser});
-    result = await Services.gqlQuery(queryOptions);
-    var response = result!.data!['Kendaraans'];
-    for (var item in response) {
-      listMotor.add({
-        "nama": item['nama'],
-        "merk": item['merk'],
-        "no_registrasi": item['no_registrasi'],
-        "no_stnk": item['no_stnk'],
-        "jenis": item['jenis'],
-        "warna": item['warna'],
-        "id_kendaraan": item['id_kendaraan']
-      });
-    }
-    print(listMotor);
-    setState(() {});
-  }
-
-  getMotor() async {
-    final String id_pengguna = await Provider.of<Person>(context, listen: false)
-        .getIdPengguna
-        .toString();
-    int vehicleId = int.parse(id_pengguna);
-    if (vehicleId != null) {
-      loadMotor(vehicleId);
-    }
-  }
 
   Future<bool?> backToMenu(BuildContext context) async {
     return Navigator.pushReplacement(context,
         MaterialPageRoute(builder: (context) {
-      return MainMenu();
+      return const MainMenu();
     }));
+  }
+
+  getHistory() async {
+    final String idPengguna =
+        Provider.of<Person>(context, listen: false).getIdPengguna.toString();
+    var data = await Services.getHistory(int.parse(idPengguna));
+    for (var a in data) {
+      historys.add({
+        "lokasi": a['nama'],
+        "masuk": a['jam_masuk'],
+        "keluar": a['jam_keluar'],
+        "tanggal": a['tanggal'],
+      });
+    }
+    print(historys);
+    setState(() {
+      notLoad = true;
+    });
+  }
+
+  bool notLoad = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getHistory();
   }
 
   @override
@@ -96,25 +77,9 @@ query loadKendaraan($id: Int, $jenis: Int) {
                     Container(
                       height: MediaQuery.of(context).size.height * 0.17,
                       width: MediaQuery.of(context).size.width * 1,
-                      child: Container(
-                          child: Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          // Padding(
-                          //   padding: const EdgeInsets.only(right: 18),
-                          //   child: GestureDetector(
-                          //     onTap: () {
-                          //       Navigator.pop(
-                          //         context,
-                          //       );
-                          //     },
-                          //     child: Icon(
-                          //       Icons.arrow_back,
-                          //       size: 35,
-                          //       color: Color.fromRGBO(52, 152, 219, 1),
-                          //     ),
-                          //   ),
-                          // ),
+                        children: const [
                           Text(
                             'History Parkir',
                             style: TextStyle(
@@ -123,59 +88,16 @@ query loadKendaraan($id: Int, $jenis: Int) {
                                 color: Color.fromRGBO(52, 152, 219, 1)),
                           ),
                         ],
-                      )),
+                      ),
                     ),
                     Column(
-                      children: [
-                        History(
-                          lokasi: 'Pamekasan Plaza',
-                          masuk: '14.00',
-                          tanggal: '23 Agustus 2022',
-                          keluar: '15.15',
-                        ),
-                        History(
-                          lokasi: 'Pamekasan Plaza',
-                          masuk: '14.00',
-                          tanggal: '23 Agustus 2022',
-                          keluar: '15.15',
-                        ),
-                        History(
-                          lokasi: 'Pamekasan Plaza',
-                          masuk: '14.00',
-                          tanggal: '23 Agustus 2022',
-                          keluar: '15.15',
-                        ),
-                        History(
-                          lokasi: 'Pamekasan Plaza',
-                          masuk: '14.00',
-                          tanggal: '23 Agustus 2022',
-                          keluar: '15.15',
-                        ),
-                        History(
-                          lokasi: 'Pamekasan Plaza',
-                          masuk: '14.00',
-                          tanggal: '23 Agustus 2022',
-                          keluar: '15.15',
-                        ),
-                        History(
-                          lokasi: 'Pamekasan Plaza',
-                          masuk: '14.00',
-                          tanggal: '23 Agustus 2022',
-                          keluar: '15.15',
-                        ),
-                        History(
-                          lokasi: 'Pamekasan Plaza',
-                          masuk: '14.00',
-                          tanggal: '23 Agustus 2022',
-                          keluar: '15.15',
-                        ),
-                        History(
-                          lokasi: 'Pamekasan Plaza',
-                          masuk: '14.00',
-                          tanggal: '23 Agustus 2022',
-                          keluar: '15.15',
-                        ),
-                      ],
+                      children: historys.map((e) {
+                        return History(
+                            lokasi: e['lokasi'],
+                            masuk: e['masuk'],
+                            tanggal: e['tanggal'],
+                            keluar: e['keluar']);
+                      }).toList(),
                     )
                   ])
                 ],

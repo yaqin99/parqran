@@ -51,6 +51,17 @@ abstract class Services {
     }
   }
 
+  static Future getHistory(int idPengguna) async {
+    print('fetching data ...');
+    try {
+      var data = await Dio().get('${dotenv.env['API']!}/parkiran/$idPengguna');
+      return data.data['data'];
+    } catch (e) {
+      print(e);
+      // throw ExcReption(e.toString());
+    }
+  }
+
   static Future deleteParkiran(int idParkiran) async {
     print('deleting Parkiran ...');
     try {

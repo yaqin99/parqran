@@ -151,7 +151,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                           warna = Colors.transparent;
                                         });
                                       },
-                                      icon: FaIcon(
+                                      icon: const FaIcon(
                                         FontAwesomeIcons.xmark,
                                         size: 26,
                                         color: Color.fromRGBO(52, 152, 219, 1),
