@@ -243,6 +243,7 @@ query loadParkiran($id: Int) {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
                                     return DetailParkiran(
+                                      id: 0,
                                       nama: e['nama'],
                                       koordinat: e['koordinat'],
                                       alamat: e['alamat'],

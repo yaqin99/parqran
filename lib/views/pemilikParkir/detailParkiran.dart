@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:parqran/component/parkirBottomNavbar.dart';
 import 'package:parqran/component/parkirFloatButton.dart';
+import 'package:parqran/model/mqtt_wrapper.dart';
 import 'package:parqran/views/pemilikParkir/pendapatan.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -12,12 +15,14 @@ class DetailParkiran extends StatefulWidget {
   final String koordinat;
   final String alamat;
   final String foto;
+  final int id;
   const DetailParkiran({
     Key? key,
     required this.nama,
     required this.koordinat,
     required this.alamat,
     required this.foto,
+    required this.id,
   }) : super(key: key);
   @override
   State<DetailParkiran> createState() => _DetailParkiranState();
@@ -26,10 +31,28 @@ class DetailParkiran extends StatefulWidget {
 class _DetailParkiranState extends State<DetailParkiran> {
   bool hold = false;
   Color warna = const Color.fromRGBO(155, 89, 182, 1);
+  String message = '';
+  late MQTTClientWrapper clientWrapper;
 
   @override
   void initState() {
+    clientWrapper = MQTTClientWrapper();
+    clientWrapper.prepareMtqqtClient('parkir/${widget.id}');
+    clientWrapper.onMessageReceived = (p0) {
+      final data = jsonDecode(p0);
+      print(data['message']);
+      setState(() {
+        message = data['message'];
+      });
+    };
+    
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    clientWrapper.disconnect();
+    super.dispose();
   }
 
   bool textFieldActivated = false;
@@ -174,12 +197,14 @@ class _DetailParkiranState extends State<DetailParkiran> {
                                   color: warna),
                             ),
                           ),
-                          Text(
-                            widget.nama,
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w300,
-                                color: warna),
+                          Flexible(
+                            child: Text(
+                              widget.nama,
+                              style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w300,
+                                  color: warna),
+                            ),
                           )
                         ],
                       ),
@@ -199,12 +224,14 @@ class _DetailParkiranState extends State<DetailParkiran> {
                                   color: warna),
                             ),
                           ),
-                          Text(
-                            widget.alamat,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                fontSize: 14,
-                                color: warna),
+                          Flexible(
+                            child: Text(
+                              widget.alamat,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w300,
+                                  fontSize: 17,
+                                  color: warna),
+                            ),
                           ),
                         ],
                       ),
@@ -224,12 +251,14 @@ class _DetailParkiranState extends State<DetailParkiran> {
                                   color: warna),
                             ),
                           ),
-                          Text(
-                            widget.koordinat,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                fontSize: 14,
-                                color: warna),
+                          Flexible(
+                            child: Text(
+                              widget.koordinat,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w300,
+                                  fontSize: 17,
+                                  color: warna),
+                            ),
                           ),
                         ],
                       ),

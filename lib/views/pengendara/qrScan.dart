@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:parqran/component/loading_overlay.dart';
 import 'package:parqran/model/person.dart';
 import 'package:parqran/model/services.dart';
 import 'package:provider/provider.dart';
@@ -48,6 +49,7 @@ query loadKendaraan($id_pengguna: Int) {
 
     final QueryOptions queryOptions = QueryOptions(document: gql(motor), variables: <String, dynamic>{"id_pengguna": int.parse(id_pengguna)});
     result = await Services.gqlQuery(queryOptions);
+    print('msg: $result');
     var response = result!.data!['Kendaraans'];
     if (response.length == 0) {
       showDialog<void>(
@@ -150,21 +152,23 @@ query loadKendaraan($id_pengguna: Int) {
     idPengguna = Provider.of<Person>(context, listen: false).id_pengguna.toString();
 
     return SafeArea(
-      child: Scaffold(
-        body: Stack(
-          children: [
-            buildQrView(context),
-            Positioned(
-                left: MediaQuery.of(context).size.width * 0.31,
-                top: MediaQuery.of(context).size.width * 0.1,
-                child: Center(
-                  child: pickVehicle(),
-                )),
-            Positioned(
-                left: MediaQuery.of(context).size.width * 0.22,
-                bottom: MediaQuery.of(context).size.width * 0.4,
-                child: Center(child: buildResult()))
-          ],
+      child: LoadingOverlay(
+        child: Scaffold(
+          body: Stack(
+            children: [
+              buildQrView(context),
+              Positioned(
+                  left: MediaQuery.of(context).size.width * 0.31,
+                  top: MediaQuery.of(context).size.width * 0.1,
+                  child: Center(
+                    child: pickVehicle(),
+                  )),
+              Positioned(
+                  left: MediaQuery.of(context).size.width * 0.22,
+                  bottom: MediaQuery.of(context).size.width * 0.4,
+                  child: Center(child: buildResult()))
+            ],
+          ),
         ),
       )
     );
@@ -236,31 +240,35 @@ query loadKendaraan($id_pengguna: Int) {
     ),
   );
   void onQRViewCreated(QRViewController controller) {
-    setState(() => this.controller = controller);
+    this.controller = controller;
     controller.scannedDataStream.listen(((scanData) => setState(() {
-      Barcode data = scanData;
-      // print('msg: ${data!.code}');
-      checkToServer(data.code);
-      controller.stopCamera();
-      // Navigator.pop(context);
+      // Barcode data = scanData;
+      // controller.stopCamera();
+      // LoadingOverlay.of(context).show();
+      print('msg: ${scanData.code}');
+      checkToServer(scanData.code);
+      
+      Navigator.pop(context);
     })));
   }
 
   checkToServer(String? data) async {
     if (data != null) {
-      print('send to server');
+      print('msg: send to server');
       // if (_lokasi) {
       //   Timer timer = new Timer(const Duration(seconds: 5), () {
       //     _determinePosition()
       //   });
       // }
       try {
-        await Dio().post('${dotenv.env['API']!}/distance', data: {
+        var response = await Dio().post('${dotenv.env['API']!}/distance', data: {
           'id_parkiran': data,
           'origins': '${_lokasi.latitude},${_lokasi.longitude}',
           'id_pengguna': idPengguna,
           'id_kendaraan': _idKendaraan,
         });
+        print('msg: ${response.data}');
+
       } catch (e) {
         print(e);
       }
