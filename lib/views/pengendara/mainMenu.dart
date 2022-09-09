@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:parqran/component/bottomNavbar.dart';
-import 'package:parqran/component/floatButton.dart';
 import 'package:parqran/model/person.dart';
 import 'package:parqran/views/pengendara/daftarMobil.dart';
 import 'package:parqran/views/pengendara/daftarMotor.dart';
@@ -74,7 +73,7 @@ class _MainMenuState extends State<MainMenu> {
                               children: [
                                 Text(
                                   'Selamat Datang $nama',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontWeight: FontWeight.w600,
                                       color: Color.fromRGBO(52, 152, 219, 1)),
                                 ),
@@ -409,7 +408,7 @@ class _MainMenuState extends State<MainMenu> {
             onPressed: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) {
-                return ScanMasuk();
+                return const ScanMasuk();
               }));
             },
             backgroundColor: const Color.fromRGBO(155, 89, 182, 1),

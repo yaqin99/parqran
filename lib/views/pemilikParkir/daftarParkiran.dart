@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:parqran/component/parkirBottomNavbar.dart';
@@ -89,10 +90,12 @@ query loadParkiran($id: Int) {
 
   _deleteParkiran(int id) async {
     try {
-      var response = await Services.deleteParkiran(id);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-        return DaftarParkiran();
-      }));
+      await Services.deleteParkiran(id);
+      if (mounted) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+          return const DaftarParkiran();
+        }));
+      }
     } catch (e) {
       print(e);
     }
@@ -256,7 +259,7 @@ query loadParkiran($id: Int) {
                                 },
                                 child: Parkiran(
                                     lokasi: e["nama"],
-                                    areaCode: e['koordinat']),
+                                    areaCode: e['koordinat'], foto: '${dotenv.env['API']}${e['foto'].replaceFirst(RegExp(r'^public'), '')}',)
                               );
                             }).toList(),
                           )

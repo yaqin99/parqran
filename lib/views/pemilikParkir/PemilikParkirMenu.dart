@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:parqran/component/parkirBottomNavbar.dart';
 import 'package:parqran/component/parkirFloatButton.dart';
@@ -5,6 +6,7 @@ import 'package:parqran/model/person.dart';
 import 'package:parqran/views/pemilikParkir/daftarParkiran.dart';
 import 'package:parqran/views/pemilikParkir/managementParkir.dart';
 import 'package:parqran/views/pemilikParkir/partner.dart';
+import 'package:parqran/views/pemilikParkir/scan_masuk_parkir.dart';
 import 'package:parqran/views/pengendara/profil.dart';
 import 'package:provider/provider.dart';
 
@@ -19,18 +21,18 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
   Future<bool?> showWarning(BuildContext context) async => showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-            title: Text('Are you sure want to Exit?'),
+            title: const Text('Are you sure want to Exit?'),
             actions: [
               ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context, false);
                   },
-                  child: Text('No')),
+                  child: const Text('No')),
               ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context, true);
                   },
-                  child: Text('Yes')),
+                  child: const Text('Yes')),
             ],
           ));
   @override
@@ -39,19 +41,21 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
     final String foto = Provider.of<Person>(context, listen: false).foto;
     return WillPopScope(
       onWillPop: () async {
-        print('Back Button Pressed');
+        if (kDebugMode) {
+          print('Back Button Pressed');
+        }
 
         final shouldPop = await showWarning(context);
         return shouldPop ?? false;
       },
       child: Scaffold(
           body: Center(
-            child: Container(
+            child: SizedBox(
               // decoration: BoxDecoration(border: Border.all(color: Colors.black)),
               width: MediaQuery.of(context).size.width * 0.9,
               child: Column(
                 children: [
-                  Container(
+                  SizedBox(
                     height: MediaQuery.of(context).size.height * 0.2,
                     width: MediaQuery.of(context).size.width * 1,
                     child: Center(
@@ -60,7 +64,7 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
                         children: [
                           Text(
                             'Selamat Datang $nama',
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.w600,
                                 color: Color.fromRGBO(155, 89, 182, 1)),
                           ),
@@ -86,14 +90,14 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
                       ),
                     ),
                   ),
-                  Container(
+                  SizedBox(
                     height: MediaQuery.of(context).size.height * 0.41,
                     width: MediaQuery.of(context).size.width * 1,
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Container(
+                          SizedBox(
                             height: MediaQuery.of(context).size.height * 0.2,
                             width: MediaQuery.of(context).size.width * 1,
                             child: Row(
@@ -103,10 +107,10 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
                                   onTap: () {
                                     Navigator.pushReplacement(context,
                                         MaterialPageRoute(builder: (context) {
-                                      return DaftarParkiran();
+                                      return const DaftarParkiran();
                                     }));
                                   },
-                                  child: Container(
+                                  child: SizedBox(
                                     height: MediaQuery.of(context).size.height *
                                         0.165,
                                     width: MediaQuery.of(context).size.width *
@@ -119,7 +123,7 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
                                             decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(20),
-                                                color: Color.fromRGBO(
+                                                color: const Color.fromRGBO(
                                                     239, 201, 255, 1)),
                                             height: MediaQuery.of(context)
                                                     .size
@@ -136,17 +140,15 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
                                           child: Stack(
                                             children: [
                                               Center(
-                                                child: Container(
-                                                  child: Image.asset(
-                                                    'assets/map2.png',
-                                                    fit: BoxFit.fill,
-                                                  ),
+                                                child: Image.asset(
+                                                  'assets/map2.png',
+                                                  fit: BoxFit.fill,
                                                 ),
                                               ),
                                             ],
                                           ),
                                         ),
-                                        Align(
+                                        const Align(
                                             alignment: Alignment.bottomCenter,
                                             child: Text('Daftar Parkiran'))
                                       ],
@@ -157,10 +159,10 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
                                   onTap: () {
                                     Navigator.pushReplacement(context,
                                         MaterialPageRoute(builder: (context) {
-                                      return ManageParkir();
+                                      return const ManageParkir();
                                     }));
                                   },
-                                  child: Container(
+                                  child: SizedBox(
                                     height: MediaQuery.of(context).size.height *
                                         0.165,
                                     width: MediaQuery.of(context).size.width *
@@ -173,7 +175,7 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
                                             decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(20),
-                                                color: Color.fromRGBO(
+                                                color: const Color.fromRGBO(
                                                     239, 201, 255, 1)),
                                             height: MediaQuery.of(context)
                                                     .size
@@ -190,17 +192,15 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
                                           child: Stack(
                                             children: [
                                               Center(
-                                                child: Container(
-                                                  child: Image.asset(
-                                                    'assets/carParking.png',
-                                                    fit: BoxFit.fill,
-                                                  ),
+                                                child: Image.asset(
+                                                  'assets/carParking.png',
+                                                  fit: BoxFit.fill,
                                                 ),
                                               ),
                                             ],
                                           ),
                                         ),
-                                        Align(
+                                        const Align(
                                             alignment: Alignment.bottomCenter,
                                             child: Text('Jumlah Parkir'))
                                       ],
@@ -210,7 +210,7 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
                               ],
                             ),
                           ),
-                          Container(
+                          SizedBox(
                             height: MediaQuery.of(context).size.height * 0.2,
                             width: MediaQuery.of(context).size.width * 1,
                             child: Row(
@@ -220,7 +220,7 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
                                   onTap: () {
                                     Navigator.pushReplacement(context,
                                         MaterialPageRoute(builder: (context) {
-                                      return Partner();
+                                      return const Partner();
                                     }));
                                   },
                                   child: Container(
@@ -236,7 +236,7 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
                                             decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(20),
-                                                color: Color.fromRGBO(
+                                                color: const Color.fromRGBO(
                                                     239, 201, 255, 1)),
                                             height: MediaQuery.of(context)
                                                     .size
@@ -253,17 +253,15 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
                                           child: Stack(
                                             children: [
                                               Center(
-                                                child: Container(
-                                                  child: Image.asset(
-                                                    'assets/partner.png',
-                                                    fit: BoxFit.fill,
-                                                  ),
+                                                child: Image.asset(
+                                                  'assets/partner.png',
+                                                  fit: BoxFit.fill,
                                                 ),
                                               ),
                                             ],
                                           ),
                                         ),
-                                        Align(
+                                        const Align(
                                             alignment: Alignment.bottomCenter,
                                             child: Text('Partnership'))
                                       ],
@@ -288,8 +286,17 @@ class _PemilikParkirMenuState extends State<PemilikParkirMenu> {
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: ParkirFloatButton(),
-          bottomNavigationBar: ParkirBotNav()),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) {
+                return const ScanMasukParkir();
+              }));
+            },
+            backgroundColor: const Color.fromRGBO(155, 89, 182, 1),
+            child: const Icon(Icons.qr_code_scanner, size: 30,),
+          ),
+          bottomNavigationBar: const ParkirBotNav()),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:parqran/views/pemilikParkir/PemilikParkirMenu.dart';
 import 'package:parqran/views/pengendara/mainMenu.dart';
@@ -34,7 +35,9 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        print('Back Button Pressed');
+        if (kDebugMode) {
+          print('Back Button Pressed');
+        }
 
         final shouldPop = await showWarning(context);
         return shouldPop ?? false;
@@ -43,7 +46,7 @@ class _HomeState extends State<Home> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
+            SizedBox(
               width: MediaQuery.of(context).size.width * 1,
               height: MediaQuery.of(context).size.height * 0.65,
               child: const Logo(),
@@ -63,7 +66,7 @@ class _HomeState extends State<Home> {
                   onPressed: () {
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) {
-                      return MainMenu();
+                      return const MainMenu();
                     }));
                   },
                   child: const Center(

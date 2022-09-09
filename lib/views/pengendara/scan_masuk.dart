@@ -176,8 +176,37 @@ class _ScanMasukState extends State<ScanMasuk> {
             );
           } else {
             // loading indicator with searching location text
-            return const Center(
-              child: CircularProgressIndicator(),
+            return Expanded(
+              child: Container(
+                width: double.infinity,
+                height: double.infinity,
+                padding: const EdgeInsets.all(16),
+                color: Colors.black87,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 26),
+                      child: SizedBox(
+                        width: 32, height: 32,
+                        child: CircularProgressIndicator(strokeWidth: 3)
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 4),
+                      child: Text(
+                        'Mencari lokasi anda...', textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ),
+                    Text(
+                      'Harap tunggu beberapa saat sampai aplikasi bisa menentukan lokasi Anda', textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white, fontSize: 12)
+                    ),
+                  ],
+                ),
+              ),
             );
           }
         }, future: _determinePosition()),
