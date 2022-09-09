@@ -10,12 +10,9 @@ import 'package:parqran/component/floatButton.dart';
 import 'package:parqran/model/services.dart';
 import 'package:parqran/views/pengendara/daftarMobil.dart';
 import 'package:parqran/views/pengendara/daftarMotor.dart';
-import 'package:parqran/views/pengendara/mainMenu.dart';
 import '../../model/person.dart';
-import '../../model/personCard.dart';
 import 'package:provider/provider.dart';
 import '../../model/services.dart';
-import 'dart:convert' as convert;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 

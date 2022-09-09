@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -51,6 +53,7 @@ query loadParkiran($id: Int) {
     final QueryOptions queryOptions = QueryOptions(
         document: gql(parkiran), variables: <String, dynamic>{"id": idUser});
     result = await Services.gqlQuery(queryOptions);
+    print('msg: $result');
     var response = result!.data!['Parkirans'];
     for (var item in response) {
       listParkiran.add({
@@ -63,7 +66,7 @@ query loadParkiran($id: Int) {
         "jam_tutup": item['jam_tutup'],
       });
     }
-    print(listParkiran);
+    print('msg: $listParkiran');
     setState(() {
       notLoad = true;
     });
@@ -243,7 +246,7 @@ query loadParkiran($id: Int) {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
                                     return DetailParkiran(
-                                      id: 0,
+                                      id: e['id_parkiran'],
                                       nama: e['nama'],
                                       koordinat: e['koordinat'],
                                       alamat: e['alamat'],

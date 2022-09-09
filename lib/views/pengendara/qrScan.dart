@@ -1,18 +1,17 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:parqran/component/loading_overlay.dart';
 import 'package:parqran/model/person.dart';
 import 'package:parqran/model/services.dart';
+import 'package:parqran/views/mqtt_wait.dart';
+import 'package:parqran/views/pengendara/mainMenu.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:geolocator/geolocator.dart';
-
-import '../../model/person.dart';
-import '../../model/services.dart';
 
 class Kendaraan {
   Kendaraan(this.id, this.nama);
@@ -35,6 +34,9 @@ class _QrScanState extends State<QrScan> {
   QueryResult? result;
   int _idKendaraan = 0;
 
+  /// Dapatkan data kendaraan yang dimiliki oleh pengguna
+  /// Jika kosong maka munculkan alert untuk menambahkan kendaraan lebih dulu
+  /// Jika tidak kosong maka masukkan listMotor untuk memilih kendaraan
   Future<void> getMotor(BuildContext context) async {
     String id_pengguna = Provider.of<Person>(context, listen: false).getIdPengguna.toString();
     
@@ -49,8 +51,10 @@ query loadKendaraan($id_pengguna: Int) {
 
     final QueryOptions queryOptions = QueryOptions(document: gql(motor), variables: <String, dynamic>{"id_pengguna": int.parse(id_pengguna)});
     result = await Services.gqlQuery(queryOptions);
-    print('msg: $result');
     var response = result!.data!['Kendaraans'];
+    if (kDebugMode) {
+      print('msg: $response');
+    }
     if (response.length == 0) {
       showDialog<void>(
         context: context,
@@ -78,14 +82,14 @@ query loadKendaraan($id_pengguna: Int) {
     for (var i = 0; i < response.length; i++) {
       listMotor.add(Kendaraan(response[i]['id_kendaraan'].toString(), response[i]['nama']));
     }
-    if (response.length == 1) {
-      id_pengguna = response[0]['id_kendaraan'].toString();
+    if (listMotor.length == 1) {
+      _idKendaraan = int.parse(listMotor[0].id);
     }
     setState(() {});
   }
 
   late Position _lokasi;
-  Future<void> _determinePosition() async {
+  Future<Position> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -116,9 +120,13 @@ query loadKendaraan($id_pengguna: Int) {
 
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
-    _lokasi = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
-    print(_lokasi.latitude);
-    print(_lokasi.longitude);
+    // _lokasi = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.best,
+      // forceAndroidLocationManager: true
+    );
+    _lokasi = position;
+    return position;
   }
 
   @override
@@ -152,25 +160,30 @@ query loadKendaraan($id_pengguna: Int) {
     idPengguna = Provider.of<Person>(context, listen: false).id_pengguna.toString();
 
     return SafeArea(
-      child: LoadingOverlay(
-        child: Scaffold(
-          body: Stack(
-            children: [
-              buildQrView(context),
-              Positioned(
-                  left: MediaQuery.of(context).size.width * 0.31,
-                  top: MediaQuery.of(context).size.width * 0.1,
-                  child: Center(
-                    child: pickVehicle(),
-                  )),
-              Positioned(
-                  left: MediaQuery.of(context).size.width * 0.22,
-                  bottom: MediaQuery.of(context).size.width * 0.4,
-                  child: Center(child: buildResult()))
-            ],
-          ),
+      child: Scaffold(
+        body: Stack(
+          children: [
+            // _lokasi.latitude > 0 ? buildQrView(context) : const Center(child: CircularProgressIndicator()),
+            FutureBuilder(builder: ((context, AsyncSnapshot<Position> snapshot) {
+              if (snapshot.hasData) {
+                print(snapshot.data);
+                return buildQrView(context);
+              }
+              return const Center(child: CircularProgressIndicator());
+            }), future: _determinePosition()),
+            Positioned(
+                left: MediaQuery.of(context).size.width * 0.31,
+                top: MediaQuery.of(context).size.width * 0.1,
+                child: Center(
+                  child: pickVehicle(),
+                )),
+            Positioned(
+                left: MediaQuery.of(context).size.width * 0.22,
+                bottom: MediaQuery.of(context).size.width * 0.4,
+                child: Center(child: buildResult()))
+          ],
         ),
-      )
+      ),
     );
   }
 
@@ -218,16 +231,16 @@ query loadKendaraan($id_pengguna: Int) {
     }), itemCount: listMotor.length, scrollDirection: Axis.horizontal),
   );
   Widget buildResult() => Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-            color: Colors.white24, borderRadius: BorderRadius.circular(8)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Text('Arahkan Camera pada Qr Code '),
-          ],
-        ),
-      );
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+        color: Colors.white24, borderRadius: BorderRadius.circular(8)),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text('Arahkan TAEK Camera pada Qr Code'),
+      ],
+    ),
+  );
   Widget buildQrView(BuildContext context) => QRView(
     key: qrKey,
     onQRViewCreated: onQRViewCreated,
@@ -242,35 +255,95 @@ query loadKendaraan($id_pengguna: Int) {
   void onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen(((scanData) => setState(() {
-      // Barcode data = scanData;
-      // controller.stopCamera();
-      // LoadingOverlay.of(context).show();
-      print('msg: ${scanData.code}');
+      controller.pauseCamera();
       checkToServer(scanData.code);
-      
-      Navigator.pop(context);
     })));
   }
 
   checkToServer(String? data) async {
     if (data != null) {
-      print('msg: send to server');
-      // if (_lokasi) {
-      //   Timer timer = new Timer(const Duration(seconds: 5), () {
-      //     _determinePosition()
-      //   });
-      // }
+      /// split data with / and then take the last item
+      var splitData = data.split('/')[data.split('/').length - 1];
+      if (kDebugMode) {
+        print('msg: idparkiran: $splitData');
+        print('msg: idpengguna: $idPengguna');
+        print('msg: idkendaraan: $_idKendaraan');
+        print('msg: lokasi: ${_lokasi.latitude},${_lokasi.longitude}');
+      }
+      
       try {
         var response = await Dio().post('${dotenv.env['API']!}/distance', data: {
-          'id_parkiran': data,
+          'id_parkiran': splitData,
           'origins': '${_lokasi.latitude},${_lokasi.longitude}',
           'id_pengguna': idPengguna,
           'id_kendaraan': _idKendaraan,
+          'isTukangParkir': false
         });
-        print('msg: ${response.data}');
-
+        // ignore: unnecessary_brace_in_string_interps
+        if (kDebugMode) {
+          print('msg: $response');
+        }
+        
+        if (response.data['message'] == 'Too Far') {
+          // showDialog
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Terlalu Jauh'),
+                content: const Text('Anda terlalu jauh dari parkiran. Silahkan dekatkan diri anda'),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('OK'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      controller?.resumeCamera();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+          return;
+        }
+ 
+        if (response.data['message'] == 'Validated') {
+          // auto validate parkiran di pengaturan, munculkan dialog success
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Berhasil'),
+                content: const Text('Anda diperbolehkan masuk parkiran. Silakan parkir'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      // redirect ke widget mainMenu
+                      controller?.dispose();
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const MainMenu()));
+                    },
+                    child: const Text('OK'),
+                  )
+                ],
+              );
+            }
+          );
+          controller!.stopCamera();
+          return;
+        } else {
+          if (kDebugMode) {
+            print(response.data['message']);
+          }
+          // gunakan mqtt untuk mengetahui persetujuan tukang parkir
+          controller!.dispose();
+          if (mounted) {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MqttWait(idParkir: int.parse(splitData), idKendaraan: _idKendaraan, nomorKendaraan: '',)));
+          }
+        }
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     }
   }

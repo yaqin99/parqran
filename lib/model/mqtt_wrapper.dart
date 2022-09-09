@@ -21,10 +21,13 @@ class MQTTClientWrapper {
   MqttSubscriptionState subscriptionState = MqttSubscriptionState.IDLE;
   
   void _setupMqqtClient() {
-    client = MqttServerClient.withPort('test.mosquitto.org', '#', 1883);
-    // client = MqttClient.withPort('test.mosquitto.org', '#', 1883);
+    final String clientId = 'flutter_client_${DateTime.now().millisecondsSinceEpoch}'; 
+    client = MqttServerClient.withPort('103.144.187.42', clientId, 1883);
+    // client = MqttServerClient.withPort('test.mosquitto.org', '#', 1883);
+    // client = MqttServerClient.withPort('broker.hivemq.com', '#', 1883);
     client.logging(on: false);
-    client.keepAlivePeriod = 20;
+    client.keepAlivePeriod = 60;
+    client.autoReconnect = true;
     client.onConnected = _onConnected;
     client.onDisconnected = _onDisconnected;
     client.onSubscribed = _onSubscribed;
@@ -76,9 +79,12 @@ class MQTTClientWrapper {
   void _onSubscribed(String topic) {
     print('MQTTClientWrapper::OnSubscribed client callback - Subscription to topic $topic succeeded');
     subscriptionState = MqttSubscriptionState.SUBSCRIBED;
+    // check if function defined
+    onSubscribed();
   }
 
   late final Function(String) onMessageReceived;
+  late final Function() onSubscribed;
 
   void prepareMtqqtClient(String topic) async {
     _setupMqqtClient();

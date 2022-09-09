@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:parqran/component/parkirBottomNavbar.dart';
@@ -34,18 +36,77 @@ class _DetailParkiranState extends State<DetailParkiran> {
   String message = '';
   late MQTTClientWrapper clientWrapper;
 
+  Future<void> _saveDiterima(data) async {
+    try {
+      var resp = await Dio().post('${dotenv.env['API']!}/parking/here', data: {
+        'id_parkiran': data['idParkir'],
+        'id_pengguna': data['idPengguna'],
+        'id_kendaraan': data['idKendaraan']
+      });
+      // anggep tersimpan
+      if (kDebugMode) {
+        print('msg: ${resp.data}');
+      }
+      clientWrapper.publishMessage('parkir/${widget.id}', jsonEncode({'idPengguna': data['idPengguna'], 'status': 'diterima'}));
+    } catch (e) {
+      if (kDebugMode) {
+        print('msg: error: $e');
+      }
+    }
+  }
+  void _setDitolak(data) {
+    clientWrapper.publishMessage('parkir/${widget.id}', jsonEncode({'idPengguna': data['idPengguna'], 'status': 'ditolak'}));
+  }
+  
+
   @override
   void initState() {
     clientWrapper = MQTTClientWrapper();
     clientWrapper.prepareMtqqtClient('parkir/${widget.id}');
-    clientWrapper.onMessageReceived = (p0) {
-      final data = jsonDecode(p0);
-      print(data['message']);
+    clientWrapper.onMessageReceived = (String msg) {
+      if (kDebugMode) {
+        print('msg: $msg');
+      }
+      final data = jsonDecode(msg);
       setState(() {
-        message = data['message'];
+        message = msg;
       });
+      if (data['status'] == 'waiting') {
+        // tampilkan dialog
+        showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Pemberitahuan'),
+              content: Text('Ada pengendara dengan nomor kendaraan ${data['nomorKendaraan']} yang ingin parkir. Apakah anda ingin menerima?'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    _saveDiterima(data);
+                    Navigator.pop(context);
+                  },
+                  child: const Text('DITERIMA', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+                ),
+                TextButton(
+                  onPressed: () {
+                    _setDitolak(data);
+                    Navigator.pop(context);
+                  },
+                  child: const Text('DITOLAK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
     };
-    
+    clientWrapper.onSubscribed = (() {
+      if (kDebugMode) {
+        print('subscribed');
+      }
+    });
+
     super.initState();
   }
 
@@ -115,7 +176,7 @@ class _DetailParkiranState extends State<DetailParkiran> {
                               onPressed: () {
                                 Navigator.pushReplacement(context,
                                     MaterialPageRoute(builder: (context) {
-                                  return Pendapatan();
+                                  return const Pendapatan();
                                 }));
                               },
                               child: const Center(
@@ -287,7 +348,7 @@ class _DetailParkiranState extends State<DetailParkiran> {
                         onTap: () {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                            return QrGenerate();
+                            return const QrGenerate();
                           }));
                         },
                         child: Stack(

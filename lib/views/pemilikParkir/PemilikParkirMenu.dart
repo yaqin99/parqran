@@ -1,19 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:parqran/component/bottomNavbar.dart';
-import 'package:parqran/component/floatButton.dart';
 import 'package:parqran/component/parkirBottomNavbar.dart';
 import 'package:parqran/component/parkirFloatButton.dart';
 import 'package:parqran/model/person.dart';
 import 'package:parqran/views/pemilikParkir/daftarParkiran.dart';
 import 'package:parqran/views/pemilikParkir/managementParkir.dart';
 import 'package:parqran/views/pemilikParkir/partner.dart';
-import 'package:parqran/views/pemilikParkir/pendapatan.dart';
-import 'package:parqran/views/pengendara/daftarMobil.dart';
-import 'package:parqran/views/pengendara/daftarMotor.dart';
-import 'package:parqran/views/pengendara/historyParkir.dart';
-import 'package:parqran/views/pengendara/pinjamKendaraan.dart';
-import 'package:http/http.dart';
 import 'package:parqran/views/pengendara/profil.dart';
 import 'package:provider/provider.dart';
 

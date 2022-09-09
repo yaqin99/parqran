@@ -126,7 +126,7 @@ class History extends StatelessWidget {
                   ],
                 ),
               ),
-              Container(
+              SizedBox(
                 height: MediaQuery.of(context).size.height * 0.13,
                 width: MediaQuery.of(context).size.width * 0.3,
                 child: Stack(
@@ -142,11 +142,9 @@ class History extends StatelessWidget {
                       ),
                     ),
                     Center(
-                      child: Container(
-                        child: Image.asset(
-                          'assets/motorcyclenew.png',
-                          fit: BoxFit.fill,
-                        ),
+                      child: Image.asset(
+                        'assets/motorcyclenew.png',
+                        fit: BoxFit.fill,
                       ),
                     ),
                   ],

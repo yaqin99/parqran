@@ -8,7 +8,7 @@ import 'package:parqran/views/pengendara/historyParkir.dart';
 import 'package:parqran/views/pengendara/loadingPage.dart';
 import 'package:parqran/views/pengendara/pinjamKendaraan.dart';
 import 'package:parqran/views/pengendara/profil.dart';
-import 'package:parqran/views/pengendara/qrGenerate.dart';
+import 'package:parqran/views/pengendara/scan_masuk.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -405,7 +405,19 @@ class _MainMenuState extends State<MainMenu> {
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: const FLoatButton(),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) {
+                return ScanMasuk();
+              }));
+            },
+            backgroundColor: const Color.fromRGBO(155, 89, 182, 1),
+            child: const Icon(
+              Icons.qr_code_scanner,
+              size: 30,
+            ),
+          ),
           bottomNavigationBar: const BottomNavbar()),
     );
   }
