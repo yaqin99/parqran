@@ -9,6 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:parqran/model/person.dart';
 import 'package:parqran/views/pengendara/daftarMotor.dart';
 import 'package:parqran/views/pengendara/detailMobil.dart';
+import 'package:parqran/views/pengendara/detailMotor.dart';
 import 'package:parqran/views/pengendara/mainMenu.dart';
 import 'package:parqran/views/pengendara/tambahKendaraan.dart';
 import 'package:provider/provider.dart';
@@ -94,11 +95,11 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
   }
 
   bool notLoad = false;
-
+  String? idPengguna;
   getMobil() {
-    final String idPengguna =
+    idPengguna =
         Provider.of<Person>(context, listen: false).getIdPengguna.toString();
-    int vehicleId = int.parse(idPengguna);
+    int vehicleId = int.parse(idPengguna!);
     if (vehicleId != null) {
       loadMotor(vehicleId);
     }
@@ -279,7 +280,7 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                 onTap: () {
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
-                                    return DetailMobil(
+                                    return DetailMotor(
                                       nama: e['nama'],
                                       merk: e['merk'],
                                       warna: e['warna'],
@@ -287,10 +288,12 @@ query loadKendaraan($id_pengguna: Int, $jenis: Int) {
                                       no_stnk: e['no_stnk'],
                                       no_rangka: e['no_rangka'],
                                       foto: e['foto_kendaraan'],
+                                      idPengguna: int.parse(idPengguna!),
+                                      idKendaraan: e['id_kendaraan'],
                                     );
                                   }));
                                 },
-                                child: Mobil(
+                                child: Motor(
                                   nama: e['nama'],
                                   noPol: e['no_registrasi'],
                                   noStnk: e['no_stnk'],

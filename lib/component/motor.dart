@@ -4,14 +4,14 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class Motor extends StatelessWidget {
   final String nama;
   final String noPol;
-  final String warna;
+  final String noStnk;
   final String foto;
   const Motor({
     Key? key,
     required this.nama,
     required this.noPol,
-    required this.warna,
     required this.foto,
+    required this.noStnk,
   }) : super(key: key);
 
   @override
@@ -68,7 +68,7 @@ class Motor extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      warna,
+                      noStnk,
                       style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,

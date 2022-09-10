@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:parqran/views/pengendara/scan_masuk.dart';
+=======
+import 'package:parqran/views/pemilikParkir/ownerQrScan.dart';
+import 'package:parqran/views/pengendara/qrGenerate.dart';
+>>>>>>> 7c289fe (Last Commtit)
 // import 'package:parqran/views/pengendara/qrScaning.dart';
 
 class ParkirFloatButton extends StatefulWidget {
@@ -16,8 +21,12 @@ class _ParkirFloatButtonState extends State<ParkirFloatButton> {
       backgroundColor: const Color.fromRGBO(155, 89, 182, 1),
       onPressed: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
+<<<<<<< HEAD
           // return QrGenerate();
           return const ScanMasuk();
+=======
+          return OwnerScan();
+>>>>>>> 7c289fe (Last Commtit)
         }));
       },
       elevation: 0,

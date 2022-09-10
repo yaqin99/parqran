@@ -101,11 +101,14 @@ class _DetailParkiranState extends State<DetailParkiran> {
         );
       }
     };
+<<<<<<< HEAD
     clientWrapper.onSubscribed = (() {
       if (kDebugMode) {
         print('subscribed');
       }
     });
+=======
+>>>>>>> 7c289fe (Last Commtit)
 
     super.initState();
   }
@@ -346,10 +349,17 @@ class _DetailParkiranState extends State<DetailParkiran> {
                       height: MediaQuery.of(context).size.height * 0.15,
                       child: GestureDetector(
                         onTap: () {
+<<<<<<< HEAD
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             return const QrGenerate();
                           }));
+=======
+                          // Navigator.push(context,
+                          //     MaterialPageRoute(builder: (context) {
+                          //   return QrGenerate();
+                          // }));
+>>>>>>> 7c289fe (Last Commtit)
                         },
                         child: Stack(
                           children: [

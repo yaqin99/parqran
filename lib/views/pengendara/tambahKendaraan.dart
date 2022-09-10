@@ -107,8 +107,6 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
       uploadImage(fotoKendaraan!);
     }
 
-    Navigator.of(context, rootNavigator: true).pop();
-
     setState(() {});
   }
 
@@ -128,7 +126,6 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
       uploadStnk(fotoStnk!);
     }
     uploadStnk(fotoStnk!);
-    Navigator.of(context, rootNavigator: true).pop();
     setState(() {});
   }
 
@@ -280,25 +277,6 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
         }
       }
     }
-
-    // setState(() {
-    //   nama.text = '';
-
-    //   merk.text = '';
-    //   warna.text = '';
-    //   noRegistrasi.text = '';
-    //   noRangka.text = '';
-    //   noStnk.text = '';
-    //   (tipe == '0')
-    //       ? Navigator.pushReplacement(context,
-    //           MaterialPageRoute(builder: (context) {
-    //           return const DaftarMotor();
-    //         }))
-    //       : Navigator.pushReplacement(context,
-    //           MaterialPageRoute(builder: (context) {
-    //           return const DaftarMobil();
-    //         }));
-    // });
   }
 
   initValue() {
@@ -461,92 +439,11 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                     borderRadius: BorderRadius.circular(50),
                                   )),
                                   backgroundColor: MaterialStateProperty.all(
-                                      Color.fromRGBO(52, 152, 219, 1))),
+                                      const Color.fromRGBO(52, 152, 219, 1))),
                               onPressed: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        scrollable: true,
-                                        title: const Text('Pilih Opsi'),
-                                        content: Container(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.14,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              GestureDetector(
-                                                onTap: () async {
-                                                  _getImageGalery();
-                                                },
-                                                child: Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.315,
-                                                  child: Stack(
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                bottom: 15),
-                                                        child: Image.asset(
-                                                          'assets/folder.png',
-                                                          width: 150,
-                                                          height: 150,
-                                                        ),
-                                                      ),
-                                                      Positioned(
-                                                          bottom: 17,
-                                                          left: 31,
-                                                          child: Text(
-                                                              'Pilih File'))
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              GestureDetector(
-                                                onTap: () async {
-                                                  await _getImageCamera();
-                                                },
-                                                child: Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.315,
-                                                  child: Stack(
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                bottom: 15),
-                                                        child: Image.asset(
-                                                          'assets/camera.png',
-                                                          width: 150,
-                                                          height: 150,
-                                                        ),
-                                                      ),
-                                                      Positioned(
-                                                          bottom: 17,
-                                                          left: 18,
-                                                          child: Text(
-                                                              'Buka Kamera'))
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    });
+                                _getImageGalery();
                               },
-                              child: Icon(Icons.camera_alt_rounded,
+                              child: const Icon(Icons.camera_alt_rounded,
                                   color: Colors.white)),
                         ),
                       )
@@ -565,8 +462,8 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                 //     border: Border.all(color: Colors.black)),
                                 child: Row(
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 62),
+                                    const Padding(
+                                      padding: EdgeInsets.only(right: 62),
                                       child: Text(
                                         'Nama',
                                         style: TextStyle(
@@ -843,95 +740,8 @@ class _TambahKendaraanState extends State<TambahKendaraan> {
                                                                   152,
                                                                   219,
                                                                   1))),
-                                                  onPressed: () async {
-                                                    showDialog(
-                                                        context: context,
-                                                        builder: (BuildContext
-                                                            context) {
-                                                          return AlertDialog(
-                                                            scrollable: true,
-                                                            title: const Text(
-                                                                'Pilih Opsi'),
-                                                            content: Container(
-                                                              height: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .height *
-                                                                  0.14,
-                                                              child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceAround,
-                                                                children: [
-                                                                  GestureDetector(
-                                                                    onTap:
-                                                                        () async {
-                                                                      await _getStnkPict();
-                                                                    },
-                                                                    child:
-                                                                        Container(
-                                                                      width: MediaQuery.of(context)
-                                                                              .size
-                                                                              .width *
-                                                                          0.315,
-                                                                      child:
-                                                                          Stack(
-                                                                        children: [
-                                                                          Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.only(bottom: 15),
-                                                                            child:
-                                                                                Image.asset(
-                                                                              'assets/folder.png',
-                                                                              width: 150,
-                                                                              height: 150,
-                                                                            ),
-                                                                          ),
-                                                                          Positioned(
-                                                                              bottom: 17,
-                                                                              left: 31,
-                                                                              child: Text('Pilih File'))
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  GestureDetector(
-                                                                    onTap:
-                                                                        () async {
-                                                                      await _getStnkPict();
-                                                                    },
-                                                                    child:
-                                                                        Container(
-                                                                      width: MediaQuery.of(context)
-                                                                              .size
-                                                                              .width *
-                                                                          0.315,
-                                                                      child:
-                                                                          Stack(
-                                                                        children: [
-                                                                          Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.only(bottom: 15),
-                                                                            child:
-                                                                                Image.asset(
-                                                                              'assets/camera.png',
-                                                                              width: 150,
-                                                                              height: 150,
-                                                                            ),
-                                                                          ),
-                                                                          const Positioned(
-                                                                              bottom: 17,
-                                                                              left: 18,
-                                                                              child: Text('Buka Kamera'))
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          );
-                                                        });
+                                                  onPressed: () {
+                                                    _getStnkPict();
                                                   },
                                                   child: Center(
                                                       child: Row(
