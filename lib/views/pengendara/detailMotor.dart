@@ -86,15 +86,13 @@ class _DetailMotorState extends State<DetailMotor> {
                         fontWeight: FontWeight.w400,
                         color: Color.fromRGBO(52, 152, 219, 1)),
                   ),
-                ),
-              ),
-              const Text(
-                'Detail Motor',
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                    color: Color.fromRGBO(52, 152, 219, 1)),
-              ),
+                  const Text(
+                    'Detail Motor',
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                        color: Color.fromRGBO(52, 152, 219, 1)),
+                  ),
                 ],
               ),
             ),
@@ -145,7 +143,8 @@ class _DetailMotorState extends State<DetailMotor> {
                                   color: Color.fromRGBO(52, 152, 219, 1)),
                             ),
                           ),
-                          Text('${widget.merk} ${widget.nama}',
+                          Text(
+                            '${widget.merk} ${widget.nama}',
                             style: const TextStyle(
                                 fontSize: 17,
                                 fontWeight: FontWeight.w300,
