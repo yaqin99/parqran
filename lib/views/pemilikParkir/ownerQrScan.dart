@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:parqran/component/loading_overlay.dart';
 import 'package:parqran/model/person.dart';
 import 'package:parqran/model/services.dart';
 import 'package:provider/provider.dart';
@@ -99,7 +98,6 @@ class _OwnerScanState extends State<OwnerScan> {
         Provider.of<Person>(context, listen: false).id_pengguna.toString();
 
     return SafeArea(
-        child: LoadingOverlay(
       child: Scaffold(
         body: Stack(
           children: [
@@ -117,7 +115,7 @@ class _OwnerScanState extends State<OwnerScan> {
           ],
         ),
       ),
-    ));
+    );
   }
 
   Widget pickVehicle() => Container(

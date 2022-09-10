@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:parqran/component/bottomNavbar.dart';
 import 'package:parqran/component/floatButton.dart';
-<<<<<<< HEAD
-=======
 import 'package:parqran/model/services.dart';
 import 'package:parqran/views/pengendara/qrGenerate.dart';
 import '../../model/person.dart';
@@ -12,7 +10,6 @@ import 'dart:convert' as convert;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'dart:io';
->>>>>>> 7c289fe (Last Commtit)
 
 class DetailMotor extends StatefulWidget {
   final String nama;
@@ -67,20 +64,6 @@ class _DetailMotorState extends State<DetailMotor> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-<<<<<<< HEAD
-              Padding(
-                padding: const EdgeInsets.only(right: 18),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(
-                      context,
-                    );
-                  },
-                  child: const Icon(
-                    Icons.arrow_back,
-                    size: 35,
-                    color: Color.fromRGBO(52, 152, 219, 1),
-=======
                   Padding(
                     padding: const EdgeInsets.only(right: 18),
                     child: GestureDetector(
@@ -102,7 +85,6 @@ class _DetailMotorState extends State<DetailMotor> {
                         fontSize: 20,
                         fontWeight: FontWeight.w400,
                         color: Color.fromRGBO(52, 152, 219, 1)),
->>>>>>> 7c289fe (Last Commtit)
                   ),
                 ),
               ),
@@ -137,44 +119,17 @@ class _DetailMotorState extends State<DetailMotor> {
                     ),
                   ],
                 ),
-<<<<<<< HEAD
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.146,
-                    height: MediaQuery.of(context).size.height * 0.07,
-                    child: ElevatedButton(
-                        style: ButtonStyle(
-                            shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
-                            )),
-                            backgroundColor: MaterialStateProperty.all(
-                                const Color.fromRGBO(52, 152, 219, 1))),
-                        onPressed: () {},
-                        child: const Icon(Icons.camera_alt_rounded,
-                            color: Colors.white)),
-                  ),
-                )
-              ]),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 40),
-              child: SizedBox(
-=======
               ]),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 15),
               child: Container(
->>>>>>> 7c289fe (Last Commtit)
                 width: MediaQuery.of(context).size.width * 0.75,
                 height: MediaQuery.of(context).size.height * 0.33,
                 // decoration:
                 //     BoxDecoration(border: Border.all(color: Colors.black)),
                 child: Column(
                   children: [
-<<<<<<< HEAD
                     Padding(
                       padding: const EdgeInsets.only(top: 20),
                       child: Row(
@@ -213,59 +168,6 @@ class _DetailMotorState extends State<DetailMotor> {
                                   fontSize: 17,
                                   color: Color.fromRGBO(52, 152, 219, 1)),
                             ),
-=======
-                    Container(
-                      child: Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.only(right: 77),
-                              child: Text(
-                                'Merk',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 17,
-                                    color: Color.fromRGBO(52, 152, 219, 1)),
-                              ),
-                            ),
-                            Text(
-                              '${widget.merk} ${widget.nama}',
-                              style: const TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w300,
-                                  color: Color.fromRGBO(52, 152, 219, 1)),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    Container(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 30),
-                        child: Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.only(right: 66),
-                                child: Text(
-                                  'Warna',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17,
-                                      color: Color.fromRGBO(52, 152, 219, 1)),
-                                ),
-                              ),
-                              Text(
-                                widget.warna,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 17,
-                                    color: Color.fromRGBO(52, 152, 219, 1)),
-                              ),
-                            ],
->>>>>>> 7c289fe (Last Commtit)
                           ),
                           Text(
                             widget.warna,
@@ -302,7 +204,6 @@ class _DetailMotorState extends State<DetailMotor> {
                         ],
                       ),
                     ),
-<<<<<<< HEAD
                     Padding(
                       padding: const EdgeInsets.only(top: 30),
                       child: Row(
@@ -351,33 +252,6 @@ class _DetailMotorState extends State<DetailMotor> {
                                 color: Color.fromRGBO(52, 152, 219, 1)),
                           ),
                         ],
-=======
-                    Container(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 30),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.only(right: 38),
-                              child: Text(
-                                'No. STNK',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 17,
-                                    color: Color.fromRGBO(52, 152, 219, 1)),
-                              ),
-                            ),
-                            Text(
-                              widget.no_stnk,
-                              style: const TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w300,
-                                  color: Color.fromRGBO(52, 152, 219, 1)),
-                            )
-                          ],
-                        ),
->>>>>>> 7c289fe (Last Commtit)
                       ),
                     ),
                     Padding(

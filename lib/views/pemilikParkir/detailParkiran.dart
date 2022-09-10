@@ -47,17 +47,19 @@ class _DetailParkiranState extends State<DetailParkiran> {
       if (kDebugMode) {
         print('msg: ${resp.data}');
       }
-      clientWrapper.publishMessage('parkir/${widget.id}', jsonEncode({'idPengguna': data['idPengguna'], 'status': 'diterima'}));
+      clientWrapper.publishMessage('parkir/${widget.id}',
+          jsonEncode({'idPengguna': data['idPengguna'], 'status': 'diterima'}));
     } catch (e) {
       if (kDebugMode) {
         print('msg: error: $e');
       }
     }
   }
+
   void _setDitolak(data) {
-    clientWrapper.publishMessage('parkir/${widget.id}', jsonEncode({'idPengguna': data['idPengguna'], 'status': 'ditolak'}));
+    clientWrapper.publishMessage('parkir/${widget.id}',
+        jsonEncode({'idPengguna': data['idPengguna'], 'status': 'ditolak'}));
   }
-  
 
   @override
   void initState() {
@@ -79,14 +81,17 @@ class _DetailParkiranState extends State<DetailParkiran> {
           builder: (context) {
             return AlertDialog(
               title: const Text('Pemberitahuan'),
-              content: Text('Ada pengendara dengan nomor kendaraan ${data['nomorKendaraan']} yang ingin parkir. Apakah anda ingin menerima?'),
+              content: Text(
+                  'Ada pengendara dengan nomor kendaraan ${data['nomorKendaraan']} yang ingin parkir. Apakah anda ingin menerima?'),
               actions: [
                 TextButton(
                   onPressed: () {
                     _saveDiterima(data);
                     Navigator.pop(context);
                   },
-                  child: const Text('DITERIMA', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+                  child: const Text('DITERIMA',
+                      style: TextStyle(
+                          color: Colors.green, fontWeight: FontWeight.bold)),
                 ),
                 TextButton(
                   onPressed: () {
@@ -101,14 +106,11 @@ class _DetailParkiranState extends State<DetailParkiran> {
         );
       }
     };
-<<<<<<< HEAD
     clientWrapper.onSubscribed = (() {
       if (kDebugMode) {
         print('subscribed');
       }
     });
-=======
->>>>>>> 7c289fe (Last Commtit)
 
     super.initState();
   }
@@ -349,17 +351,10 @@ class _DetailParkiranState extends State<DetailParkiran> {
                       height: MediaQuery.of(context).size.height * 0.15,
                       child: GestureDetector(
                         onTap: () {
-<<<<<<< HEAD
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return const QrGenerate();
-                          }));
-=======
                           // Navigator.push(context,
                           //     MaterialPageRoute(builder: (context) {
                           //   return QrGenerate();
                           // }));
->>>>>>> 7c289fe (Last Commtit)
                         },
                         child: Stack(
                           children: [
